@@ -1,0 +1,62 @@
+import type { UserProfile } from '../types';
+
+export const mockUser: UserProfile = {
+  id: 'USR-89214',
+  name: 'Ramesh Kumar',
+  phone: '+91 98765 43210',
+  email: 'ramesh.k@gramudyog.in',
+  role: 'entrepreneur',
+  district: 'Karnal',
+  state: 'Haryana',
+  village: 'Stundi',
+  category: 'OBC',
+  education: 'Diploma in Agriculture Technology',
+  experienceYears: 6,
+  availableCapital: 850000,
+};
+
+export const mockUsersList: UserProfile[] = [
+  mockUser,
+  {
+    id: 'USR-44102',
+    name: 'Sunita Devi',
+    phone: '+91 94123 88901',
+    email: 'sunita.d@gmail.com',
+    role: 'entrepreneur',
+    district: 'Karnal',
+    state: 'Haryana',
+    village: 'Gharaunda',
+    category: 'SC',
+    education: 'Higher Secondary',
+    experienceYears: 3,
+    availableCapital: 350000,
+  },
+  {
+    id: 'USR-10928',
+    name: 'Vikram Singh',
+    phone: '+91 99881 22334',
+    email: 'vikram.analyst@gov.in',
+    role: 'analyst',
+    district: 'Ambala',
+    state: 'Haryana',
+    village: 'City Office',
+    category: 'General',
+    education: 'M.Sc Rural Development',
+    experienceYears: 10,
+    availableCapital: 0,
+  },
+  {
+    id: 'USR-90011',
+    name: 'Dr. Anita Sharma',
+    phone: '+91 91234 56789',
+    email: 'anita.sharma@dic.haryana.gov.in',
+    role: 'admin',
+    district: 'Chandigarh (HQ)',
+    state: 'Haryana',
+    village: 'State Nodal DIC',
+    category: 'General',
+    education: 'Ph.D Economics / IAS',
+    experienceYears: 15,
+    availableCapital: 0,
+  }
+];
