@@ -1,0 +1,28 @@
+{
+    "businessSelection": {
+        "title": "What kind of business do you want to start?",
+        "searchPlaceholder": "Search categories...",
+        "selectCategory": "Select a Category",
+        "selectType": "Select a Specific Business",
+        "selectProduct": "Select Products (Optional)",
+        "next": "Continue",
+        "back": "Back"
+    },
+    "categories": {
+        "Dairy": "Dairy",
+        "Agriculture": "Agriculture",
+        "Retail": "Retail",
+        "Grocery": "Grocery",
+        "Textiles": "Textiles",
+        "Food Processing": "Food Processing",
+        "Bakery": "Bakery",
+        "Handicrafts": "Handicrafts",
+        "Mobile Repair": "Mobile Repair",
+        "Electrical Services": "Electrical Services",
+        "Transportation": "Transportation",
+        "Beauty/Personal Care": "Beauty/Personal Care",
+        "Manufacturing": "Manufacturing",
+        "Livestock": "Livestock",
+        "Other": "Other"
+    }
+}

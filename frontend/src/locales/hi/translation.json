@@ -1,0 +1,28 @@
+{
+    "businessSelection": {
+        "title": "आप किस प्रकार का व्यवसाय शुरू करना चाहते हैं?",
+        "searchPlaceholder": "श्रेणियाँ खोजें...",
+        "selectCategory": "एक श्रेणी चुनें",
+        "selectType": "विशिष्ट व्यवसाय चुनें",
+        "selectProduct": "उत्पाद चुनें (वैकल्पिक)",
+        "next": "आगे बढ़ें",
+        "back": "वापस"
+    },
+    "categories": {
+        "Dairy": "डेयरी",
+        "Agriculture": "कृषि",
+        "Retail": "खुदरा व्यापार (रिटेल)",
+        "Grocery": "किराना",
+        "Textiles": "कपड़ा और सिलाई",
+        "Food Processing": "खाद्य प्रसंस्करण",
+        "Bakery": "बेकरी",
+        "Handicrafts": "हस्तशिल्प",
+        "Mobile Repair": "मोबाइल मरम्मत",
+        "Electrical Services": "बिजली सेवाएँ",
+        "Transportation": "परिवहन",
+        "Beauty/Personal Care": "सौंदर्य/व्यक्तिगत देखभाल",
+        "Manufacturing": "विनिर्माण",
+        "Livestock": "पशुधन",
+        "Other": "अन्य"
+    }
+}
