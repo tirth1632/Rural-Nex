@@ -7,6 +7,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = [
+            'avatar_url',
+            'phone_verified',
+            'face_verified',
+            'face_data',
             'preferred_language',
             'entrepreneur_type',
             'experience',
@@ -17,6 +21,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'default_block',
             'default_village',
         ]
+
 
 
 class UserSerializer(serializers.ModelSerializer):

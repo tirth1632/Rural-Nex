@@ -14,11 +14,16 @@ import {
   EyeOff, 
   ArrowRight,
   Loader2,
-  ChevronDown
+  ChevronDown,
+  Sparkles,
+  UserCheck,
+  X
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useGoogleLogin } from '@react-oauth/google';
 import LanguageSelector from '../../components/LanguageSelector';
+import { FaceDetectorInput } from './components/FaceDetectorInput';
+import { faceLogin, type FaceAccountChoice } from '../../services/auth.service';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -27,11 +32,39 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [showFaceScanner, setShowFaceScanner] = useState(false);
+  const [accountChoices, setAccountChoices] = useState<FaceAccountChoice[] | null>(null);
+  const [capturedFaceImage, setCapturedFaceImage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string }>({});
 
   const { login } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const handleFaceLogin = async (capturedDataUrl: string, selectedUserId?: number) => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await faceLogin(capturedDataUrl, undefined, selectedUserId);
+      if (data.multiple_accounts && data.accounts && data.accounts.length > 0) {
+        setAccountChoices(data.accounts);
+        setCapturedFaceImage(capturedDataUrl);
+        return;
+      }
+      if (data.access && data.refresh) {
+        login(data.access, data.refresh);
+        setAccountChoices(null);
+        setCapturedFaceImage(null);
+        navigate('/');
+      } else {
+        setError(data.detail || 'Face login verification failed.');
+      }
+    } catch (err: any) {
+      setError(err?.data?.detail || err?.data?.message || 'Face login verification failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem('rn_remembered_user');
@@ -271,7 +304,7 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate autoComplete="off">
             
             {/* Username */}
             <div>
@@ -285,6 +318,7 @@ const Login = () => {
                 <input
                   id="username"
                   type="text"
+                  autoComplete="off"
                   className={`w-full pl-9 pr-3 py-2.5 bg-gray-50 border ${fieldErrors.username ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-200'} rounded-lg text-gray-900 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 transition-all`}
                   placeholder="Enter your username"
                   value={username}
@@ -309,6 +343,7 @@ const Login = () => {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
                   className={`w-full pl-9 pr-10 py-2.5 bg-gray-50 border ${fieldErrors.password ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-200'} rounded-lg text-gray-900 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 transition-all tracking-wide`}
                   placeholder="••••••••"
                   value={password}
@@ -356,6 +391,35 @@ const Login = () => {
                 <>Sign In <ArrowRight size={16} /></>
               )}
             </button>
+
+            {/* Face Login Option directly below Sign In button */}
+            <button
+              type="button"
+              onClick={() => {
+                const nextState = !showFaceScanner;
+                setShowFaceScanner(nextState);
+                setError('');
+                if (nextState) {
+                  // Reset form fields so face login operates purely on biometric scan
+                  setUsername('');
+                  setPassword('');
+                }
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-emerald-300 bg-emerald-50/70 hover:bg-emerald-100/90 text-emerald-800 rounded-lg transition shadow-sm font-bold text-sm mt-3"
+            >
+              <Sparkles size={16} className="text-emerald-600" />
+              <span>{showFaceScanner ? 'Close Face Scanner' : 'Sign in with Face AI (MediaPipe)'}</span>
+            </button>
+
+            {/* MediaPipe Face Scanner Drawer */}
+            {showFaceScanner && (
+              <div className="mt-3">
+                <FaceDetectorInput
+                  autoStart={true}
+                  onFaceCaptured={handleFaceLogin}
+                />
+              </div>
+            )}
           </form>
 
           {/* Divider */}
@@ -384,6 +448,72 @@ const Login = () => {
         </div>
 
       </div>
+
+      {/* Account Selection Modal if multiple accounts match face scan */}
+      {accountChoices && accountChoices.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 flex flex-col gap-4 relative">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-emerald-100 rounded-lg text-emerald-700">
+                  <UserCheck size={22} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-lg leading-tight">Select Account</h3>
+                  <p className="text-xs text-gray-500 font-medium">Multiple matching accounts found</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => { setAccountChoices(null); setCapturedFaceImage(null); }}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-600 font-medium">
+              This face scan matches multiple accounts. Which account would you like to sign into?
+            </p>
+
+            {/* Candidate Account list */}
+            <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+              {accountChoices.map((acc) => (
+                <button
+                  key={acc.id}
+                  disabled={loading}
+                  onClick={() => capturedFaceImage && handleFaceLogin(capturedFaceImage, acc.id)}
+                  className="w-full flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition group text-left shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow-md group-hover:scale-105 transition-transform">
+                      {acc.name ? acc.name.charAt(0).toUpperCase() : acc.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-900 group-hover:text-emerald-700 transition">{acc.name}</h4>
+                      <p className="text-xs text-gray-500">@{acc.username} {acc.email ? `• ${acc.email}` : ''}</p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 group-hover:bg-emerald-600 group-hover:text-white transition">
+                    {acc.role ? acc.role.toUpperCase() : 'USER'}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="pt-2 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => { setAccountChoices(null); setCapturedFaceImage(null); }}
+                className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

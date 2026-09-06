@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
@@ -6,9 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { accountSchema, type AccountFormValues } from '../../../schemas/registration.schema';
 import { PasswordInput } from './PasswordInput';
+import { FaceDetectorInput } from './FaceDetectorInput';
 
 interface Props {
-  onSuccess: (data: AccountFormValues) => void;
+  onSuccess: (data: AccountFormValues, faceAvatarUrl?: string) => void;
   serverErrors?: Record<string, string[]>;
   isLoading: boolean;
 }
@@ -25,6 +26,7 @@ const inputCls = (hasError: boolean) =>
 
 export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoading }) => {
   const { t } = useTranslation();
+  const [faceAvatarUrl, setFaceAvatarUrl] = useState<string | undefined>(undefined);
 
   const {
     register,
@@ -52,7 +54,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
   };
 
   return (
-    <form onSubmit={handleSubmit(onSuccess)} noValidate>
+    <form onSubmit={handleSubmit((data) => onSuccess(data, faceAvatarUrl))} noValidate>
       {/* Name row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         {/* First Name */}
@@ -186,7 +188,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
       </div>
 
       {/* Confirm Password */}
-      <div className="mb-6">
+      <div className="mb-5">
         <PasswordInput
           id="reg-confirm-password"
           label={`${t('auth.register.confirmPassword')} *`}
@@ -196,6 +198,9 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
           {...register('confirm_password')}
         />
       </div>
+
+      {/* MediaPipe Face Detector */}
+      <FaceDetectorInput onFaceCaptured={(url) => setFaceAvatarUrl(url)} />
 
       {/* Submit */}
       <button
@@ -209,7 +214,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
             <span>{t('saving')}</span>
           </>
         ) : (
-          t('auth.register.continue')
+          t('auth.register.submit')
         )}
       </button>
 

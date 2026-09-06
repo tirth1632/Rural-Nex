@@ -16,7 +16,26 @@ export interface LoginResponse {
   refresh: string;
 }
 
+export interface FaceAccountChoice {
+  id: number;
+  username: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface FaceLoginResponse {
+  access?: string;
+  refresh?: string;
+  multiple_accounts?: boolean;
+  accounts?: FaceAccountChoice[];
+  detail?: string;
+}
+
 export interface ProfilePayload {
+  avatar_url?: string;
+  face_data?: string;
+  face_verified?: boolean;
   preferred_language?: string;
   entrepreneur_type?: string;
   experience?: string;
@@ -52,6 +71,26 @@ export async function loginUser(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw { status: res.status, data };
+  }
+
+  return res.json();
+}
+
+/** POST /api/v1/auth/face-login/ — login via MediaPipe AI face detection */
+export async function faceLogin(
+  faceImage: string,
+  username?: string,
+  userId?: number
+): Promise<FaceLoginResponse> {
+  const res = await fetch(`${BASE}/face-login/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ face_image: faceImage, username, user_id: userId }),
   });
 
   if (!res.ok) {

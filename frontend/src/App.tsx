@@ -22,6 +22,7 @@ import Dashboard from './features/dashboard/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import BusinessCompare from './features/comparison/BusinessCompare';
 import WhatIfSimulator from './features/simulator/WhatIfSimulator';
+import SettingsPage from './features/settings/SettingsPage';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -46,7 +47,9 @@ function App() {
             <Route path="reports" element={<div className="p-8">Reports Module - Coming Soon</div>} />
             <Route path="compare" element={<BusinessCompare />} />
             <Route path="simulator" element={<WhatIfSimulator />} />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="profile" element={<Profile />} />
+
             
             {/* Standalone pages reachable from nav or links */}
             <Route path="location-search" element={<LocationSearch />} />

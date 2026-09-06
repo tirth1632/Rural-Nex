@@ -25,8 +25,8 @@
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
+  :root, html[data-theme="light"], html.theme-light {
+    --background: 210 20% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -35,8 +35,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 158 64% 40%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -52,10 +52,391 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 158 64% 40%;
 
     --radius-val: 0.5rem;
   }
+
+  html[data-theme="dark"], html.theme-dark, html.dark {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 7%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 158 64% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 158 64% 48%;
+  }
+
+  html[data-theme="oled"], html.theme-oled {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 158 64% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 100%;
+  }
+}
+
+/* Specific Theme Classes for Settings Sidebar & Segmented Control */
+
+/* Settings Sidebar Nav Items */
+.settings-nav-active {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.settings-nav-inactive {
+  color: #4b5563;
+}
+.settings-nav-inactive:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
+html[data-theme="dark"] .settings-nav-active,
+html.theme-dark .settings-nav-active {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .settings-nav-inactive,
+html.theme-dark .settings-nav-inactive {
+  color: #9ca3af !important;
+}
+html[data-theme="dark"] .settings-nav-inactive:hover,
+html.theme-dark .settings-nav-inactive:hover {
+  color: #ffffff !important;
+  background-color: #1f2937 !important;
+}
+
+html[data-theme="oled"] .settings-nav-active,
+html.theme-oled .settings-nav-active {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="oled"] .settings-nav-inactive,
+html.theme-oled .settings-nav-inactive {
+  color: #a1a1aa !important;
+}
+html[data-theme="oled"] .settings-nav-inactive:hover,
+html.theme-oled .settings-nav-inactive:hover {
+  color: #ffffff !important;
+  background-color: #18181b !important;
+}
+
+/* Segmented Control Component */
+.segmented-container {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.segmented-active {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.segmented-inactive {
+  color: #4b5563;
+}
+.segmented-inactive:hover {
+  color: #111827;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+html[data-theme="dark"] .segmented-container,
+html.theme-dark .segmented-container {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+html[data-theme="dark"] .segmented-active,
+html.theme-dark .segmented-active {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+  border-color: #4b5563 !important;
+}
+
+html[data-theme="dark"] .segmented-inactive,
+html.theme-dark .segmented-inactive {
+  color: #9ca3af !important;
+}
+html[data-theme="dark"] .segmented-inactive:hover,
+html.theme-dark .segmented-inactive:hover {
+  color: #ffffff !important;
+  background-color: #1f2937 !important;
+}
+
+html[data-theme="oled"] .segmented-container,
+html.theme-oled .segmented-container {
+  background-color: #121212 !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="oled"] .segmented-active,
+html.theme-oled .segmented-active {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+  border-color: #3f3f46 !important;
+}
+
+html[data-theme="oled"] .segmented-inactive,
+html.theme-oled .segmented-inactive {
+  color: #a1a1aa !important;
+}
+html[data-theme="oled"] .segmented-inactive:hover,
+html.theme-oled .segmented-inactive:hover {
+  color: #ffffff !important;
+  background-color: #18181b !important;
+}
+
+/* Global Primary Accent Rules */
+html[data-theme="dark"] .bg-primary,
+html[data-theme="oled"] .bg-primary {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .text-primary,
+html[data-theme="oled"] .text-primary {
+  color: #34d399 !important;
+}
+
+/* Main Sidebar Inactive Links in Dark & OLED */
+html[data-theme="dark"] aside a.text-gray-700,
+html[data-theme="oled"] aside a.text-gray-700 {
+  color: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] aside a.text-gray-700:hover,
+html[data-theme="oled"] aside a.text-gray-700:hover {
+  color: #ffffff !important;
+  background-color: #18181b !important;
+}
+
+/* Global Theme Overrides for Dark & OLED Themes */
+html[data-theme="dark"] body,
+html[data-theme="dark"].theme-dark body,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .bg-gray-50 {
+  background-color: #0b0f19 !important;
+  color: #f9fafb !important;
+}
+
+html[data-theme="oled"] body,
+html[data-theme="oled"].theme-oled body,
+html[data-theme="oled"] main,
+html[data-theme="oled"] .bg-gray-50 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Card & Box Containers */
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] .bg-gray-50\/50,
+html[data-theme="dark"] .bg-gray-50\/60,
+html[data-theme="dark"] .bg-gray-50\/70,
+html[data-theme="dark"] .bg-gray-50\/80 {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+html[data-theme="oled"] .bg-white,
+html[data-theme="oled"] .bg-gray-50\/50,
+html[data-theme="oled"] .bg-gray-50\/60,
+html[data-theme="oled"] .bg-gray-50\/70,
+html[data-theme="oled"] .bg-gray-50\/80 {
+  background-color: #09090b !important;
+  color: #ffffff !important;
+}
+
+/* Text Colors */
+html[data-theme="dark"] .text-gray-900,
+html[data-theme="dark"] .text-gray-800,
+html[data-theme="dark"] .text-gray-700 {
+  color: #f9fafb !important;
+}
+
+html[data-theme="dark"] .text-gray-600,
+html[data-theme="dark"] .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+html[data-theme="dark"] .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+html[data-theme="oled"] .text-gray-900,
+html[data-theme="oled"] .text-gray-800,
+html[data-theme="oled"] .text-gray-700 {
+  color: #ffffff !important;
+}
+
+html[data-theme="oled"] .text-gray-600,
+html[data-theme="oled"] .text-gray-500 {
+  color: #a1a1aa !important;
+}
+
+html[data-theme="oled"] .text-gray-400 {
+  color: #71717a !important;
+}
+
+/* Color overrides for dark banner texts */
+html[data-theme="dark"] .text-blue-900,
+html[data-theme="dark"] .text-blue-950,
+html[data-theme="dark"] .text-blue-800 {
+  color: #bfdbfe !important;
+}
+
+html[data-theme="oled"] .text-blue-900,
+html[data-theme="oled"] .text-blue-950,
+html[data-theme="oled"] .text-blue-800 {
+  color: #bfdbfe !important;
+}
+
+html[data-theme="dark"] .text-emerald-800,
+html[data-theme="dark"] .text-emerald-900 {
+  color: #a7f3d0 !important;
+}
+
+html[data-theme="oled"] .text-emerald-800,
+html[data-theme="oled"] .text-emerald-900 {
+  color: #a7f3d0 !important;
+}
+
+/* Borders */
+html[data-theme="dark"] .border-gray-200,
+html[data-theme="dark"] .border-gray-300,
+html[data-theme="dark"] .border-gray-100,
+html[data-theme="dark"] .border-gray-200\/80,
+html[data-theme="dark"] .border-gray-200\/70,
+html[data-theme="dark"] .border-gray-200\/60,
+html[data-theme="dark"] .border-gray-200\/50 {
+  border-color: #374151 !important;
+}
+
+html[data-theme="oled"] .border-gray-200,
+html[data-theme="oled"] .border-gray-300,
+html[data-theme="oled"] .border-gray-100,
+html[data-theme="oled"] .border-gray-200\/80,
+html[data-theme="oled"] .border-gray-200\/70,
+html[data-theme="oled"] .border-gray-200\/60,
+html[data-theme="oled"] .border-gray-200\/50 {
+  border-color: #27272a !important;
+}
+
+/* Form Elements (select, input, option) */
+html[data-theme="dark"] select,
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] textarea {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+html[data-theme="dark"] select option {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="oled"] select,
+html[data-theme="oled"] input[type="text"],
+html[data-theme="oled"] input[type="number"],
+html[data-theme="oled"] input[type="password"],
+html[data-theme="oled"] input[type="email"],
+html[data-theme="oled"] textarea {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="oled"] select option {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+}
+
+/* Toggle Unchecked State Override */
+html[data-theme="dark"] .bg-gray-200 {
+  background-color: #374151 !important;
+}
+
+html[data-theme="oled"] .bg-gray-200 {
+  background-color: #27272a !important;
+}
+
+/* Alert Boxes & Banners */
+html[data-theme="dark"] .bg-blue-50\/70,
+html[data-theme="dark"] .bg-blue-50 {
+  background-color: #1e293b !important;
+  border-color: #3b82f6 !important;
+  color: #bfdbfe !important;
+}
+
+html[data-theme="oled"] .bg-blue-50\/70,
+html[data-theme="oled"] .bg-blue-50 {
+  background-color: #0c192c !important;
+  border-color: #1d4ed8 !important;
+  color: #bfdbfe !important;
+}
+
+/* Secondary Action Buttons (e.g. Discard, Cancel, Edit) */
+html[data-theme="dark"] button.bg-white,
+html[data-theme="dark"] a.bg-white {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+html[data-theme="oled"] button.bg-white,
+html[data-theme="oled"] a.bg-white {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
 }
 
 @layer base {

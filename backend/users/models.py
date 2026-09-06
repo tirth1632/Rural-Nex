@@ -34,11 +34,16 @@ class User(AbstractUser, SoftDeleteModel):
 
 class UserProfile(AuditModel, SoftDeleteModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar_url = models.TextField(blank=True, null=True)
+    phone_verified = models.BooleanField(default=False)
+    face_verified = models.BooleanField(default=False)
+    face_data = models.TextField(blank=True, default='')
     preferred_language = models.CharField(
         max_length=10,
         choices=[('en', 'English'), ('hi', 'Hindi'), ('gu', 'Gujarati')],
         default='en'
     )
+
 
     # Entrepreneur profile
     entrepreneur_type = models.CharField(
@@ -90,3 +95,22 @@ class PasswordResetOTP(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.username}"
+
+
+class PhoneVerificationOTP(models.Model):
+    phone_number = models.CharField(max_length=20, db_index=True)
+    otp_hash = models.CharField(max_length=128, default='')
+    attempts_count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_sent_at = models.DateTimeField(auto_now=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+
+    def is_valid(self):
+        from django.utils import timezone
+        return not self.is_used and self.attempts_count < 5 and timezone.now() <= self.expires_at
+
+    def __str__(self):
+        return f"Phone OTP for {self.phone_number}"
+
+

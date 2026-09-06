@@ -1,21 +1,28 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import i18n from '../i18n';
 
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
+  first_name?: string;
+  last_name?: string;
   role: string;
   profile?: {
-    preferred_language: string;
+    avatar_url?: string;
+    face_verified?: boolean;
+    face_data?: string;
+    preferred_language?: string;
   };
 }
+
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (token: string, refresh: string) => void;
   logout: () => void;
+  updateUser: (updatedUser: Partial<User>) => void;
   isLoading: boolean;
 }
 
@@ -66,8 +73,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedUser: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        ...updatedUser,
+        profile: {
+          ...prev.profile,
+          ...updatedUser.profile,
+        },
+      };
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

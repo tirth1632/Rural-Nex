@@ -16,10 +16,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import LanguageSelector from '../../components/LanguageSelector';
 import { registerUser, loginUser, updateProfile } from '../../services/auth.service';
 import type { AccountFormValues } from '../../schemas/registration.schema';
-import type { ProfileFormValues } from '../../schemas/registration.schema';
-import { RegistrationProgress } from './components/RegistrationProgress';
 import { AccountStep } from './components/AccountStep';
-import { ProfileStep } from './components/ProfileStep';
 
 
 
@@ -43,19 +40,16 @@ const Register: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
-  const [step1Data, setStep1Data] = useState<AccountFormValues | null>(null);
-  const [stepToken, setStepToken] = useState<string | null>(null); // access token after step 1
   const [serverErrors, setServerErrors] = useState<Record<string, string[]>>({});
   const [generalError, setGeneralError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Focus heading on step change for screen readers
+  // Focus heading on load for screen readers
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  // ── Step 1 submit ─────────────────────────────────────────────────────────
-  const handleAccountSubmit = async (data: AccountFormValues) => {
+  // ── Register submit ─────────────────────────────────────────────────────────
+  const handleAccountSubmit = async (data: AccountFormValues, faceAvatarUrl?: string) => {
     setLoading(true);
     setServerErrors({});
     setGeneralError('');
@@ -71,63 +65,26 @@ const Register: React.FC = () => {
         phone_number: data.phone_number,
       });
 
-      // 2. Immediately auto-login to get tokens for step 2
+      // 2. Auto-login & transition directly to dashboard
       const tokens = await loginUser(data.username, data.password);
-      setStepToken(tokens.access);
 
-      // Store refresh token now; access token only after step 2 completes
-      localStorage.setItem('refresh_token', tokens.refresh);
+      // 3. Save face photo captured via MediaPipe for face login ONLY (not as profile picture avatar)
+      if (faceAvatarUrl) {
+        try {
+          await updateProfile({ face_data: faceAvatarUrl, face_verified: true }, tokens.access);
+        } catch (err) {
+          console.warn('Failed to attach MediaPipe face photo for login:', err);
+        }
+      }
 
-      // 3. Save step 1 data and advance
-      setStep1Data(data);
-      setStep(2);
-      setTimeout(() => headingRef.current?.focus(), 50);
+      login(tokens.access, tokens.refresh);
+      setSuccess(true);
+      setTimeout(() => navigate('/dashboard'), 800);
     } catch (err) {
       const { fields, general } = parseDRFErrors(err);
       setServerErrors(fields);
       if (general) setGeneralError(general.includes('.') ? t(general) : general);
       else if (Object.keys(fields).length === 0) setGeneralError(t('auth.register.err.network'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ── Step 2 submit ─────────────────────────────────────────────────────────
-  const handleProfileSubmit = async (data: ProfileFormValues) => {
-    if (!stepToken || !step1Data) return;
-
-    setLoading(true);
-    setGeneralError('');
-
-    try {
-      // PATCH profile with token from post-registration auto-login
-      await updateProfile(
-        {
-          preferred_language: data.preferred_language,
-          entrepreneur_type: data.entrepreneur_type,
-          experience: data.experience,
-          own_capital: data.own_capital ?? null,
-          business_interest: data.business_interest || undefined,
-          default_state: data.default_state,
-          default_district: data.default_district,
-          default_block: data.default_block,
-          default_village: data.default_village,
-        },
-        stepToken
-      );
-
-      // Now fully log in — store the access token and trigger auth context
-      setSuccess(true);
-
-      // Re-login to get a fresh set of tokens (profile language may affect UX)
-      const freshTokens = await loginUser(step1Data.username, step1Data.password);
-      login(freshTokens.access, freshTokens.refresh);
-
-      // Navigate after brief success moment
-      setTimeout(() => navigate('/dashboard'), 800);
-    } catch (err) {
-      const { general } = parseDRFErrors(err);
-      setGeneralError(general || t('auth.register.err.server'));
     } finally {
       setLoading(false);
     }
@@ -333,9 +290,6 @@ const Register: React.FC = () => {
             <p className="text-[10px] font-bold text-gray-400 tracking-widest uppercase mt-0.5">Empowering Rural Dreams</p>
           </div>
 
-          {/* Progress indicator */}
-          <RegistrationProgress currentStep={step} />
-
           {/* Form card */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-8 sm:px-8 mt-4">
 
@@ -346,10 +300,10 @@ const Register: React.FC = () => {
                 tabIndex={-1}
                 className="text-2xl font-bold text-gray-900 outline-none"
               >
-                {step === 1 ? t('auth.register.step1.title') : t('auth.register.step2.title')}
+                {t('auth.register.step1.title')}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                {step === 1 ? t('auth.register.step1.subtitle') : t('auth.register.step2.subtitle')}
+                {t('auth.register.step1.subtitle')}
               </p>
             </div>
 
@@ -364,28 +318,12 @@ const Register: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1 */}
-            {step === 1 && (
-              <AccountStep
-                onSuccess={handleAccountSubmit}
-                serverErrors={serverErrors}
-                isLoading={loading}
-              />
-            )}
-
-            {/* Step 2 */}
-            {step === 2 && (
-              <ProfileStep
-                onSuccess={handleProfileSubmit}
-                onBack={() => {
-                  setStep(1);
-                  setGeneralError('');
-                  setTimeout(() => headingRef.current?.focus(), 50);
-                }}
-                isLoading={loading}
-                serverError={generalError}
-              />
-            )}
+            {/* Single Step Account Form */}
+            <AccountStep
+              onSuccess={handleAccountSubmit}
+              serverErrors={serverErrors}
+              isLoading={loading}
+            />
           </div>
           
           {/* Divider */}
