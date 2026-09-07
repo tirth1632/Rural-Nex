@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSettings } from '../SettingsContext';
 import { useAuth } from '../../../context/AuthContext';
-import { Camera, CheckCircle2, ShieldAlert, X, RefreshCw, KeyRound, Trash2 } from 'lucide-react';
+import { Camera, CheckCircle2, ShieldAlert, X, RefreshCw, KeyRound } from 'lucide-react';
 
 const INDIAN_MOBILE_REGEX = /^(\+91[\s-]?)?[6-9]\d{9}$/;
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, ArrowLeft, Loader2, CheckCircle2, Leaf } from 'lucide-react';
+import { Mail, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { PasswordInput } from './components/PasswordInput';
 
 const ForgotPassword = () => {
@@ -126,9 +126,7 @@ const ForgotPassword = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 relative">
         <div className="flex flex-col items-center mb-6">
-          <div className="bg-green-600 text-white p-2 rounded-xl flex items-center justify-center shadow-md mb-3">
-            <Leaf size={28} strokeWidth={2.5} />
-          </div>
+          <img src="/logo.png" alt="RuralNex Logo" className="h-14 w-auto object-contain mb-2 drop-shadow-sm" />
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">RuralNex</h1>
         </div>
         

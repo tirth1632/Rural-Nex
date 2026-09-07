@@ -88,7 +88,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # Geo Provider Configuration
 GEO_PROVIDER = 'GOOGLE'
-GOOGLE_MAPS_API_KEY = 'AIzaSyDE9XKikkX34uhZYJJWvZg1I3vL9yoNRVQ'
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY', 'AIzaSyC0EMn8kBc9Hcji1n7qGcob4Ol2TnRZ4L8')
 
 ROOT_URLCONF = 'config.urls'
 
@@ -113,16 +113,55 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.environ.get('DB_NAME', 'ruralnex'),
-        'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'Vansh@1234'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5433'),
+DB_ENGINE = os.environ.get('DB_ENGINE')
+if not DB_ENGINE:
+    use_sqlite_env = os.environ.get('USE_SQLITE')
+    if use_sqlite_env is not None:
+        use_sqlite = use_sqlite_env.lower() in ('true', '1')
+    else:
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        host = os.environ.get('DB_HOST', 'localhost')
+        port = int(os.environ.get('DB_PORT', '5433'))
+        try:
+            s.connect((host, port))
+            s.close()
+            use_sqlite = False
+        except Exception:
+            use_sqlite = True
+    
+    if use_sqlite:
+        DB_ENGINE = 'django.db.backends.sqlite3'
+    else:
+        DB_ENGINE = 'django.contrib.gis.db.backends.postgis'
+
+if DB_ENGINE == 'django.db.backends.sqlite3':
+    from django.db.backends.sqlite3.base import DatabaseOperations
+    DatabaseOperations.geo_db_type = lambda self, f: 'TEXT'
+    DatabaseOperations.select = '%s'
+    DatabaseOperations.gis_placeholder = lambda self, f, val=None, compiler=None: '%s'
+    DatabaseOperations.get_geom_placeholder = lambda self, f, val=None, compiler=None: '%s'
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': os.environ.get('DB_NAME', 'ruralnex'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'Vansh@1234'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5433'),
+        }
+    }
+
+
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -210,6 +249,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000 # 1 year

@@ -49,7 +49,7 @@ export default function BusinessSelection() {
     });
 
     const filteredCategories = categories.filter((c: any) => 
-        t(`categories.${c.name}`, c.name).toLowerCase().includes(searchTerm.toLowerCase())
+        String(t(`categories.${c.name}`, c.name)).toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleContinue = () => {
@@ -89,7 +89,7 @@ export default function BusinessSelection() {
                                         {iconMap[cat.icon_slug] || <Store size={32} />}
                                     </div>
                                     <span className="font-semibold text-gray-800">
-                                        {t(`categories.${cat.name}`, cat.name)}
+                                        {String(t(`categories.${cat.name}`, cat.name))}
                                     </span>
                                 </button>
                             ))}

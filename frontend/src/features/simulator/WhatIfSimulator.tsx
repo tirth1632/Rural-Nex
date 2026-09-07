@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { runSimulation, type SimulationPayload } from '../../api/simulator';
 import { 
-    Calculator, TrendingUp, TrendingDown, Users,
-    IndianRupee, Package, AlertCircle, Save
+    Calculator, TrendingUp,
+    IndianRupee, AlertCircle, Save
 } from 'lucide-react';
 import useDebounce from '../../hooks/useDebounce';
 
@@ -40,7 +40,6 @@ export default function WhatIfSimulator() {
         queryKey: ['simulate', debouncedPayload],
         queryFn: () => runSimulation(debouncedPayload),
         staleTime: Infinity,
-        keepPreviousData: true
     });
 
     const handleChange = (field: keyof SimulationPayload, value: number) => {

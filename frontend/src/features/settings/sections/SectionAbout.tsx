@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Leaf, ExternalLink, Shield, FileText, HelpCircle, Mail } from 'lucide-react';
+import { ExternalLink, Shield, FileText, HelpCircle, Mail } from 'lucide-react';
 
 export const SectionAbout: React.FC = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -15,9 +15,7 @@ export const SectionAbout: React.FC = () => {
       <div className="p-6 bg-white border border-gray-200 rounded-xl space-y-6 shadow-2xs">
         {/* Logo & Platform Info */}
         <div className="flex items-center gap-4 pb-6 border-b border-gray-100">
-          <div className="p-3.5 bg-primary/10 rounded-xl text-primary shrink-0 border border-primary/20">
-            <Leaf size={32} />
-          </div>
+          <img src="/logo.png" alt="RuralNex Logo" className="h-14 w-auto object-contain shrink-0" />
           <div>
             <div className="flex items-center gap-2.5">
               <h3 className="text-xl font-bold text-gray-900 tracking-tight">RuralNex</h3>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 interface SegmentedControlProps<T extends string> {
   options: T[];

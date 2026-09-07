@@ -1,9 +1,4 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
-import { useAuth } from './context/AuthContext'
-import ProposalWizard from './features/proposal/ProposalWizard'
-import ChatAssistant from './features/chat/ChatAssistant'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './features/auth/Login'
 import Register from './features/auth/Register'
 import ForgotPassword from './features/auth/ForgotPassword'
@@ -14,7 +9,6 @@ import CalculatorForm from './features/finance/CalculatorForm';
 import SchemeResult from './features/finance/SchemeResult';
 import RepaymentSchedule from './features/finance/RepaymentSchedule';
 import WorkingCapitalForm from './features/finance/WorkingCapitalForm';
-import MarketDashboard from './features/market/MarketDashboard';
 import ChatLayout from './features/chat/ChatLayout';
 import WizardLayout from './features/wizard/WizardLayout';
 import DashboardLayout from './components/DashboardLayout';
@@ -23,11 +17,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import BusinessCompare from './features/comparison/BusinessCompare';
 import WhatIfSimulator from './features/simulator/WhatIfSimulator';
 import SettingsPage from './features/settings/SettingsPage';
+import GeoSpatialPage from './features/geospatial/GeoSpatialPage';
 
 function App() {
-  const { t, i18n } = useTranslation();
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   return (
     <div className="font-sans">
@@ -40,7 +32,8 @@ function App() {
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="market" element={<MarketDashboard />} />
+            <Route path="market" element={<GeoSpatialPage />} />
+            <Route path="geospatial" element={<GeoSpatialPage />} />
             <Route path="assistant" element={<ChatLayout />} />
             <Route path="competitors" element={<div className="p-8">Competitors Module - Coming Soon</div>} />
             <Route path="finance" element={<CalculatorForm />} />

@@ -34,6 +34,7 @@ export const SectionSecurity: React.FC = () => {
         updateUser({ profile: { face_data: dataUrl, face_verified: true } });
         setToastMessage('Face biometric updated for login successfully!');
         setTimeout(() => setToastMessage(null), 3000);
+        setIsFaceScannerOpen(false);
       }
     } catch (e) {
       console.error('Failed to update face biometric', e);

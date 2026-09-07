@@ -1,9 +1,6 @@
-import React from 'react';
 import MapComponent from '../maps/MapComponent';
-import { useTranslation } from 'react-i18next';
 
 const ReportDashboard = () => {
-  const { t } = useTranslation();
   
   // Mock data for presentation
   const mockCenter: [number, number] = [18.5204, 73.8567]; // Pune

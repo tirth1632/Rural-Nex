@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const { user, token } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [lang, setLang] = useState(user?.profile?.preferred_language || 'en');
   const [success, setSuccess] = useState('');
 

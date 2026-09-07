@@ -57,7 +57,7 @@ export default function WizardLayout() {
         const nextStep = step + 1;
         const payload = { ...stepData, current_step: nextStep };
         
-        setDraftData(prev => ({ ...prev, ...payload }));
+        setDraftData((prev: Record<string, any>) => ({ ...prev, ...payload }));
         setStep(nextStep);
 
         if (proposalId) {

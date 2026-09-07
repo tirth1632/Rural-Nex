@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, X, Smartphone, QrCode, RefreshCw, KeyRound } from 'lucide-react';
+import { ShieldCheck, X, Smartphone, QrCode, RefreshCw } from 'lucide-react';
 import { authService, type Setup2FAResponse } from '../../../services/authService';
 
 interface Setup2FAModalProps {

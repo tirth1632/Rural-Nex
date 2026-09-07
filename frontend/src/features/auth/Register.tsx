@@ -2,14 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
-  CheckCircle2,
-  Leaf, 
-  Lightbulb, 
-  BarChart3, 
-  Landmark, 
-  Users, 
-  Globe2, 
-  ChevronDown
+  CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -17,6 +10,7 @@ import LanguageSelector from '../../components/LanguageSelector';
 import { registerUser, loginUser, updateProfile } from '../../services/auth.service';
 import type { AccountFormValues } from '../../schemas/registration.schema';
 import { AccountStep } from './components/AccountStep';
+import { AuthBrandingPanel } from './components/AuthBrandingPanel';
 
 
 
@@ -77,7 +71,7 @@ const Register: React.FC = () => {
         }
       }
 
-      login(tokens.access, tokens.refresh);
+      await login(tokens.access, tokens.refresh);
       setSuccess(true);
       setTimeout(() => navigate('/dashboard'), 800);
     } catch (err) {
@@ -102,7 +96,7 @@ const Register: React.FC = () => {
         });
         const data = await res.json();
         if (res.ok) {
-          login(data.access, data.refresh);
+          await login(data.access, data.refresh);
           navigate('/');
         } else {
           setGeneralError(data.detail || 'Google authentication failed.');
@@ -140,221 +134,83 @@ const Register: React.FC = () => {
 
   // ── Main layout ───────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex w-full font-sans bg-gray-50">
+    <div className="h-screen w-full flex font-sans bg-gray-50 overflow-hidden">
       
-      {/* LEFT PANEL - MARKETING (Hidden on Mobile) */}
-      <div className="hidden lg:flex lg:w-[45%] xl:w-1/2 relative flex-col justify-between overflow-hidden bg-green-50">
-        
-        {/* Background Image with Gradient Overlay */}
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-center blur-[3px] scale-105"
-          style={{ backgroundImage: 'url("/bg-farm.jpg")' }}
-        ></div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-white via-white/80 to-transparent"></div>
-        <div className="absolute inset-x-0 bottom-0 h-1/3 z-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-        {/* Top Section */}
-        <div className="relative z-10 px-10 xl:px-16 pt-12">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-10">
-            <div className="bg-green-600 text-white p-1.5 rounded-lg flex items-center justify-center shadow-lg">
-              <Leaf size={22} strokeWidth={2.5} />
-            </div>
-            <div>
-              <h1 className="text-xl font-extrabold text-gray-900 tracking-tight leading-none">RuralNex</h1>
-              <p className="text-[11px] font-semibold text-gray-500 tracking-wide mt-0.5 uppercase">Empowering Rural Dreams</p>
-            </div>
-          </div>
-
-          {/* Tagline */}
-          <div className="mb-8">
-            <h2 className="text-2xl xl:text-3xl font-black text-gray-900 leading-tight">
-              Smarter Ideas.<br/>
-              Stronger Villages.<br/>
-              <span className="text-green-600">Brighter Tomorrow.</span>
-            </h2>
-            <p className="mt-3 text-gray-600 font-medium text-sm max-w-sm leading-relaxed">
-              AI-powered business advisory, market insights and loan assistance for rural and semi-urban entrepreneurs.
-            </p>
-          </div>
-
-          {/* Features List */}
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="bg-green-100 p-1.5 rounded-full text-green-700 mt-0.5 shadow-sm">
-                <Lightbulb size={18} />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm">AI Business Ideas</h3>
-                <p className="text-gray-600 text-xs font-medium">Get personalized, location-based<br/>business recommendations</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="bg-green-100 p-1.5 rounded-full text-green-700 mt-0.5 shadow-sm">
-                <BarChart3 size={18} />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm">Market Insights</h3>
-                <p className="text-gray-600 text-xs font-medium">Analyze demand, competition<br/>and profitability</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="bg-green-100 p-1.5 rounded-full text-green-700 mt-0.5 shadow-sm">
-                <Landmark size={18} />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm">Loan Assistance</h3>
-                <p className="text-gray-600 text-xs font-medium">Discover government schemes<br/>and easy financing options</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="bg-green-100 p-1.5 rounded-full text-green-700 mt-0.5 shadow-sm">
-                <Users size={18} />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm">Expert Guidance</h3>
-                <p className="text-gray-600 text-xs font-medium">Connect with mentors and experts</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="bg-green-100 p-1.5 rounded-full text-green-700 mt-0.5 shadow-sm">
-                <Globe2 size={18} />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm">Available in Multiple Languages</h3>
-                <p className="text-gray-600 text-xs font-medium">Built for every Indian, in every region</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Quote */}
-        <div className="absolute right-8 top-[55%] mt-10 z-10 transform -rotate-6">
-          <p className="font-serif italic text-lg xl:text-xl text-gray-800 leading-snug drop-shadow-md">
-            Rural<br/>
-            Entrepreneurs<br/>
-            Rural India<br/>
-            <span className="font-bold border-b-2 border-gray-800 pb-0.5">Stronger India</span>
-          </p>
-        </div>
-
-        {/* Footer Stats */}
-        <div className="relative z-10 px-10 xl:px-16 pb-10 w-full">
-          <div className="mb-5">
-            <p className="italic font-serif text-lg text-white drop-shadow-lg font-medium">
-              "Viksit Bharat begins with<br/>Viksit Gaon."
-            </p>
-            <div className="h-1 w-10 bg-green-500 mt-2"></div>
-          </div>
-
-          <div className="flex items-center gap-6 xl:gap-8 text-white drop-shadow-md border-t border-white/20 pt-4">
-            <div>
-              <p className="text-xl font-black">10K+</p>
-              <p className="text-[9px] font-semibold opacity-90 uppercase tracking-widest mt-0.5">Rural Entrepreneurs</p>
-            </div>
-            <div className="w-px h-8 bg-white/30"></div>
-            <div>
-              <p className="text-xl font-black">500+</p>
-              <p className="text-[9px] font-semibold opacity-90 uppercase tracking-widest mt-0.5">Villages Covered</p>
-            </div>
-            <div className="w-px h-8 bg-white/30"></div>
-            <div>
-              <p className="text-xl font-black">95%</p>
-              <p className="text-[9px] font-semibold opacity-90 uppercase tracking-widest mt-0.5">User Satisfaction</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* LEFT PANEL - BRANDING & FEATURES */}
+      <AuthBrandingPanel />
 
       {/* RIGHT PANEL - REGISTRATION FORM */}
-      <div className="w-full lg:w-[55%] xl:w-1/2 flex flex-col relative bg-white shadow-[0_0_40px_rgba(0,0,0,0.05)] z-20 overflow-y-auto">
+      <div className="w-full lg:w-[55%] xl:w-[52%] h-screen flex flex-col relative bg-white shadow-[0_0_40px_rgba(0,0,0,0.05)] z-20 overflow-y-auto">
         
         {/* Top Bar - Language */}
-        <div className="absolute top-6 right-6 xl:right-8">
+        <div className="absolute top-5 right-6 xl:right-8 z-30">
           <LanguageSelector />
         </div>
 
         {/* Main Form Content */}
-        <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 xl:px-24 py-10 w-full max-w-[540px] mx-auto min-h-screen">
+        <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 md:px-12 lg:px-10 xl:px-14 py-6 w-full max-w-[560px] xl:max-w-[600px] mx-auto">
         
           {/* Form Logo */}
-          <div className="flex flex-col items-center mb-6 pt-8">
-            <div className="bg-green-600 text-white p-2 rounded-xl flex items-center justify-center shadow-md mb-2.5">
-              <Leaf size={28} strokeWidth={2.5} />
-            </div>
-            <h1 className="text-xl font-extrabold text-gray-900 tracking-tight">RuralNex</h1>
-            <p className="text-[10px] font-bold text-gray-400 tracking-widest uppercase mt-0.5">Empowering Rural Dreams</p>
+          <div className="flex flex-col items-center mb-4">
+            <img src="/logo.png" alt="RuralNex Logo" className="h-14 w-auto object-contain mb-1.5 filter drop-shadow-sm transition-transform hover:scale-105" />
+            <h1 className="text-2xl font-black text-gray-900 tracking-tight leading-none">RuralNex</h1>
+            <p className="text-[10px] font-extrabold text-emerald-800 tracking-widest uppercase mt-0.5">Empowering Rural Dreams</p>
           </div>
 
-          {/* Form card */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-8 sm:px-8 mt-4">
-
-            {/* Step heading */}
-            <div className="mb-6">
-              <h1
-                ref={headingRef}
-                tabIndex={-1}
-                className="text-2xl font-bold text-gray-900 outline-none"
-              >
-                {t('auth.register.step1.title')}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                {t('auth.register.step1.subtitle')}
-              </p>
-            </div>
-
-            {/* General server error */}
-            {generalError && (
-              <div
-                role="alert"
-                className="mb-5 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-              >
-                <span className="shrink-0">⚠</span>
-                <span>{generalError}</span>
-              </div>
-            )}
-
-            {/* Single Step Account Form */}
-            <AccountStep
-              onSuccess={handleAccountSubmit}
-              serverErrors={serverErrors}
-              isLoading={loading}
-            />
+          <div className="text-center mb-4">
+            <h2 
+              ref={headingRef}
+              tabIndex={-1}
+              className="text-2xl font-bold text-gray-900 tracking-tight outline-none"
+            >
+              {t('auth.register.step1.title')}
+            </h2>
+            <p className="text-xs text-gray-500 mt-1 font-medium">
+              {t('auth.register.step1.subtitle')}
+            </p>
           </div>
+
+          {/* General server error */}
+          {generalError && (
+            <div
+              role="alert"
+              className="mb-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs text-red-700 font-semibold"
+            >
+              <span className="shrink-0">⚠️</span>
+              <span>{generalError}</span>
+            </div>
+          )}
+
+          {/* Single Step Account Form */}
+          <AccountStep
+            onSuccess={handleAccountSubmit}
+            serverErrors={serverErrors}
+            isLoading={loading}
+          />
           
           {/* Divider */}
-          <div className="flex items-center my-6">
+          <div className="flex items-center my-4">
             <div className="flex-grow h-px bg-gray-100"></div>
-            <span className="px-3 text-[10px] font-bold text-gray-400 tracking-widest uppercase">Or</span>
+            <span className="px-3 text-[10px] font-bold text-gray-400 tracking-widest uppercase">Or Continue With</span>
             <div className="flex-grow h-px bg-gray-100"></div>
           </div>
 
           {/* Social Buttons */}
-          <div className="mb-2">
+          <div>
             <button 
               type="button"
               onClick={() => googleLogin()}
-              className="w-full flex items-center justify-center py-2 px-4 border border-gray-200 bg-white rounded-lg hover:bg-gray-50 transition shadow-sm font-semibold text-gray-700 text-sm"
+              className="w-full flex items-center justify-center py-2.5 px-4 border border-gray-200 bg-white rounded-xl hover:bg-gray-50 active:bg-gray-100 transition shadow-2xs font-semibold text-gray-700 text-sm"
             >
               <GoogleIcon /> Continue with Google
             </button>
           </div>
           
-          <div className="mt-8 text-center">
-            <Link to="/login" className="text-sm font-bold text-green-600 hover:text-green-700 transition">
+          <div className="mt-4 text-center">
+            <Link to="/login" className="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition">
               Already have an account? Sign in
             </Link>
           </div>
-
-          {/* Footer note */}
-          <p className="mt-6 text-center text-xs text-gray-400 pb-8">
-            By creating an account, you acknowledge that this is a financial advisory tool.
-            Loan approvals are subject to lender decisions.
-          </p>
         </div>
       </div>
     </div>

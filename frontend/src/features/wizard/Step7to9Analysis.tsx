@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { analyzeProposal, recommendProposal } from '../../api/wizard';
-import { Loader2, Calculator, MapPin, Brain } from 'lucide-react';
+import { Loader2, Calculator, Brain } from 'lucide-react';
 
 export default function Step7to9Analysis({ proposalId, onNext }: { proposalId: number, onNext: () => void }) {
     const [status, setStatus] = useState<string>("Calculating financial eligibility...");

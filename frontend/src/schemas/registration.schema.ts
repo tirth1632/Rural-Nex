@@ -32,7 +32,7 @@ export type AccountFormValues = z.infer<typeof accountSchema>;
 // ── Step 2: User profile ───────────────────────────────────────────────────
 
 export const profileSchema = z.object({
-  preferred_language: z.enum(['en', 'hi', 'gu']).default('en'),
+  preferred_language: z.enum(['en', 'hi', 'gu']),
   entrepreneur_type: z.enum(['aspiring', 'new', 'existing']).optional(),
   experience: z.enum(['none', 'lt1', '1_3', '3_5', 'gt5']).optional(),
   default_state: z.number().int().positive().optional().nullable(),

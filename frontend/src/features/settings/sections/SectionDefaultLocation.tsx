@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSettings } from '../SettingsContext';
-import { MapPin, Navigation, CheckCircle2 } from 'lucide-react';
+import { MapPin, Navigation } from 'lucide-react';
+import { detectUserLocation } from '../../../services/geolocationService';
 
 const INDIAN_STATES = [
   'Andhra Pradesh',
@@ -39,31 +40,22 @@ export const SectionDefaultLocation: React.FC = () => {
   const { draftSettings, updateDraft, setToastMessage } = useSettings();
   const [isLocating, setIsLocating] = useState(false);
 
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = async () => {
     setIsLocating(true);
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          setIsLocating(false);
-          updateDraft('state', 'Gujarat');
-          updateDraft('district', 'Anand');
-          updateDraft('block', 'Anand Rural');
-          updateDraft('village', 'Mogri');
-          updateDraft('pinCode', '388345');
-          setToastMessage('Location detected and updated.');
-          setTimeout(() => setToastMessage(null), 4000);
-        },
-        err => {
-          setIsLocating(false);
-          // Fallback simulation
-          updateDraft('state', 'Gujarat');
-          updateDraft('district', 'Anand');
-          setToastMessage('Default location preset applied.');
-          setTimeout(() => setToastMessage(null), 4000);
-        }
-      );
-    } else {
+    try {
+      const loc = await detectUserLocation();
+      if (loc.state) updateDraft('state', loc.state);
+      if (loc.district) updateDraft('district', loc.district);
+      if (loc.block) updateDraft('block', loc.block);
+      if (loc.village) updateDraft('village', loc.village);
+      if (loc.pinCode) updateDraft('pinCode', loc.pinCode);
+
+      setToastMessage(`Detected: ${loc.village}, ${loc.district}, ${loc.state}`);
+    } catch (err: any) {
+      setToastMessage(err.message || 'Failed to detect location');
+    } finally {
       setIsLocating(false);
+      setTimeout(() => setToastMessage(null), 5000);
     }
   };
 

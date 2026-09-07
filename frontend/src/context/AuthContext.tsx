@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import i18n from '../i18n';
 
 export interface User {
@@ -7,6 +7,7 @@ export interface User {
   email: string;
   first_name?: string;
   last_name?: string;
+  phone_number?: string;
   role: string;
   profile?: {
     avatar_url?: string;
@@ -20,7 +21,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, refresh: string) => void;
+  login: (token: string, refresh: string) => Promise<User | null>;
   logout: () => void;
   updateUser: (updatedUser: Partial<User>) => void;
   isLoading: boolean;
@@ -60,10 +61,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token]);
 
-  const login = (accessToken: string, refreshToken: string) => {
+  const login = async (accessToken: string, refreshToken: string): Promise<User | null> => {
     localStorage.setItem('access_token', accessToken);
     localStorage.setItem('refresh_token', refreshToken);
     setToken(accessToken);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/v1/auth/me/', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      if (res.ok) {
+        const userData: User = await res.json();
+        setUser(userData);
+        if (userData.profile?.preferred_language) {
+          i18n.changeLanguage(userData.profile.preferred_language);
+        }
+        return userData;
+      }
+    } catch (err) {
+      console.error('Failed to fetch user on login:', err);
+    } finally {
+      setIsLoading(false);
+    }
+    return null;
   };
 
   const logout = () => {

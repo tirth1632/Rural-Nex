@@ -5,14 +5,8 @@ import { SegmentedControl } from '../components/SegmentedControl';
 import { Info, HelpCircle } from 'lucide-react';
 
 export const SectionFinancialPreferences: React.FC = () => {
-  const { draftSettings, updateDraft, saveChanges, cancelChanges, hasUnsavedChanges, setToastMessage } = useSettings();
+  const { draftSettings, updateDraft } = useSettings();
   const [showTooltip, setShowTooltip] = useState(false);
-
-  const handleSave = () => {
-    saveChanges();
-    setToastMessage('Financial preferences saved successfully.');
-    setTimeout(() => setToastMessage(null), 4000);
-  };
 
   const handleInterestRateChange = (val: string) => {
     const num = parseFloat(val);

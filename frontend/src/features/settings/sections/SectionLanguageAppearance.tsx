@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSettings } from '../SettingsContext';
 import { SegmentedControl } from '../components/SegmentedControl';
-import { Globe, Sun, Moon, Monitor } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },

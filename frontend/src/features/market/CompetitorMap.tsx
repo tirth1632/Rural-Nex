@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ExternalDataBadge, EstimateBadge } from './ObservationBadges';
+import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION, createUserLocationIcon } from '../../config/maps';
 
 // Fix for default Leaflet markers in React
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -28,21 +30,49 @@ interface CompetitorMapProps {
 }
 
 export default function CompetitorMap({ userLat, userLng, radiusKm, competitors }: CompetitorMapProps) {
+    const [isLocationOn, setIsLocationOn] = useState<boolean>(true);
+    const [pinPos, setPinPos] = useState<[number, number]>([userLat, userLng]);
+
     return (
-        <div className="h-[400px] w-full rounded-xl overflow-hidden border shadow-sm">
-            <MapContainer center={[userLat, userLng]} zoom={radiusKm === 5 ? 12 : 11} scrollWheelZoom={false} className="h-full w-full">
+        <div className="relative h-[400px] w-full rounded-xl overflow-hidden border shadow-sm">
+            {/* Map Controls */}
+            <div className="absolute top-3 right-3 z-[1000]">
+                <button
+                    onClick={() => setIsLocationOn(!isLocationOn)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg shadow-md transition-colors cursor-pointer ${
+                        isLocationOn ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                >
+                    Location {isLocationOn ? 'ON' : 'OFF'}
+                </button>
+            </div>
+
+            <MapContainer center={pinPos} zoom={radiusKm === 5 ? 12 : 11} scrollWheelZoom={false} className="h-full w-full">
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution={GOOGLE_MAPS_ATTRIBUTION}
+                    url={GOOGLE_MAPS_TILE_URLS.roadmap}
+                    subdomains={GOOGLE_MAPS_SUBDOMAINS}
                 />
                 
                 {/* User Location */}
-                <Marker position={[userLat, userLng]}>
-                    <Popup>
-                        <strong>Selected Location</strong>
-                        <p className="text-sm text-gray-600">Search Center</p>
-                    </Popup>
-                </Marker>
+                {isLocationOn && (
+                    <Marker 
+                        position={pinPos} 
+                        icon={createUserLocationIcon('Your Location (Drag to adjust)')}
+                        draggable={true}
+                        eventHandlers={{
+                            dragend: (e) => {
+                                const latLng = e.target.getLatLng();
+                                setPinPos([latLng.lat, latLng.lng]);
+                            }
+                        }}
+                    >
+                        <Popup>
+                            <strong>100% Precise Location</strong>
+                            <p className="text-xs text-gray-600">{pinPos[0].toFixed(5)}, {pinPos[1].toFixed(5)}</p>
+                        </Popup>
+                    </Marker>
+                )}
                 
                 {/* Search Radius */}
                 <Circle 

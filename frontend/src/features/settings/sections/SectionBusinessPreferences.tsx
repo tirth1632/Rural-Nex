@@ -85,7 +85,7 @@ const BUSINESS_TYPES_MAP: Record<string, string[]> = {
 };
 
 export const SectionBusinessPreferences: React.FC = () => {
-  const { draftSettings, updateDraft, saveChanges, cancelChanges, hasUnsavedChanges, setToastMessage } = useSettings();
+  const { draftSettings, updateDraft } = useSettings();
 
   const currentCategory = draftSettings.defaultCategory || 'Agriculture';
   const availableTypes = BUSINESS_TYPES_MAP[currentCategory] || BUSINESS_TYPES_MAP['Other'];
@@ -96,12 +96,6 @@ export const SectionBusinessPreferences: React.FC = () => {
     if (!validTypes.includes(draftSettings.defaultBusinessType)) {
       updateDraft('defaultBusinessType', validTypes[0]);
     }
-  };
-
-  const handleSave = () => {
-    saveChanges();
-    setToastMessage('Business preferences saved successfully.');
-    setTimeout(() => setToastMessage(null), 4000);
   };
 
   return (

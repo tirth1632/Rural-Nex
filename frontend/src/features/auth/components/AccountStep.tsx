@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { accountSchema, type AccountFormValues } from '../../../schemas/registration.schema';
@@ -17,11 +16,11 @@ interface Props {
 /** Shared input class helper */
 const inputCls = (hasError: boolean) =>
   [
-    'w-full rounded-lg border px-3 py-2.5 text-sm text-gray-900 outline-none transition',
-    'focus:ring-2 focus:ring-primary/40 focus:border-primary',
+    'w-full rounded-xl border px-3.5 py-2 text-sm text-gray-900 outline-none transition-all font-medium',
+    'focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600',
     hasError
-      ? 'border-red-400 bg-red-50 focus:ring-red-200 focus:border-red-400'
-      : 'border-gray-300 bg-white',
+      ? 'border-red-300 bg-red-50 focus:ring-red-200 focus:border-red-400'
+      : 'border-gray-200 bg-gray-50',
   ].join(' ');
 
 export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoading }) => {
@@ -56,10 +55,10 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
   return (
     <form onSubmit={handleSubmit((data) => onSuccess(data, faceAvatarUrl))} noValidate>
       {/* Name row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
         {/* First Name */}
         <div>
-          <label htmlFor="reg-first-name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="reg-first-name" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
             {t('auth.register.firstName')} <span aria-hidden="true" className="text-red-500">*</span>
           </label>
           <input
@@ -74,7 +73,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
             {...register('first_name')}
           />
           {fieldError('first_name') && (
-            <p id="err-first-name" role="alert" className="mt-1 text-xs text-red-600">
+            <p id="err-first-name" role="alert" className="mt-1 text-xs text-red-600 font-medium">
               {fieldError('first_name')}
             </p>
           )}
@@ -82,7 +81,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
 
         {/* Last Name */}
         <div>
-          <label htmlFor="reg-last-name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="reg-last-name" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
             {t('auth.register.lastName')} <span aria-hidden="true" className="text-red-500">*</span>
           </label>
           <input
@@ -97,7 +96,7 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
             {...register('last_name')}
           />
           {fieldError('last_name') && (
-            <p id="err-last-name" role="alert" className="mt-1 text-xs text-red-600">
+            <p id="err-last-name" role="alert" className="mt-1 text-xs text-red-600 font-medium">
               {fieldError('last_name')}
             </p>
           )}
@@ -105,8 +104,8 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
       </div>
 
       {/* Username */}
-      <div className="mb-4">
-        <label htmlFor="reg-username" className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="mb-3">
+        <label htmlFor="reg-username" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
           {t('auth.register.username')} <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <input
@@ -121,92 +120,100 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
           {...register('username')}
         />
         {fieldError('username') && (
-          <p id="err-username" role="alert" className="mt-1 text-xs text-red-600">
+          <p id="err-username" role="alert" className="mt-1 text-xs text-red-600 font-medium">
             {fieldError('username')}
           </p>
         )}
       </div>
 
-      {/* Email */}
-      <div className="mb-4">
-        <label htmlFor="reg-email" className="block text-sm font-medium text-gray-700 mb-1">
-          {t('auth.register.email')} <span aria-hidden="true" className="text-red-500">*</span>
-        </label>
-        <input
-          id="reg-email"
-          type="email"
-          autoComplete="email"
-          placeholder={t('auth.register.email.placeholder')}
-          aria-required="true"
-          aria-invalid={!!fieldError('email')}
-          aria-describedby={fieldError('email') ? 'err-email' : undefined}
-          className={inputCls(!!fieldError('email'))}
-          {...register('email')}
-        />
-        {fieldError('email') && (
-          <p id="err-email" role="alert" className="mt-1 text-xs text-red-600">
-            {fieldError('email')}
-          </p>
-        )}
+      {/* Email & Mobile Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        {/* Email */}
+        <div>
+          <label htmlFor="reg-email" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            {t('auth.register.email')} <span aria-hidden="true" className="text-red-500">*</span>
+          </label>
+          <input
+            id="reg-email"
+            type="email"
+            autoComplete="email"
+            placeholder={t('auth.register.email.placeholder')}
+            aria-required="true"
+            aria-invalid={!!fieldError('email')}
+            aria-describedby={fieldError('email') ? 'err-email' : undefined}
+            className={inputCls(!!fieldError('email'))}
+            {...register('email')}
+          />
+          {fieldError('email') && (
+            <p id="err-email" role="alert" className="mt-1 text-xs text-red-600 font-medium">
+              {fieldError('email')}
+            </p>
+          )}
+        </div>
+
+        {/* Mobile */}
+        <div>
+          <label htmlFor="reg-mobile" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            {t('auth.register.mobile')} <span aria-hidden="true" className="text-red-500">*</span>
+          </label>
+          <input
+            id="reg-mobile"
+            type="tel"
+            autoComplete="tel"
+            placeholder={t('auth.register.mobile.placeholder')}
+            aria-required="true"
+            aria-invalid={!!fieldError('phone_number')}
+            aria-describedby={fieldError('phone_number') ? 'err-mobile' : undefined}
+            className={inputCls(!!fieldError('phone_number'))}
+            {...register('phone_number')}
+          />
+          {fieldError('phone_number') && (
+            <p id="err-mobile" role="alert" className="mt-1 text-xs text-red-600 font-medium">
+              {fieldError('phone_number')}
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Mobile */}
-      <div className="mb-4">
-        <label htmlFor="reg-mobile" className="block text-sm font-medium text-gray-700 mb-1">
-          {t('auth.register.mobile')} <span aria-hidden="true" className="text-red-500">*</span>
-        </label>
-        <input
-          id="reg-mobile"
-          type="tel"
-          autoComplete="tel"
-          placeholder={t('auth.register.mobile.placeholder')}
-          aria-required="true"
-          aria-invalid={!!fieldError('phone_number')}
-          aria-describedby={fieldError('phone_number') ? 'err-mobile' : undefined}
-          className={inputCls(!!fieldError('phone_number'))}
-          {...register('phone_number')}
-        />
-        {fieldError('phone_number') && (
-          <p id="err-mobile" role="alert" className="mt-1 text-xs text-red-600">
-            {fieldError('phone_number')}
-          </p>
-        )}
+      {/* Password & Confirm Password Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        {/* Password */}
+        <div>
+          <PasswordInput
+            id="reg-password"
+            label={`${t('auth.register.password')} *`}
+            placeholder={t('auth.register.password.placeholder')}
+            autoComplete="new-password"
+            showStrength={false}
+            value={passwordValue}
+            error={fieldError('password')}
+            {...register('password')}
+          />
+        </div>
+
+        {/* Confirm Password */}
+        <div>
+          <PasswordInput
+            id="reg-confirm-password"
+            label={`${t('auth.register.confirmPassword')} *`}
+            placeholder={t('auth.register.confirmPassword.placeholder')}
+            autoComplete="new-password"
+            error={fieldError('confirm_password')}
+            {...register('confirm_password')}
+          />
+        </div>
       </div>
 
-      {/* Password */}
-      <div className="mb-4">
-        <PasswordInput
-          id="reg-password"
-          label={`${t('auth.register.password')} *`}
-          placeholder={t('auth.register.password.placeholder')}
-          autoComplete="new-password"
-          showStrength
-          value={passwordValue}
-          error={fieldError('password')}
-          {...register('password')}
-        />
+      {/* MediaPipe Face Detector Option */}
+      <div className="mb-3">
+        <FaceDetectorInput onFaceCaptured={(url) => setFaceAvatarUrl(url)} />
       </div>
 
-      {/* Confirm Password */}
-      <div className="mb-5">
-        <PasswordInput
-          id="reg-confirm-password"
-          label={`${t('auth.register.confirmPassword')} *`}
-          placeholder={t('auth.register.confirmPassword.placeholder')}
-          autoComplete="new-password"
-          error={fieldError('confirm_password')}
-          {...register('confirm_password')}
-        />
-      </div>
-
-      {/* MediaPipe Face Detector */}
-      <FaceDetectorInput onFaceCaptured={(url) => setFaceAvatarUrl(url)} />
-
-      {/* Submit */}
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-primary text-white font-semibold rounded-lg py-3 px-4 text-sm transition hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl py-2.5 px-4 text-sm transition-all shadow-md shadow-emerald-600/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
       >
         {isLoading ? (
           <>
@@ -217,17 +224,6 @@ export const AccountStep: React.FC<Props> = ({ onSuccess, serverErrors, isLoadin
           t('auth.register.submit')
         )}
       </button>
-
-      {/* Sign-in link */}
-      <p className="mt-5 text-center text-sm text-gray-500">
-        {t('auth.register.signinPrompt')}{' '}
-        <Link
-          to="/login"
-          className="font-semibold text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-        >
-          {t('auth.register.signin')}
-        </Link>
-      </p>
     </form>
   );
 };

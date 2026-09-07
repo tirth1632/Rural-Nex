@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { Bot } from 'lucide-react';
 
 const ChatAssistant = () => {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'ASSISTANT', content: 'Namaste! I am the RuralNex AI. How can I help you analyze your business feasibility today?' }

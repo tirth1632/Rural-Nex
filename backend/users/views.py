@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q                                                                                                          
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -626,6 +626,13 @@ import base64
 import cv2
 import numpy as np
 
+face_cascade = None
+try:
+    if hasattr(cv2, 'CascadeClassifier') and hasattr(cv2, 'data'):
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+except Exception:
+    face_cascade = None
+
 def base64_to_cv2(b64_str):
     if not b64_str:
         return None
@@ -638,18 +645,79 @@ def base64_to_cv2(b64_str):
     except Exception:
         return None
 
-def compute_face_similarity(scanned_b64, stored_b64):
+def extract_face_crop(img):
+    if img is None:
+        return None
+    if face_cascade is not None:
+        try:
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30))
+            if len(faces) > 0:
+                faces = sorted(faces, key=lambda f: f[2] * f[3], reverse=True)
+                x, y, w, h = faces[0]
+                mx, my = int(w * 0.15), int(h * 0.15)
+                x1 = max(0, x - mx)
+                y1 = max(0, y - my)
+                x2 = min(img.shape[1], x + w + mx)
+                y2 = min(img.shape[0], y + h + my)
+                crop = img[y1:y2, x1:x2]
+                if crop.shape[0] > 10 and crop.shape[1] > 10:
+                    return crop
+        except Exception:
+            pass
+    return img
+
+def parse_face_data_payload(raw_data):
+    """
+    Extract base64 images list & landmark vector from raw face_data input.
+    Supports legacy raw base64 string AND multi-pose JSON objects ({ main, center, left, right, landmarks }).
+    """
+    images = []
+    landmarks = None
+
+    if not raw_data:
+        return images, landmarks
+
+    if isinstance(raw_data, str) and (raw_data.strip().startswith('{') or raw_data.strip().startswith('[')):
+        try:
+            parsed = json.loads(raw_data)
+            if isinstance(parsed, dict):
+                for k in ['main', 'center', 'left', 'right', 'image']:
+                    val = parsed.get(k)
+                    if val and isinstance(val, str) and len(val) > 50:
+                        images.append(val)
+                if 'landmarks' in parsed and isinstance(parsed['landmarks'], list):
+                    landmarks = [float(x) for x in parsed['landmarks'] if isinstance(x, (int, float))]
+            elif isinstance(parsed, list):
+                images = [x for x in parsed if isinstance(x, str) and len(x) > 50]
+        except Exception:
+            pass
+
+    if not images and isinstance(raw_data, str):
+        images.append(raw_data)
+
+    unique_images = []
+    for img in images:
+        if img not in unique_images:
+            unique_images.append(img)
+
+    return unique_images, landmarks
+
+def compute_single_image_similarity(scanned_b64, stored_b64):
     if not scanned_b64 or not stored_b64:
         return 0.0
 
-    img1 = base64_to_cv2(scanned_b64)
-    img2 = base64_to_cv2(stored_b64)
+    raw1 = base64_to_cv2(scanned_b64)
+    raw2 = base64_to_cv2(stored_b64)
 
-    if img1 is None or img2 is None:
+    if raw1 is None or raw2 is None:
         return 0.0
 
+    img1 = extract_face_crop(raw1)
+    img2 = extract_face_crop(raw2)
+
     try:
-        # Resize face images to standard 128x128
+        # Resize cropped face images to standard 128x128
         g1 = cv2.cvtColor(cv2.resize(img1, (128, 128)), cv2.COLOR_BGR2GRAY)
         g2 = cv2.cvtColor(cv2.resize(img2, (128, 128)), cv2.COLOR_BGR2GRAY)
 
@@ -677,15 +745,45 @@ def compute_face_similarity(scanned_b64, stored_b64):
         if des1 is not None and des2 is not None and len(des1) > 0 and len(des2) > 0:
             bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
             matches = bf.match(des1, des2)
-            good_matches = [m for m in matches if m.distance < 45]
+            good_matches = [m for m in matches if m.distance < 50]
             max_kp = max(len(des1), len(des2))
-            orb_score = min(1.0, len(good_matches) / max(10, max_kp * 0.3))
+            orb_score = min(1.0, len(good_matches) / max(6, max_kp * 0.2))
 
-        # Composite similarity score
-        score = (cosine_sim * 0.3) + (max(0, tmpl_sim) * 0.4) + (orb_score * 0.3)
+        # Composite similarity score for single image pair
+        score = (cosine_sim * 0.4) + (max(0, tmpl_sim) * 0.35) + (orb_score * 0.25)
         return score
     except Exception:
         return 0.0
+
+def compute_face_similarity(scanned_data_str, stored_data_str):
+    scanned_images, scanned_landmarks = parse_face_data_payload(scanned_data_str)
+    stored_images, stored_landmarks = parse_face_data_payload(stored_data_str)
+
+    if not scanned_images or not stored_images:
+        return 0.0
+
+    # Max similarity across all combinations of scanned vs stored multi-pose views
+    max_img_score = 0.0
+    for s_img in scanned_images:
+        for t_img in stored_images:
+            sim = compute_single_image_similarity(s_img, t_img)
+            if sim > max_img_score:
+                max_img_score = sim
+
+    # Landmark vector cosine similarity score (if present)
+    landmark_sim = 0.0
+    if scanned_landmarks and stored_landmarks and len(scanned_landmarks) == len(stored_landmarks):
+        vec1 = np.array(scanned_landmarks, dtype=np.float32)
+        vec2 = np.array(stored_landmarks, dtype=np.float32)
+        n1 = np.linalg.norm(vec1)
+        n2 = np.linalg.norm(vec2)
+        if n1 > 0 and n2 > 0:
+            landmark_sim = float(np.dot(vec1, vec2) / (n1 * n2))
+
+    if landmark_sim > 0:
+        return (max_img_score * 0.7) + (max(0, landmark_sim) * 0.3)
+    
+    return max_img_score
 
 
 class FaceLoginView(APIView):
@@ -707,18 +805,20 @@ class FaceLoginView(APIView):
 
         # 2. If no user_id specified, compare scanned face against stored face data for registered users
         if not user:
-            registered_face_users = User.objects.filter(
-                profile__face_verified=True, 
+            from django.db.models import Q
+            registered_face_users = list(User.objects.filter(
                 is_active=True
-            ).exclude(profile__face_data='').distinct()
+            ).filter(
+                Q(profile__face_verified=True) | Q(profile__face_data__gt='') | Q(profile__avatar_url__icontains='data:image')
+            ).distinct())
 
             matching_users = []
-            if registered_face_users.exists():
+            if registered_face_users:
+                threshold = 0.38 if len(registered_face_users) == 1 else 0.45
                 for u in registered_face_users:
-                    stored_face = u.profile.face_data
+                    stored_face = getattr(u.profile, 'face_data', '') or getattr(u.profile, 'avatar_url', '')
                     sim_score = compute_face_similarity(face_image, stored_face)
-                    # Require minimum 0.58 similarity threshold to confirm biometric face match
-                    if sim_score >= 0.58:
+                    if sim_score >= threshold:
                         matching_users.append((u, sim_score))
 
             if matching_users:
@@ -726,7 +826,7 @@ class FaceLoginView(APIView):
                 matching_users.sort(key=lambda x: x[1], reverse=True)
                 matched_user_objs = [m[0] for m in matching_users]
 
-                if len(matched_user_objs) > 1:
+                if len(matched_user_objs) > 1 and matching_users[0][1] - matching_users[1][1] < 0.12:
                     accounts_list = []
                     for u in matched_user_objs[:6]:
                         name = f"{u.first_name} {u.last_name}".strip() or u.username
@@ -742,7 +842,7 @@ class FaceLoginView(APIView):
                         'accounts': accounts_list,
                         'detail': 'Multiple accounts detected matching your face. Please select your account to sign in.'
                     }, status=status.HTTP_200_OK)
-                elif len(matched_user_objs) == 1:
+                else:
                     user = matched_user_objs[0]
             else:
                 return Response(

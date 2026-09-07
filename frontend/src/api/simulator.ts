@@ -13,7 +13,26 @@ export interface SimulationPayload {
     category?: string;
 }
 
-export const runSimulation = async (payload: SimulationPayload) => {
+export interface SimulationResponse {
+    simulation: {
+        is_financially_feasible: boolean;
+        error_message?: string;
+        loan_amount: number;
+        scheme_name: string;
+        monthly_revenue: number;
+        gross_margin_percentage: number;
+        break_even_customers: number;
+        repayment_schedule?: {
+            installments?: Array<{ total_installment: number }>;
+        };
+    };
+    feasibility: {
+        is_feasible: boolean;
+        overall_score: number;
+    };
+}
+
+export const runSimulation = async (payload: SimulationPayload): Promise<SimulationResponse> => {
     const res = await fetch(`/api/v1/advisory/simulate/`, {
         method: 'POST',
         headers: {

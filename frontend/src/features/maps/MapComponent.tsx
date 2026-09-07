@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION, createUserLocationIcon } from '../../config/maps';
+
 // Fix for default marker icon in react-leaflet
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -30,12 +32,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
     <div className="h-[400px] w-full rounded-lg overflow-hidden border shadow-sm">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} className="h-full w-full">
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={GOOGLE_MAPS_ATTRIBUTION}
+          url={GOOGLE_MAPS_TILE_URLS.roadmap}
+          subdomains={GOOGLE_MAPS_SUBDOMAINS}
         />
         
-        {/* Village/Block Center */}
-        <Marker position={center}>
+        {/* Village/Block Center User Logo Marker */}
+        <Marker position={center} icon={createUserLocationIcon('Your Location')}>
           <Popup>Proposed Location</Popup>
         </Marker>
 

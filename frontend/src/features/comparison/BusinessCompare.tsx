@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { compareBusinesses } from '../../api/compare';
 import { useQuery } from '@tanstack/react-query';

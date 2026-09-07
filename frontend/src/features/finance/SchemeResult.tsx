@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { calculateFinance } from '../../api/finance';

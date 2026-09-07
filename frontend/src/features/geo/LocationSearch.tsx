@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Circle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Navigation } from 'lucide-react';
+import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION, createUserLocationIcon } from '../../config/maps';
+import { detectUserLocation } from '../../services/geolocationService';
 
 // Fix leaflet icon issue with webpack/vite
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -26,11 +29,35 @@ const LocationSearch = () => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locateError, setLocateError] = useState<string | null>(null);
   
   // Default to central India if nothing selected
   const [mapPosition, setMapPosition] = useState<[number, number]>([20.5937, 78.9629]);
-  
   const [radius, setRadius] = useState<number>(5000); // meters
+
+  const handleDetectLocation = async () => {
+    setIsLocating(true);
+    setLocateError(null);
+    try {
+      const loc = await detectUserLocation();
+      setMapPosition([loc.lat, loc.lng]);
+      setSelectedLocation({
+        geometry: { coordinates: [loc.lng, loc.lat] },
+        properties: {
+          name: loc.formattedAddress,
+          village: loc.village,
+          block: loc.block,
+          district: loc.district,
+          state: loc.state,
+        }
+      });
+    } catch (err: any) {
+      setLocateError(err.message || 'Location detection failed.');
+    } finally {
+      setIsLocating(false);
+    }
+  };
   
   const handleSearch = async (val: string) => {
     setQuery(val);
@@ -88,7 +115,24 @@ const LocationSearch = () => {
       
       {/* Sidebar - Search and Summary */}
       <div className="w-full md:w-1/3 flex flex-col gap-4">
-        <h2 className="text-xl font-bold text-primary">Location Intelligence</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-primary">Location Intelligence</h2>
+          <button
+            type="button"
+            onClick={handleDetectLocation}
+            disabled={isLocating}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors cursor-pointer"
+          >
+            <Navigation size={13} className={isLocating ? 'animate-spin' : ''} />
+            <span>{isLocating ? 'Locating...' : 'Detect My Location'}</span>
+          </button>
+        </div>
+
+        {locateError && (
+          <p className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200">
+            {locateError}
+          </p>
+        )}
         
         <form onSubmit={handleGeocode} className="relative">
           <input 
@@ -161,13 +205,24 @@ const LocationSearch = () => {
       <div className="w-full md:w-2/3 h-full rounded border overflow-hidden z-0 relative">
         <MapContainer center={mapPosition} zoom={11} className="w-full h-full">
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution={GOOGLE_MAPS_ATTRIBUTION}
+            url={GOOGLE_MAPS_TILE_URLS.roadmap}
+            subdomains={GOOGLE_MAPS_SUBDOMAINS}
           />
           {selectedLocation && (
             <>
               <MapCenter position={mapPosition} />
-              <Marker position={mapPosition} />
+              <Marker 
+                position={mapPosition} 
+                icon={createUserLocationIcon('Your Location (Drag to adjust)')} 
+                draggable={true}
+                eventHandlers={{
+                  dragend: (e) => {
+                    const latLng = e.target.getLatLng();
+                    setMapPosition([latLng.lat, latLng.lng]);
+                  }
+                }}
+              />
               <Circle 
                 center={mapPosition}
                 radius={radius}

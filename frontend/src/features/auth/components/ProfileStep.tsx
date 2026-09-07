@@ -67,14 +67,16 @@ export const ProfileStep: React.FC<Props> = ({ onSuccess, onBack, isLoading, ser
     villageId: null,
   });
 
+  const currentLang = ['en', 'hi', 'gu'].includes(i18n.language) ? (i18n.language as 'en' | 'hi' | 'gu') : 'en';
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
-    defaultValues: { preferred_language: (i18n.language as 'en' | 'hi' | 'gu') ?? 'en' },
+    resolver: zodResolver(profileSchema) as any,
+    defaultValues: { preferred_language: currentLang },
     mode: 'onSubmit',
   });
 

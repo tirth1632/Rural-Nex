@@ -2,6 +2,8 @@
     "app_title": "RuralNex",
     "app_subtitle": "Rural Enterprise Assessment",
     "nav_dashboard": "Dashboard",
+    "nav_geospatial": "GeoSpatial",
+    "nav_financial_calculator": "Financial Calculator",
     "nav_assessment": "Assessment",
     "nav_market": "Market Data",
     "nav_competitors": "Competitors",
