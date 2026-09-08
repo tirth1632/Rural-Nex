@@ -1,44 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSettings } from '../SettingsContext';
 import { MapPin, Navigation } from 'lucide-react';
 import { detectUserLocation } from '../../../services/geolocationService';
+import { geoService } from '../../../services/geoService';
 
-const INDIAN_STATES = [
-  'Andhra Pradesh',
-  'Arunachal Pradesh',
-  'Assam',
-  'Bihar',
-  'Chhattisgarh',
-  'Goa',
-  'Gujarat',
-  'Haryana',
-  'Himachal Pradesh',
-  'Jharkhand',
-  'Karnataka',
-  'Kerala',
-  'Madhya Pradesh',
-  'Maharashtra',
-  'Manipur',
-  'Meghalaya',
-  'Mizoram',
-  'Nagaland',
-  'Odisha',
-  'Punjab',
-  'Rajasthan',
-  'Sikkim',
-  'Tamil Nadu',
-  'Telangana',
-  'Tripura',
-  'Uttar Pradesh',
-  'Uttarakhand',
-  'West Bengal',
-];
+// Map state names to geoService state IDs
+const STATE_NAME_TO_ID: Record<string, string> = {
+  'Andhra Pradesh': 'AP',
+  'Arunachal Pradesh': 'AR',
+  'Assam': 'AS',
+  'Bihar': 'BR',
+  'Chhattisgarh': 'CG',
+  'Goa': 'GA',
+  'Gujarat': 'GJ',
+  'Haryana': 'HR',
+  'Himachal Pradesh': 'HP',
+  'Jharkhand': 'JH',
+  'Karnataka': 'KA',
+  'Kerala': 'KL',
+  'Madhya Pradesh': 'MP',
+  'Maharashtra': 'MH',
+  'Manipur': 'MN',
+  'Meghalaya': 'ML',
+  'Mizoram': 'MZ',
+  'Nagaland': 'NL',
+  'Odisha': 'OD',
+  'Punjab': 'PB',
+  'Rajasthan': 'RJ',
+  'Sikkim': 'SK',
+  'Tamil Nadu': 'TN',
+  'Telangana': 'TG',
+  'Tripura': 'TR',
+  'Uttar Pradesh': 'UP',
+  'Uttarakhand': 'UK',
+  'West Bengal': 'WB',
+  'Andaman and Nicobar Islands': 'AN',
+  'Chandigarh': 'CH',
+  'Dadra and Nagar Haveli and Daman and Diu': 'DN',
+  'Delhi (NCT)': 'DL',
+  'Jammu and Kashmir': 'JK',
+  'Ladakh': 'LA',
+  'Lakshadweep': 'LD',
+  'Puducherry': 'PY',
+};
 
-const GUJARAT_DISTRICTS = ['Anand', 'Ahmedabad', 'Kheda', 'Surat', 'Vadodara', 'Rajkot', 'Mehsana', 'Gandhinagar'];
+// All states and UTs from geoService, sorted alphabetically by name
+const ALL_STATES = geoService.getStates().slice().sort((a, b) => a.name.localeCompare(b.name));
 
 export const SectionDefaultLocation: React.FC = () => {
   const { draftSettings, updateDraft, setToastMessage } = useSettings();
   const [isLocating, setIsLocating] = useState(false);
+
+  // Get the state ID for the currently selected state name
+  const selectedStateId = STATE_NAME_TO_ID[draftSettings.state] || '';
+
+  // Districts for the selected state
+  const districts = useMemo(() => {
+    if (!selectedStateId) return [];
+    return geoService.getDistricts(selectedStateId);
+  }, [selectedStateId]);
+
+  const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStateName = e.target.value;
+    updateDraft('state', newStateName);
+    // Reset district to first available district for the new state
+    const newStateId = STATE_NAME_TO_ID[newStateName] || '';
+    if (newStateId) {
+      const newDistricts = geoService.getDistricts(newStateId);
+      updateDraft('district', newDistricts.length > 0 ? newDistricts[0].name : '');
+    } else {
+      updateDraft('district', '');
+    }
+  };
 
   const handleUseCurrentLocation = async () => {
     setIsLocating(true);
@@ -93,12 +126,12 @@ export const SectionDefaultLocation: React.FC = () => {
             <label className="block text-xs font-semibold text-gray-700 mb-1.5">State</label>
             <select
               value={draftSettings.state}
-              onChange={e => updateDraft('state', e.target.value)}
+              onChange={handleStateChange}
               className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-white"
             >
-              {INDIAN_STATES.map(st => (
-                <option key={st} value={st}>
-                  {st}
+              {ALL_STATES.map(st => (
+                <option key={st.id} value={st.name}>
+                  {st.name}
                 </option>
               ))}
             </select>
@@ -109,11 +142,15 @@ export const SectionDefaultLocation: React.FC = () => {
             <select
               value={draftSettings.district}
               onChange={e => updateDraft('district', e.target.value)}
-              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-white"
+              disabled={districts.length === 0}
+              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {GUJARAT_DISTRICTS.map(dst => (
-                <option key={dst} value={dst}>
-                  {dst}
+              {districts.length === 0 && (
+                <option value="">— Select a state first —</option>
+              )}
+              {districts.map(dst => (
+                <option key={dst.id} value={dst.name}>
+                  {dst.name}
                 </option>
               ))}
             </select>

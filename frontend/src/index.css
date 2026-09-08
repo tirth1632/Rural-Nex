@@ -660,18 +660,41 @@ html.dark .leaflet-bar a:hover {
   display: none !important;
 }
 
+/* Outer Leaflet marker container: ONLY elevate z-index on hover, NEVER override transform positioning */
 .category-marker-icon,
 .your-location-pin,
 .custom-score-marker {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
-  will-change: transform;
+  transition: z-index 0.2s ease;
 }
 
 .category-marker-icon:hover,
 .your-location-pin:hover,
 .custom-score-marker:hover {
-  transform: scale(1.15) !important;
   z-index: 9999 !important;
+}
+
+/* Inner marker wrapper scaling on hover: Smooth & perfectly anchored without affecting map coordinates */
+.category-marker-icon > div,
+.your-location-pin > div,
+.custom-score-marker > div {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.your-location-pin > div {
+  transform-origin: bottom center;
+}
+
+.custom-score-marker > div {
+  transform-origin: bottom center;
+}
+
+.category-marker-icon:hover > div,
+.your-location-pin:hover > div,
+.custom-score-marker:hover > div {
+  transform: scale(1.25) !important;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
 }
 
 
@@ -775,4 +798,90 @@ td {
 .font-mono *,
 [class*="font-mono"] {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+/* ==========================================================================
+   CUSTOM SCROLLBAR — LIGHT THEME
+   Subtle, minimal, matches pure white surface
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+/* ==========================================================================
+   CUSTOM SCROLLBAR — DARK THEME
+   Deep black track, zinc thumb, emerald accent on hover
+   ========================================================================== */
+html[data-theme="dark"] ::-webkit-scrollbar,
+html.dark ::-webkit-scrollbar,
+html.theme-dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track,
+html.theme-dark ::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb,
+html.theme-dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover,
+html.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background: #34d399;
+  background-clip: padding-box;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-corner,
+html.dark ::-webkit-scrollbar-corner,
+html.theme-dark ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox dark mode */
+html[data-theme="dark"] *,
+html.dark *,
+html.theme-dark * {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
 }

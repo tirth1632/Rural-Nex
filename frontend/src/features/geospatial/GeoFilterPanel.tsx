@@ -202,9 +202,9 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
             </select>
           </div>
 
-          {/* Area / Village Select */}
+          {/* Area / Taluka / Cluster Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_area', 'Area / Village')}</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_area', 'Area / Taluka / Cluster')}</label>
             <select
               value={searchParams.areaId}
               onChange={handleAreaChange}
@@ -258,19 +258,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
             </div>
           )}
 
-          {/* Cross State Toggle */}
-          <div className="pt-1 flex items-center justify-between bg-gray-50/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200/60 dark:border-slate-700">
-            <div>
-              <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 block">{t('geo_cross_border', 'Include neighboring states')}</span>
-              <span className="text-[10px] text-gray-500 dark:text-gray-400 block">Allow cross-border candidate locations</span>
-            </div>
-            <input
-              type="checkbox"
-              checked={searchParams.includeNeighboringStates}
-              onChange={(e) => onParamsChange({ includeNeighboringStates: e.target.checked })}
-              className="w-4 h-4 text-primary accent-primary rounded cursor-pointer"
-            />
-          </div>
+
         </div>
 
         <hr className="border-gray-100 dark:border-slate-800" />

@@ -81,7 +81,7 @@ export async function loginUser(
   return res.json();
 }
 
-/** POST /api/v1/auth/face-login/ — login via MediaPipe AI face detection */
+/** POST /api/v1/auth/face-login/ — login via ArcFace 512-d biometric face verification */
 export async function faceLogin(
   faceImage: string,
   username?: string,
@@ -100,6 +100,29 @@ export async function faceLogin(
 
   return res.json();
 }
+
+/** POST /api/v1/auth/face-enroll/ — enroll user ArcFace 512-d face embedding (requires auth token) */
+export async function faceEnroll(
+  faceImage: string,
+  accessToken: string
+): Promise<{ detail: string; face_verified: boolean; embedding_dim: number }> {
+  const res = await fetch(`${BASE}/face-enroll/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ face_image: faceImage }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw { status: res.status, data };
+  }
+
+  return res.json();
+}
+
 
 /** PATCH /api/v1/auth/profile/ — update user profile (requires auth token) */
 export async function updateProfile(

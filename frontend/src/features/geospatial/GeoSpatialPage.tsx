@@ -185,11 +185,11 @@ export const GeoSpatialPage: React.FC = () => {
         </button>
       </div>
 
-      {/* TOP SECTION: Filters on Left, Map on Right (Expansive Balanced Dimensions) */}
-      <div className="w-full flex flex-col md:flex-row h-auto md:h-[620px] lg:h-[680px] xl:h-[720px] border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-black shrink-0">
-        {/* LEFT PANEL: Filters Sidebar (~320px width on desktop) */}
+      {/* TOP SECTION: Filters on Left, Map on Right (Expansive Full Viewport Canvas) */}
+      <div className="w-full flex flex-col md:flex-row h-auto md:h-[calc(100vh-80px)] min-h-[680px] border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-black shrink-0">
+        {/* LEFT PANEL: Filters Sidebar (~380px width on desktop) */}
         <div
-          className={`w-full md:w-80 lg:w-[320px] h-[520px] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-black z-10 overflow-y-auto ${
+          className={`w-full md:w-96 lg:w-[380px] xl:w-[400px] h-[520px] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-black z-10 overflow-y-auto ${
             mobileTab === 'filters' ? 'block' : 'hidden md:block'
           }`}
         >
@@ -218,15 +218,13 @@ export const GeoSpatialPage: React.FC = () => {
             selectedLocation={selectedLocation}
             onSelectLocation={(loc) => {
               setSelectedLocation(loc);
-              if (insightsRef.current) {
-                insightsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
             }}
             onOpen3DView={() => setIs3DModalOpen(true)}
             isSearching={isSearching}
             onResetFilters={handleResetFilters}
             districtName={selectedDistrictObj?.name || 'Anand'}
             businessCategory={searchParams.businessCategory}
+            subType={searchParams.subType}
           />
         </div>
       </div>

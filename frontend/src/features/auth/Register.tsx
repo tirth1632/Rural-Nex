@@ -7,7 +7,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
 import LanguageSelector from '../../components/LanguageSelector';
-import { registerUser, loginUser, updateProfile } from '../../services/auth.service';
+import { registerUser, loginUser, faceEnroll } from '../../services/auth.service';
 import type { AccountFormValues } from '../../schemas/registration.schema';
 import { AccountStep } from './components/AccountStep';
 import { AuthBrandingPanel } from './components/AuthBrandingPanel';
@@ -65,7 +65,7 @@ const Register: React.FC = () => {
       // 3. Save face photo captured via MediaPipe for face login ONLY (not as profile picture avatar)
       if (faceAvatarUrl) {
         try {
-          await updateProfile({ face_data: faceAvatarUrl, face_verified: true }, tokens.access);
+          await faceEnroll(faceAvatarUrl, tokens.access);
         } catch (err) {
           console.warn('Failed to attach MediaPipe face photo for login:', err);
         }

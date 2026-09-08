@@ -622,250 +622,192 @@ class DeleteAllSavedDataView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-import base64
-import cv2
-import numpy as np
+import json
+import logging
+from users.face_engine import face_engine, COSINE_SIMILARITY_THRESHOLD
 
-face_cascade = None
-try:
-    if hasattr(cv2, 'CascadeClassifier') and hasattr(cv2, 'data'):
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-except Exception:
-    face_cascade = None
+logger = logging.getLogger(__name__)
 
-def base64_to_cv2(b64_str):
-    if not b64_str:
+def parse_face_vector(face_data_str: str):
+    """Parse stored face_data. Returns 512-d float list or extracts embedding if legacy base64 format."""
+    if not face_data_str:
         return None
-    if ',' in b64_str:
-        b64_str = b64_str.split(',', 1)[1]
-    try:
-        img_bytes = base64.b64decode(b64_str)
-        nparr = np.frombuffer(img_bytes, np.uint8)
-        return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    except Exception:
-        return None
-
-def extract_face_crop(img):
-    if img is None:
-        return None
-    if face_cascade is not None:
-        try:
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30))
-            if len(faces) > 0:
-                faces = sorted(faces, key=lambda f: f[2] * f[3], reverse=True)
-                x, y, w, h = faces[0]
-                mx, my = int(w * 0.15), int(h * 0.15)
-                x1 = max(0, x - mx)
-                y1 = max(0, y - my)
-                x2 = min(img.shape[1], x + w + mx)
-                y2 = min(img.shape[0], y + h + my)
-                crop = img[y1:y2, x1:x2]
-                if crop.shape[0] > 10 and crop.shape[1] > 10:
-                    return crop
-        except Exception:
-            pass
-    return img
-
-def parse_face_data_payload(raw_data):
-    """
-    Extract base64 images list & landmark vector from raw face_data input.
-    Supports legacy raw base64 string AND multi-pose JSON objects ({ main, center, left, right, landmarks }).
-    """
-    images = []
-    landmarks = None
-
-    if not raw_data:
-        return images, landmarks
-
-    if isinstance(raw_data, str) and (raw_data.strip().startswith('{') or raw_data.strip().startswith('[')):
-        try:
-            parsed = json.loads(raw_data)
-            if isinstance(parsed, dict):
-                for k in ['main', 'center', 'left', 'right', 'image']:
-                    val = parsed.get(k)
-                    if val and isinstance(val, str) and len(val) > 50:
-                        images.append(val)
-                if 'landmarks' in parsed and isinstance(parsed['landmarks'], list):
-                    landmarks = [float(x) for x in parsed['landmarks'] if isinstance(x, (int, float))]
-            elif isinstance(parsed, list):
-                images = [x for x in parsed if isinstance(x, str) and len(x) > 50]
-        except Exception:
-            pass
-
-    if not images and isinstance(raw_data, str):
-        images.append(raw_data)
-
-    unique_images = []
-    for img in images:
-        if img not in unique_images:
-            unique_images.append(img)
-
-    return unique_images, landmarks
-
-def compute_single_image_similarity(scanned_b64, stored_b64):
-    if not scanned_b64 or not stored_b64:
-        return 0.0
-
-    raw1 = base64_to_cv2(scanned_b64)
-    raw2 = base64_to_cv2(stored_b64)
-
-    if raw1 is None or raw2 is None:
-        return 0.0
-
-    img1 = extract_face_crop(raw1)
-    img2 = extract_face_crop(raw2)
-
-    try:
-        # Resize cropped face images to standard 128x128
-        g1 = cv2.cvtColor(cv2.resize(img1, (128, 128)), cv2.COLOR_BGR2GRAY)
-        g2 = cv2.cvtColor(cv2.resize(img2, (128, 128)), cv2.COLOR_BGR2GRAY)
-
-        # Equalize histogram
-        g1_eq = cv2.equalizeHist(g1)
-        g2_eq = cv2.equalizeHist(g2)
-
-        # 1. Cosine similarity of pixel intensities
-        v1 = g1_eq.flatten().astype(np.float32)
-        v2 = g2_eq.flatten().astype(np.float32)
-        v1_norm = np.linalg.norm(v1)
-        v2_norm = np.linalg.norm(v2)
-        cosine_sim = float(np.dot(v1, v2) / (v1_norm * v2_norm)) if (v1_norm > 0 and v2_norm > 0) else 0.0
-
-        # 2. Template correlation score
-        res = cv2.matchTemplate(g1_eq, g2_eq, cv2.TM_CCOEFF_NORMED)
-        tmpl_sim = float(res[0][0])
-
-        # 3. ORB feature matching score
-        orb = cv2.ORB_create(nfeatures=500)
-        kp1, des1 = orb.detectAndCompute(g1_eq, None)
-        kp2, des2 = orb.detectAndCompute(g2_eq, None)
-        
-        orb_score = 0.0
-        if des1 is not None and des2 is not None and len(des1) > 0 and len(des2) > 0:
-            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-            matches = bf.match(des1, des2)
-            good_matches = [m for m in matches if m.distance < 50]
-            max_kp = max(len(des1), len(des2))
-            orb_score = min(1.0, len(good_matches) / max(6, max_kp * 0.2))
-
-        # Composite similarity score for single image pair
-        score = (cosine_sim * 0.4) + (max(0, tmpl_sim) * 0.35) + (orb_score * 0.25)
-        return score
-    except Exception:
-        return 0.0
-
-def compute_face_similarity(scanned_data_str, stored_data_str):
-    scanned_images, scanned_landmarks = parse_face_data_payload(scanned_data_str)
-    stored_images, stored_landmarks = parse_face_data_payload(stored_data_str)
-
-    if not scanned_images or not stored_images:
-        return 0.0
-
-    # Max similarity across all combinations of scanned vs stored multi-pose views
-    max_img_score = 0.0
-    for s_img in scanned_images:
-        for t_img in stored_images:
-            sim = compute_single_image_similarity(s_img, t_img)
-            if sim > max_img_score:
-                max_img_score = sim
-
-    # Landmark vector cosine similarity score (if present)
-    landmark_sim = 0.0
-    if scanned_landmarks and stored_landmarks and len(scanned_landmarks) == len(stored_landmarks):
-        vec1 = np.array(scanned_landmarks, dtype=np.float32)
-        vec2 = np.array(stored_landmarks, dtype=np.float32)
-        n1 = np.linalg.norm(vec1)
-        n2 = np.linalg.norm(vec2)
-        if n1 > 0 and n2 > 0:
-            landmark_sim = float(np.dot(vec1, vec2) / (n1 * n2))
-
-    if landmark_sim > 0:
-        return (max_img_score * 0.7) + (max(0, landmark_sim) * 0.3)
     
-    return max_img_score
+    # If already a JSON float array string
+    if face_data_str.strip().startswith('['):
+        try:
+            vector = json.loads(face_data_str)
+            if isinstance(vector, list) and len(vector) == 512:
+                return [float(x) for x in vector]
+        except Exception:
+            pass
+
+    # Legacy base64 support: extract ArcFace embedding on the fly if user hasn't re-enrolled
+    vec, err, _ = face_engine.extract_embedding(face_data_str)
+    return vec
+
+
+class FaceEnrollView(APIView):
+    """
+    POST /api/v1/auth/face-enroll/
+    Validates face image quality & passive liveness, extracts ArcFace 512-d embedding,
+    and securely stores the normalized vector array in user's profile.face_data.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        face_image = request.data.get('face_image') or request.data.get('main') or request.data.get('center')
+        if not face_image:
+            return Response({'detail': 'Face image scan is required for enrollment.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Handle stringified JSON payloads from multi-pose setup
+        if isinstance(face_image, str) and face_image.strip().startswith('{'):
+            try:
+                parsed = json.loads(face_image)
+                face_image = parsed.get('main') or parsed.get('center') or parsed.get('image') or face_image
+            except Exception:
+                pass
+
+        # Generate ArcFace 512-d Embedding Vector & perform quality/anti-spoofing validation
+        embedding, err_code, meta = face_engine.extract_embedding(face_image)
+
+        if err_code:
+            error_messages = {
+                "NO_FACE_DETECTED": "No face detected in camera frame. Position your face inside the circle.",
+                "MULTIPLE_FACES_DETECTED": "Multiple faces detected. Only one person should be visible in camera.",
+                "BLURRY_IMAGE": "Image is too blurry. Hold camera steady and ensure good focus.",
+                "POOR_LIGHTING_DARK": "Lighting is too dark. Increase ambient room lighting.",
+                "POOR_LIGHTING_BRIGHT": "Lighting is overexposed or direct glare detected.",
+                "SCREEN_REFLECTION_GLARE": "Screen display reflection or spoof attempt detected.",
+                "FACE_TOO_SMALL": "Face is too far away. Move closer to the camera.",
+                "INVALID_IMAGE_PAYLOAD": "Invalid image format uploaded.",
+            }
+            msg = error_messages.get(err_code, f"Face processing error: {err_code}")
+            return Response({'detail': msg, 'error_code': err_code, 'meta': meta}, status=status.HTTP_400_BAD_REQUEST)
+
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile.face_verified = True
+        profile.face_data = json.dumps(embedding)  # Store 512-d JSON float array string
+        profile.save()
+
+        logger.info(f"Successfully enrolled ArcFace biometric face profile for user {request.user.username}")
+        return Response({
+            'detail': 'ArcFace biometric face profile successfully enrolled & verified.',
+            'face_verified': True,
+            'embedding_dim': len(embedding)
+        }, status=status.HTTP_200_OK)
 
 
 class FaceLoginView(APIView):
+    """
+    POST /api/v1/auth/face-login/
+    Authenticates user via camera frame snapshot using ArcFace 512-d Cosine Similarity matching.
+    """
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        face_image = request.data.get('face_image')
+        face_image = request.data.get('face_image') or request.data.get('image') or request.data.get('main')
         user_id = request.data.get('user_id')
+        username = request.data.get('username')
 
         if not face_image:
             return Response({'detail': 'Face image scan is required for face login.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 1. If explicit user_id is provided (selected from modal), authenticate directly for that user
-        user = None
+        # Handle JSON object strings
+        if isinstance(face_image, str) and face_image.strip().startswith('{'):
+            try:
+                parsed = json.loads(face_image)
+                face_image = parsed.get('main') or parsed.get('image') or face_image
+            except Exception:
+                pass
+
+        # Extract 512-d ArcFace embedding for incoming scan
+        scanned_embedding, err_code, meta = face_engine.extract_embedding(face_image)
+
+        if err_code:
+            error_messages = {
+                "NO_FACE_DETECTED": "No face detected in scan. Look directly at the camera.",
+                "MULTIPLE_FACES_DETECTED": "Multiple faces detected in frame. Only one face allowed.",
+                "BLURRY_IMAGE": "Scan is too blurry. Hold still while scanning.",
+                "POOR_LIGHTING_DARK": "Lighting too dark. Improve lighting and try again.",
+                "POOR_LIGHTING_BRIGHT": "Lighting overexposed. Avoid direct backlight glare.",
+                "SCREEN_REFLECTION_GLARE": "Screen display reflection or spoof attempt detected.",
+                "FACE_TOO_SMALL": "Face too far away. Move closer to the camera.",
+            }
+            msg = error_messages.get(err_code, f"Face scan failed: {err_code}")
+            return Response({'detail': msg, 'error_code': err_code, 'meta': meta}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Target candidate users
+        from django.db.models import Q
+        user_query = User.objects.filter(is_active=True)
         if user_id:
-            user = User.objects.filter(id=user_id, is_active=True).first()
-            if not user:
-                return Response({'detail': 'Selected user account not found.'}, status=status.HTTP_404_NOT_FOUND)
+            user_query = user_query.filter(id=user_id)
+        elif username:
+            user_query = user_query.filter(username__iexact=username)
 
-        # 2. If no user_id specified, compare scanned face against stored face data for registered users
-        if not user:
-            from django.db.models import Q
-            registered_face_users = list(User.objects.filter(
-                is_active=True
-            ).filter(
-                Q(profile__face_verified=True) | Q(profile__face_data__gt='') | Q(profile__avatar_url__icontains='data:image')
-            ).distinct())
+        registered_users = list(user_query.filter(
+            Q(profile__face_verified=True) | Q(profile__face_data__gt='')
+        ).select_related('profile').distinct())
 
-            matching_users = []
-            if registered_face_users:
-                threshold = 0.38 if len(registered_face_users) == 1 else 0.45
-                for u in registered_face_users:
-                    stored_face = getattr(u.profile, 'face_data', '') or getattr(u.profile, 'avatar_url', '')
-                    sim_score = compute_face_similarity(face_image, stored_face)
-                    if sim_score >= threshold:
-                        matching_users.append((u, sim_score))
+        if not registered_users:
+            # Fallback to check all active face users if no specific user ID match
+            registered_users = list(User.objects.filter(
+                is_active=True, profile__face_verified=True
+            ).select_related('profile'))
 
-            if matching_users:
-                # Sort matched users by highest face similarity score
-                matching_users.sort(key=lambda x: x[1], reverse=True)
-                matched_user_objs = [m[0] for m in matching_users]
+        if not registered_users:
+            return Response({
+                'detail': 'No enrolled face profile found. Please register or enroll face lock first.'
+            }, status=status.HTTP_404_NOT_FOUND)
 
-                if len(matched_user_objs) > 1 and matching_users[0][1] - matching_users[1][1] < 0.12:
-                    accounts_list = []
-                    for u in matched_user_objs[:6]:
-                        name = f"{u.first_name} {u.last_name}".strip() or u.username
-                        accounts_list.append({
-                            'id': u.id,
-                            'username': u.username,
-                            'name': name,
-                            'email': u.email,
-                            'role': getattr(u, 'role', 'user'),
-                        })
-                    return Response({
-                        'multiple_accounts': True,
-                        'accounts': accounts_list,
-                        'detail': 'Multiple accounts detected matching your face. Please select your account to sign in.'
-                    }, status=status.HTTP_200_OK)
-                else:
-                    user = matched_user_objs[0]
-            else:
-                return Response(
-                    {'detail': 'Face scan does not match any registered user account. Please check lighting or sign in with password.'}, 
-                    status=status.HTTP_404_NOT_FOUND
-                )
+        matching_users = []
+        for u in registered_users:
+            stored_data_str = getattr(u.profile, 'face_data', '')
+            stored_vector = parse_face_vector(stored_data_str)
+            if stored_vector:
+                sim_score = face_engine.compute_similarity(scanned_embedding, stored_vector)
+                logger.info(f"ArcFace similarity score for user '{u.username}': {sim_score:.4f} (Threshold: {COSINE_SIMILARITY_THRESHOLD})")
+                if sim_score >= COSINE_SIMILARITY_THRESHOLD:
+                    matching_users.append((u, sim_score))
 
-        if not user:
-            return Response({'detail': 'No registered user found for face login.'}, status=status.HTTP_404_NOT_FOUND)
+        if not matching_users:
+            return Response({
+                'detail': 'Face scan does not match registered profile. Please check lighting or sign in with password.'
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Mark face as verified & save face data strictly for login biometric authentication
-        profile, _ = UserProfile.objects.get_or_create(user=user)
-        profile.face_verified = True
-        profile.face_data = face_image
-        profile.save()
+        # Sort matches by highest similarity score
+        matching_users.sort(key=lambda x: x[1], reverse=True)
+        best_user, best_score = matching_users[0]
 
-        # Issue JWT tokens
-        refresh = RefreshToken.for_user(user)
+        # Handle ambiguous multiple match edge case (rare with ArcFace 512-d)
+        if len(matching_users) > 1 and (matching_users[0][1] - matching_users[1][1] < 0.05):
+            accounts_list = []
+            for u, score in matching_users[:5]:
+                name = f"{u.first_name} {u.last_name}".strip() or u.username
+                accounts_list.append({
+                    'id': u.id,
+                    'username': u.username,
+                    'name': name,
+                    'email': u.email,
+                    'role': getattr(u, 'role', 'user'),
+                })
+            return Response({
+                'multiple_accounts': True,
+                'accounts': accounts_list,
+                'detail': 'Multiple accounts match your face profile. Select your account to sign in.'
+            }, status=status.HTTP_200_OK)
+
+        # Authenticate user & issue JWT tokens
+        refresh = RefreshToken.for_user(best_user)
+        logger.info(f"ArcFace Login successful for user {best_user.username} (similarity: {best_score:.4f})")
+
         return Response({
             'access': str(refresh.access_token),
             'refresh': str(refresh),
-            'user': UserSerializer(user).data
+            'user': UserSerializer(best_user).data,
+            'similarity_score': round(best_score, 4)
         }, status=status.HTTP_200_OK)
+
 
 
 

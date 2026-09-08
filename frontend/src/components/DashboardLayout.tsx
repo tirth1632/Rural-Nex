@@ -12,7 +12,6 @@ import {
     Sliders,
     ClipboardList,
     Settings as SettingsIcon,
-    ChevronDown,
     Sun,
     Moon,
     Landmark
@@ -103,7 +102,12 @@ export default function DashboardLayout() {
                         ))}
 
                         {/* More Tools Dropdown */}
-                        <div className="relative" ref={toolsDropdownRef}>
+                        <div 
+                            className="relative" 
+                            ref={toolsDropdownRef}
+                            onMouseEnter={() => setToolsMenuOpen(true)}
+                            onMouseLeave={() => setToolsMenuOpen(false)}
+                        >
                             <button
                                 onClick={() => setToolsMenuOpen(!toolsMenuOpen)}
                                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white transition-colors ${
@@ -111,25 +115,26 @@ export default function DashboardLayout() {
                                 }`}
                             >
                                 <span>{t('nav_more_tools', 'More Tools')}</span>
-                                <ChevronDown size={14} className={`transition-transform duration-200 ${toolsMenuOpen ? 'rotate-180' : ''}`} />
                             </button>
 
                             {toolsMenuOpen && (
-                                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white dark:bg-[#0a0a0c] rounded-xl shadow-xl border border-gray-200 dark:border-zinc-800 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
-                                    {toolItems.map((item) => (
-                                        <NavLink
-                                            key={item.path}
-                                            to={item.path}
-                                            onClick={() => setToolsMenuOpen(false)}
-                                            className={({ isActive }) => `
-                                                flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors
-                                                ${isActive ? 'bg-primary/10 text-primary font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white'}
-                                            `}
-                                        >
-                                            <item.icon size={16} className="shrink-0" />
-                                            <span>{item.label}</span>
-                                        </NavLink>
-                                    ))}
+                                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50">
+                                    <div className="w-56 bg-white dark:bg-[#0a0a0c] rounded-xl shadow-xl border border-gray-200 dark:border-zinc-800 py-1.5 animate-in fade-in zoom-in-95 duration-100">
+                                        {toolItems.map((item) => (
+                                            <NavLink
+                                                key={item.path}
+                                                to={item.path}
+                                                onClick={() => setToolsMenuOpen(false)}
+                                                className={({ isActive }) => `
+                                                    flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors
+                                                    ${isActive ? 'bg-primary/10 text-primary font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white'}
+                                                `}
+                                            >
+                                                <item.icon size={16} className="shrink-0" />
+                                                <span>{item.label}</span>
+                                            </NavLink>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -171,10 +176,15 @@ export default function DashboardLayout() {
 
                         {/* User Profile & Menu */}
                         {user && (
-                            <div className="relative" ref={userDropdownRef}>
+                            <div 
+                                className="relative" 
+                                ref={userDropdownRef}
+                                onMouseEnter={() => setUserMenuOpen(true)}
+                                onMouseLeave={() => setUserMenuOpen(false)}
+                            >
                                 <button
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-900 transition-colors"
+                                    className="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
                                 >
                                     {user.profile?.avatar_url ? (
                                         <img 
@@ -188,36 +198,37 @@ export default function DashboardLayout() {
                                             {user.first_name ? user.first_name[0].toUpperCase() : (user.username ? user.username[0].toUpperCase() : 'U')}
                                         </div>
                                     )}
-                                    <ChevronDown size={14} className="text-gray-500 dark:text-gray-400" />
                                 </button>
 
                                 {userMenuOpen && (
-                                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#0a0a0c] rounded-xl shadow-xl border border-gray-200 dark:border-zinc-800 py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
-                                        <div className="px-4 py-2 border-b border-gray-100 dark:border-zinc-800">
-                                            <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
-                                                {user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.username}
-                                            </p>
-                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                                    <div className="absolute right-0 top-full pt-1.5 z-50">
+                                        <div className="w-56 bg-white dark:bg-[#0a0a0c] rounded-xl shadow-xl border border-gray-200 dark:border-zinc-800 py-2 animate-in fade-in zoom-in-95 duration-100">
+                                            <div className="px-4 py-2 border-b border-gray-100 dark:border-zinc-800">
+                                                <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                                                    {user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.username}
+                                                </p>
+                                                <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                                            </div>
+
+                                            <NavLink
+                                                to="/settings"
+                                                onClick={() => setUserMenuOpen(false)}
+                                                className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white"
+                                            >
+                                                <SettingsIcon size={16} />
+                                                <span>System Settings</span>
+                                            </NavLink>
+
+                                            <div className="border-t border-gray-100 dark:border-zinc-800 my-1"></div>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                className="flex items-center gap-2 px-4 py-2 w-full text-left text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
+                                            >
+                                                <LogOut size={16} />
+                                                <span>{t('nav_logout', 'Logout')}</span>
+                                            </button>
                                         </div>
-
-                                        <NavLink
-                                            to="/settings"
-                                            onClick={() => setUserMenuOpen(false)}
-                                            className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white"
-                                        >
-                                            <SettingsIcon size={16} />
-                                            <span>System Settings</span>
-                                        </NavLink>
-
-                                        <div className="border-t border-gray-100 dark:border-zinc-800 my-1"></div>
-
-                                        <button
-                                            onClick={handleLogout}
-                                            className="flex items-center gap-2 px-4 py-2 w-full text-left text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
-                                        >
-                                            <LogOut size={16} />
-                                            <span>{t('nav_logout', 'Logout')}</span>
-                                        </button>
                                     </div>
                                 )}
                             </div>

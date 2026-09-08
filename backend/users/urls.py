@@ -6,13 +6,14 @@ from .views import (
     ChangePasswordView, ActiveSessionsView, RevokeOtherSessionsView,
     Setup2FAView, Verify2FAView, Disable2FAView, DeleteAccountView,
     UserDataCountsView, UserDataExportView, ClearAssessmentHistoryView, DeleteAllSavedDataView,
-    FaceLoginView
+    FaceLoginView, FaceEnrollView
 )
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('face-login/', FaceLoginView.as_view(), name='face_login'),
+    path('face-enroll/', FaceEnrollView.as_view(), name='face_enroll'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('me/', CurrentUserView.as_view(), name='current_user'),
     path('profile/', UpdateProfileView.as_view(), name='update_profile'),

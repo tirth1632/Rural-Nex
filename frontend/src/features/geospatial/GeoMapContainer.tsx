@@ -8,7 +8,6 @@ import {
   RefreshCw,
   Sun,
   Moon,
-  ChevronDown,
   Navigation,
   Plus,
   Minus,
@@ -19,9 +18,10 @@ import { geoService, type CandidateLocation, type LayerFeature, type MapFeatureC
 import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION } from '../../config/maps';
 
 // 1. Center Location Marker Icon (Green gradient teardrop pin with sleek badge and pointer)
+// 1. Center Location Marker Icon (Green gradient teardrop pin with sleek badge and pointer)
 const createYourLocationPinIcon = (label: string = 'Your Location') => {
   const html = `
-    <div style="position: relative; width: 44px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; transform: translate3d(0,0,0); pointer-events: auto;">
+    <div style="position: relative; width: 44px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; pointer-events: auto;">
       <!-- Subtle ground shadow -->
       <div style="position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 22px; height: 8px; background: rgba(5, 150, 105, 0.35); border-radius: 50%; filter: blur(2px);"></div>
       
@@ -69,53 +69,140 @@ const createYourLocationPinIcon = (label: string = 'Your Location') => {
   });
 };
 
-// 2. Map Feature Circular Marker Icon (Competitors, Similar Businesses, Key POIs, Target Market)
-const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string) => {
-  let bgColor = '#E11D48'; // Red for competitor
-  let shadowColor = 'rgba(225, 29, 72, 0.45)';
-  let svgContent = '';
-
-  if (category === 'competitor') {
-    bgColor = '#E11D48'; // Crimson Red
-    shadowColor = 'rgba(225, 29, 72, 0.45)';
-    // White Storefront with Awning
-    svgContent = `
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-    `;
-  } else if (category === 'similar') {
-    bgColor = '#2563EB'; // Royal Blue
-    shadowColor = 'rgba(37, 99, 235, 0.45)';
-    // White Storefront with Awning
-    svgContent = `
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-    `;
-  } else if (category === 'poi') {
-    bgColor = '#F59E0B'; // Amber Orange
-    shadowColor = 'rgba(245, 158, 11, 0.45)';
-    if (type === 'school') {
+// Helper function to return unique SVG icons for each business, shop, factory, and POI sub-type
+const getIconSvg = (iconKey: string): string => {
+  switch (iconKey) {
+    case 'dairy':
+      // Milk Bottle & Droplet
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 2h8v3H8zM7 5h10l1 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/>
+          <path d="M12 11c-1.5 2-2 3-2 4a2 2 0 0 0 4 0c0-1-.5-2-2-4z" fill="#FFFFFF"/>
+        </svg>
+      `;
+    case 'crop':
+      // Sprout / Leaf
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V10"/>
+          <path d="M12 10C12 5.5 16 3 20 3c0 4.5-2.5 8.5-8 8.5"/>
+          <path d="M12 14C12 10.5 8 8 4 8c0 3.5 2.5 6.5 8 6.5"/>
+        </svg>
+      `;
+    case 'poultry':
+      // Egg / Chick
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22a8 8 0 0 0 8-8c0-5-3.5-12-8-12S4 9 4 14a8 8 0 0 0 8 8z"/>
+          <circle cx="12" cy="13" r="2.5" fill="#FFFFFF"/>
+        </svg>
+      `;
+    case 'fish':
+      // Fish
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6.5 12c.5-2.5 3-5.5 8-5.5 3 0 5 1.5 6.5 3.5-1.5 2-3.5 3.5-6.5 3.5-5 0-7.5-3-8-1.5z"/>
+          <path d="M2 9.5L6.5 12 2 14.5v-5z"/>
+          <circle cx="15.5" cy="10.5" r="1" fill="#FFFFFF"/>
+        </svg>
+      `;
+    case 'livestock':
+      // Livestock / Animal
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 3l2 4M8 3L6 7M4 11h16v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-5z"/>
+          <circle cx="9" cy="14" r="1" fill="#FFFFFF"/>
+          <circle cx="15" cy="14" r="1" fill="#FFFFFF"/>
+        </svg>
+      `;
+    case 'mill':
+      // Flour Sack / Milling
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12l1 5-2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V10L5 8z"/>
+          <path d="M9 14h6M12 11v6"/>
+        </svg>
+      `;
+    case 'factory':
+      // Factory Building & Chimneys
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20h20"/>
+          <path d="M2 20V10l5 3V10l5 3V4h8v16"/>
+          <path d="M16 8h2M16 12h2M16 16h2"/>
+        </svg>
+      `;
+    case 'shop':
+      // Shopping Bag / Retail Store
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      `;
+    case 'truck':
+      // Cargo Truck
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="14" height="13" rx="1"/>
+          <polygon points="15 8 20 8 23 12 23 16 15 16 15 8"/>
+          <circle cx="5.5" cy="18.5" r="2" fill="#FFFFFF"/>
+          <circle cx="18.5" cy="18.5" r="2" fill="#FFFFFF"/>
+        </svg>
+      `;
+    case 'hotel':
+      // Utensils & Plate / Dining
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2v20M18 8h4M2 2v20M2 12h8V2"/>
+          <path d="M6 12v10"/>
+        </svg>
+      `;
+    case 'solar':
+      // Solar Panel / Wrench Tool
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      `;
+    case 'craft':
+      // Scissors & Handloom
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="3"/>
+          <circle cx="6" cy="18" r="3"/>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+          <line x1="14.47" y1="14.47" x2="20" y2="20"/>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+        </svg>
+      `;
+    case 'vet':
+      // Medical Cross / Clinic
+      return `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M2 12h20"/>
+          <circle cx="12" cy="12" r="9" stroke-width="2"/>
+        </svg>
+      `;
+    case 'school':
       // Graduation Cap
-      svgContent = `
+      return `
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
           <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
       `;
-    } else if (type === 'hospital') {
-      // Heartpulse line
-      svgContent = `
+    case 'hospital':
+      // Heartpulse
+      return `
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
         </svg>
       `;
-    } else if (type === 'transport') {
+    case 'transport':
       // Bus
-      svgContent = `
+      return `
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <rect width="16" height="16" x="4" y="3" rx="2"/>
           <path d="M4 11h16"/>
@@ -125,9 +212,9 @@ const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string) => 
           <path d="M18 19v2"/>
         </svg>
       `;
-    } else {
-      // Bank / Landmark
-      svgContent = `
+    case 'bank':
+      // Bank Pillars
+      return `
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="21" x2="21" y2="21"/>
           <line x1="3" y1="10" x2="21" y2="10"/>
@@ -138,19 +225,63 @@ const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string) => 
           <line x1="18" y1="10" x2="18" y2="21"/>
         </svg>
       `;
-    }
+    default:
+      // Shopping Cart (Default Market / General Store)
+      return `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="21" r="1" fill="#FFFFFF"/>
+          <circle cx="19" cy="21" r="1" fill="#FFFFFF"/>
+          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+        </svg>
+      `;
+  }
+};
+
+const determineIconKey = (type: string, subTypeIcon?: string, featureName: string = ''): string => {
+  if (subTypeIcon) return subTypeIcon;
+  if (type === 'school') return 'school';
+  if (type === 'hospital') return 'hospital';
+  if (type === 'transport') return 'transport';
+  if (type === 'bank') return 'bank';
+  if (type === 'market') return 'market';
+
+  const nameLower = (featureName || '').toLowerCase();
+  if (nameLower.includes('milk') || nameLower.includes('dairy') || nameLower.includes('ghee') || nameLower.includes('chilling')) return 'dairy';
+  if (nameLower.includes('poultry') || nameLower.includes('egg') || nameLower.includes('hatchery') || nameLower.includes('broiler')) return 'poultry';
+  if (nameLower.includes('fish') || nameLower.includes('aqua') || nameLower.includes('prawn')) return 'fish';
+  if (nameLower.includes('mill') || nameLower.includes('flour') || nameLower.includes('chakki') || nameLower.includes('spice')) return 'mill';
+  if (nameLower.includes('factory') || nameLower.includes('plant') || nameLower.includes('packaging') || nameLower.includes('tile')) return 'factory';
+  if (nameLower.includes('truck') || nameLower.includes('freight') || nameLower.includes('logistics') || nameLower.includes('van')) return 'truck';
+  if (nameLower.includes('restaurant') || nameLower.includes('dhaba') || nameLower.includes('hotel') || nameLower.includes('resort') || nameLower.includes('homestay')) return 'hotel';
+  if (nameLower.includes('solar') || nameLower.includes('repair') || nameLower.includes('workshop') || nameLower.includes('tractor')) return 'solar';
+  if (nameLower.includes('craft') || nameLower.includes('loom') || nameLower.includes('pottery') || nameLower.includes('textile') || nameLower.includes('weaving')) return 'craft';
+  if (nameLower.includes('crop') || nameLower.includes('seed') || nameLower.includes('fertilizer') || nameLower.includes('farm')) return 'crop';
+  if (nameLower.includes('vet') || nameLower.includes('cattle')) return 'vet';
+
+  return 'shop';
+};
+
+// 2. Map Feature Circular Marker Icon (Competitors, Similar Businesses, Key POIs, Target Market)
+const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string, subTypeIcon?: string, featureName: string = '') => {
+  let bgColor = '#E11D48'; // Red for competitor
+  let shadowColor = 'rgba(225, 29, 72, 0.45)';
+
+  if (category === 'competitor') {
+    bgColor = '#E11D48'; // Crimson Red
+    shadowColor = 'rgba(225, 29, 72, 0.45)';
+  } else if (category === 'similar') {
+    bgColor = '#2563EB'; // Royal Blue
+    shadowColor = 'rgba(37, 99, 235, 0.45)';
+  } else if (category === 'poi') {
+    bgColor = '#F59E0B'; // Amber Orange
+    shadowColor = 'rgba(245, 158, 11, 0.45)';
   } else if (category === 'market') {
     bgColor = '#0D9488'; // Teal Green
     shadowColor = 'rgba(13, 148, 136, 0.45)';
-    // Shopping Cart
-    svgContent = `
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="8" cy="21" r="1" fill="#FFFFFF"/>
-        <circle cx="19" cy="21" r="1" fill="#FFFFFF"/>
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-      </svg>
-    `;
   }
+
+  const iconKey = determineIconKey(type, subTypeIcon, featureName);
+  const svgContent = getIconSvg(iconKey);
 
   const html = `
     <div style="
@@ -164,8 +295,6 @@ const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string) => 
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transform: translate3d(0,0,0);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
     ">
       ${svgContent}
     </div>
@@ -199,10 +328,10 @@ const createCustomScoreIcon = (score: number, isSelected: boolean) => {
     borderColor = '#991B1B';
   }
 
-  const selectedRing = isSelected ? 'box-shadow: 0 0 0 4px #10B981, 0 8px 16px rgba(0,0,0,0.35); z-index: 999; transform: scale(1.1);' : 'box-shadow: 0 3px 8px rgba(0,0,0,0.25);';
+  const selectedRing = isSelected ? 'box-shadow: 0 0 0 4px #10B981, 0 8px 16px rgba(0,0,0,0.35); z-index: 999;' : 'box-shadow: 0 3px 8px rgba(0,0,0,0.25);';
 
   const html = `
-    <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);">
+    <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
       <div style="background-color: ${bgColor}; color: white; padding: 3px 7px; border-radius: 12px; font-weight: 800; font-size: 11px; font-family: 'Plus Jakarta Sans', sans-serif; border: 2px solid ${borderColor}; ${selectedRing} display: flex; align-items: center; gap: 3px; white-space: nowrap;">
         <span>★</span>
         <span>${score}</span>
@@ -233,12 +362,33 @@ const MapController: React.FC<{
     });
   }, [centerLat, centerLng, radiusKm, recenterTrigger, map]);
 
-  // Handle map canvas redraw on fullscreen or container resize
+  // Handle map canvas redraw on container resize & fullscreen toggles
   useEffect(() => {
-    const timer = setTimeout(() => {
-      map.invalidateSize({ animate: true });
-    }, 200);
-    return () => clearTimeout(timer);
+    const invalidate = () => {
+      map.invalidateSize({ animate: false });
+    };
+
+    invalidate();
+    const timer1 = setTimeout(invalidate, 100);
+    const timer2 = setTimeout(invalidate, 300);
+
+    let observer: ResizeObserver | null = null;
+    const container = map.getContainer();
+    if (container) {
+      observer = new ResizeObserver(() => {
+        map.invalidateSize({ animate: false });
+      });
+      observer.observe(container);
+    }
+
+    window.addEventListener('resize', invalidate);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      if (observer) observer.disconnect();
+      window.removeEventListener('resize', invalidate);
+    };
   }, [isFullscreen, map]);
 
   return null;
@@ -293,6 +443,7 @@ interface GeoMapContainerProps {
   onResetFilters: () => void;
   districtName?: string;
   businessCategory?: string;
+  subType?: string;
 }
 
 export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
@@ -306,6 +457,7 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
   onResetFilters,
   districtName = 'Anand',
   businessCategory = 'Dairy Farming',
+  subType,
 }) => {
   const [mapTileMode, setMapTileMode] = useState<'standard' | 'satellite' | 'terrain'>('standard');
   const [isNightMode, setIsNightMode] = useState<boolean>(() => {
@@ -358,9 +510,9 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
   // Load accurately located map layer features based on chosen location & parameters
   useEffect(() => {
     geoService
-      .getLayersData(centerLat, centerLng, radiusKm, districtName, businessCategory)
+      .getLayersData(centerLat, centerLng, radiusKm, districtName, businessCategory, subType)
       .then(setLayerFeatures);
-  }, [centerLat, centerLng, radiusKm, districtName, businessCategory]);
+  }, [centerLat, centerLng, radiusKm, districtName, businessCategory, subType]);
 
   // Tile Layer URLs (Google Maps API)
   const tileUrls = {
@@ -432,7 +584,11 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
         </button>
 
         {/* Map Layers Dropdown Button */}
-        <div className="relative">
+        <div 
+          className="relative"
+          onMouseEnter={() => setIsLayersOpen(true)}
+          onMouseLeave={() => setIsLayersOpen(false)}
+        >
           <button
             onClick={() => setIsLayersOpen(!isLayersOpen)}
             className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl backdrop-blur-md border transition-all cursor-pointer shadow-md active:scale-95 ${
@@ -443,66 +599,67 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
           >
             <Layers size={14} className={isLayersOpen ? 'text-white' : 'text-primary'} />
             <span>Layers</span>
-            <ChevronDown size={13} className={`transition-transform duration-200 ${isLayersOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Menu Popover */}
           {isLayersOpen && (
-            <div className="absolute right-0 top-full mt-2 z-[1001] bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 p-3 rounded-2xl shadow-2xl w-56 animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2 mb-2">
-                <span className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <Layers size={14} className="text-primary" /> Map Overlays
-                </span>
-              </div>
-              <div className="space-y-2 text-xs font-medium text-gray-700 dark:text-zinc-200">
-                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={visibleCategories.competitor}
-                    onChange={() => toggleCategory('competitor')}
-                    className="w-4 h-4 accent-[#E11D48] rounded cursor-pointer"
-                  />
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]"></span>
-                    <span>Competitors ({counts.competitors})</span>
+            <div className="absolute right-0 top-full pt-1.5 z-[1001]">
+              <div className="bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 p-3 rounded-2xl shadow-2xl w-56 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2 mb-2">
+                  <span className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <Layers size={14} className="text-primary" /> Map Overlays
                   </span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={visibleCategories.similar}
-                    onChange={() => toggleCategory('similar')}
-                    className="w-4 h-4 accent-[#2563EB] rounded cursor-pointer"
-                  />
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span>
-                    <span>Similar Businesses ({counts.similar})</span>
-                  </span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={visibleCategories.poi}
-                    onChange={() => toggleCategory('poi')}
-                    className="w-4 h-4 accent-[#F59E0B] rounded cursor-pointer"
-                  />
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span>
-                    <span>Key POIs ({counts.pois})</span>
-                  </span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={visibleCategories.market}
-                    onChange={() => toggleCategory('market')}
-                    className="w-4 h-4 accent-[#0D9488] rounded cursor-pointer"
-                  />
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488]"></span>
-                    <span>Target Market ({counts.markets})</span>
-                  </span>
-                </label>
+                </div>
+                <div className="space-y-2 text-xs font-medium text-gray-700 dark:text-zinc-200">
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={visibleCategories.competitor}
+                      onChange={() => toggleCategory('competitor')}
+                      className="w-4 h-4 accent-[#E11D48] rounded cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]"></span>
+                      <span>Competitors ({counts.competitors})</span>
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={visibleCategories.similar}
+                      onChange={() => toggleCategory('similar')}
+                      className="w-4 h-4 accent-[#2563EB] rounded cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span>
+                      <span>Similar Businesses ({counts.similar})</span>
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={visibleCategories.poi}
+                      onChange={() => toggleCategory('poi')}
+                      className="w-4 h-4 accent-[#F59E0B] rounded cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span>
+                      <span>Key POIs ({counts.pois})</span>
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={visibleCategories.market}
+                      onChange={() => toggleCategory('market')}
+                      className="w-4 h-4 accent-[#0D9488] rounded cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488]"></span>
+                      <span>Target Market ({counts.markets})</span>
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           )}
@@ -582,7 +739,8 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
         markerZoomAnimation={true}
         wheelPxPerZoomLevel={120}
         wheelDebounceTime={40}
-        style={{ width: '100%', height: '100%', zIndex: 1 }}
+        className="w-full h-full min-h-full"
+        style={{ width: '100%', height: '100%', minHeight: '100%', zIndex: 1, backgroundColor: isNightMode ? '#0a0a0c' : '#f3f4f6' }}
       >
         <TileLayer url={activeTileUrl} attribution={activeAttribution} subdomains={GOOGLE_MAPS_SUBDOMAINS} />
 
@@ -670,7 +828,7 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
             <Marker
               key={feat.id}
               position={[feat.lat, feat.lng]}
-              icon={createFeatureMarkerIcon(feat.category, feat.type)}
+              icon={createFeatureMarkerIcon(feat.category, feat.type, feat.subTypeIcon, feat.name)}
             >
               <Popup className="custom-popup">
                 <div className="p-1.5 text-xs space-y-1.5 font-sans min-w-[210px]">

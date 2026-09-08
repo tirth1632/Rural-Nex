@@ -219,6 +219,22 @@ export const FaceDetectorInput: React.FC<FaceDetectorInputProps> = ({
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         if (detections && detections.length > 0) {
+          if (detections.length > 1) {
+            setFaceDetected(false);
+            setConfidence(null);
+            setPoseFeedback('⚠️ Multiple faces detected! Only 1 person must be visible.');
+            ctx.strokeStyle = '#EF4444';
+            ctx.lineWidth = 3;
+            detections.forEach((d) => {
+              if (d.boundingBox) {
+                ctx.strokeRect(d.boundingBox.originX, d.boundingBox.originY, d.boundingBox.width, d.boundingBox.height);
+              }
+            });
+            onStatusChange?.(false);
+            animFrameRef.current = requestAnimationFrame(() => detectLoop(detector));
+            return;
+          }
+
           setFaceDetected(true);
           const det = detections[0];
           const score = Math.round((det.categories[0]?.score || 0.9) * 100);
@@ -427,16 +443,16 @@ export const FaceDetectorInput: React.FC<FaceDetectorInputProps> = ({
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider whitespace-nowrap">
-                {mode === 'enroll' ? 'Mobile Face Lock Setup' : 'MediaPipe Face Detector'}
+                {mode === 'enroll' ? 'ArcFace Biometric Setup' : 'ArcFace Biometric Detector'}
               </h3>
               <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-extrabold px-1.5 py-0.5 rounded whitespace-nowrap">
-                AI POWERED
+                ARCFACE 512-D
               </span>
             </div>
             <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 leading-snug">
               {mode === 'enroll' 
-                ? 'Mobile-style 3D multi-angle pose enrollment (Center 🎯, Left 👈, Right 👉)' 
-                : 'High-accuracy biometric verification'}
+                ? 'ArcFace 512-d embedding enrollment & active pose liveness verification' 
+                : 'SCRFD alignment & 512-d ArcFace vector similarity match'}
             </p>
           </div>
         </div>

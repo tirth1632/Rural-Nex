@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe2, ChevronDown, Check } from 'lucide-react';
+import { Globe2, Check } from 'lucide-react';
 
 export interface LanguageOption {
   code: string;
@@ -79,7 +79,12 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ className = '', var
   };
 
   return (
-    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
+    <div 
+      className={`relative inline-block text-left ${className}`} 
+      ref={dropdownRef}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <button 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -95,14 +100,11 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ className = '', var
       >
         <Globe2 size={14} className="text-gray-500 dark:text-zinc-400 shrink-0" />
         <span className="tracking-tight">{currentLanguage.nativeName}</span>
-        <ChevronDown 
-          size={12} 
-          className={`text-gray-400 dark:text-zinc-500 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} 
-        />
       </button>
       
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-40 bg-white dark:bg-[#0c0d10] rounded-xl shadow-lg border border-gray-200/90 dark:border-zinc-800 py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute right-0 top-full pt-1.5 z-50">
+          <div className="w-40 bg-white dark:bg-[#0c0d10] rounded-xl shadow-lg border border-gray-200/90 dark:border-zinc-800 py-1 animate-in fade-in zoom-in-95 duration-100">
           {LANGUAGES.map(lang => {
             const isSelected = currentCode === lang.code;
             return (
@@ -128,6 +130,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ className = '', var
               </button>
             );
           })}
+          </div>
         </div>
       )}
     </div>

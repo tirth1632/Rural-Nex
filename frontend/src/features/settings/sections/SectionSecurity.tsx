@@ -10,13 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { authService, type SessionDevice } from '../../../services/authService';
 import { FaceDetectorInput } from '../../auth/components/FaceDetectorInput';
-import { updateProfile } from '../../../services/auth.service';
+import { faceEnroll } from '../../../services/auth.service';
 
 export const SectionSecurity: React.FC = () => {
-  const { draftSettings, updateDraft, setToastMessage } = useSettings();
+  const { draftSettings, updateDraft } = useSettings();
   const { user, updateUser, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isSetup2FAModalOpen, setIsSetup2FAModalOpen] = useState(false);
   const [isDisable2FAModalOpen, setIsDisable2FAModalOpen] = useState(false);
@@ -30,14 +31,17 @@ export const SectionSecurity: React.FC = () => {
     try {
       const token = localStorage.getItem('access_token');
       if (token) {
-        await updateProfile({ face_data: dataUrl, face_verified: true }, token);
-        updateUser({ profile: { face_data: dataUrl, face_verified: true } });
-        setToastMessage('Face biometric updated for login successfully!');
+        await faceEnroll(dataUrl, token);
+        updateUser({ profile: { face_data: '[512-d ArcFace Vector]', face_verified: true } });
+        setToastMessage('ArcFace biometric face profile successfully enrolled & verified!');
         setTimeout(() => setToastMessage(null), 3000);
         setIsFaceScannerOpen(false);
       }
-    } catch (e) {
-      console.error('Failed to update face biometric', e);
+    } catch (e: any) {
+      console.error('Failed to enroll ArcFace biometric profile:', e);
+      const msg = e?.data?.detail || 'Failed to process face scan. Check lighting and positioning.';
+      setToastMessage(msg);
+      setTimeout(() => setToastMessage(null), 4000);
     }
   };
 
@@ -70,6 +74,13 @@ export const SectionSecurity: React.FC = () => {
         <h2 className="text-xl font-bold text-gray-900 tracking-tight">Security</h2>
         <p className="text-xs text-gray-500 mt-1">Manage your password and account security.</p>
       </div>
+
+      {toastMessage && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-800 flex items-center gap-2">
+          <ShieldCheck size={16} className="shrink-0 text-emerald-600" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
       {/* Password Section */}
       <div className="p-6 bg-white border border-gray-200 rounded-xl space-y-4 shadow-2xs">
