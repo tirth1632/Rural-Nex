@@ -1,16 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCompetitors, fetchDensity } from '../../api/market';
+import { getProposalDetail } from '../../api/dashboard';
 import CompetitorMap from './CompetitorMap';
 import CompetitorTable from './CompetitorTable';
-import { MapPin, Users, Navigation } from 'lucide-react';
+import { MapPin, Users, Navigation, Store } from 'lucide-react';
 
 export default function MarketDashboard() {
-    // For MVP, we'll hardcode a central location (e.g. New Delhi) or use browser geolocation.
-    // In full app, this comes from LocationSearch component.
-    const [userLat] = useState(28.6139); 
-    const [userLng] = useState(77.2090);
-    const [radiusKm, setRadiusKm] = useState(5.0);
+    const [userLat, setUserLat] = useState<number>(22.9948); 
+    const [userLng, setUserLng] = useState<number>(72.6624);
+    const [locationLabel, setLocationLabel] = useState<string>('Vastral, Daskroi, Ahmedabad');
+    const [businessLabel, setBusinessLabel] = useState<string>('Agro & Dairy Processing Unit');
+    const [radiusKm, setRadiusKm] = useState<number>(5.0);
+
+    useEffect(() => {
+        const syncActiveProposal = () => {
+            const activeId = localStorage.getItem('ruralnex_active_proposal_id');
+            if (activeId) {
+                getProposalDetail(Number(activeId)).then((p) => {
+                    if (p) {
+                        if (p.lat && p.lng) {
+                            setUserLat(p.lat);
+                            setUserLng(p.lng);
+                        }
+                        const loc = [p.village_name, p.block_name, p.district_name].filter(Boolean).join(', ');
+                        if (loc) setLocationLabel(loc);
+                        if (p.category?.name) setBusinessLabel(p.category.name);
+                    }
+                }).catch(() => {});
+            }
+        };
+
+        syncActiveProposal();
+        window.addEventListener('ruralnex_proposal_changed', syncActiveProposal);
+        return () => window.removeEventListener('ruralnex_proposal_changed', syncActiveProposal);
+    }, []);
 
     const { data: competitorsResponse, isLoading: loadingCompetitors } = useQuery({
         queryKey: ['competitors', userLat, userLng, radiusKm],
@@ -27,9 +51,18 @@ export default function MarketDashboard() {
 
     return (
         <div className="max-w-6xl mx-auto p-4 mt-8 space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Hyper-Local Market Intelligence</h1>
-                <p className="text-gray-600">Analyzing external data and POIs around your selected location.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Hyper-Local Market Intelligence</h1>
+                    <p className="text-gray-600 dark:text-zinc-400 text-sm">Analyzing real demographic demand and competitor density around your venture.</p>
+                </div>
+                <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-3.5 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs font-bold">
+                    <Store size={14} className="text-emerald-600 shrink-0" />
+                    <span>{businessLabel}</span>
+                    <span className="text-emerald-400">•</span>
+                    <MapPin size={13} className="text-emerald-600 shrink-0" />
+                    <span className="truncate max-w-[180px]">{locationLabel}</span>
+                </div>
             </div>
 
             {/* Radius Toggle */}

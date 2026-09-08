@@ -150,13 +150,13 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
 
         {/* Financial Leverage Breakdown Panel */}
         {numericValue > 0 && (
-          <div className="p-5 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/80 space-y-4 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-100 pb-3">
-              <div className="flex items-center gap-2 text-emerald-950 font-extrabold text-sm">
-                <TrendingUp size={18} className="text-emerald-600 shrink-0" />
+          <div className="p-5 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white dark:from-emerald-950/40 dark:via-teal-950/20 dark:to-zinc-900/90 rounded-xl border border-emerald-200/80 dark:border-emerald-900/50 space-y-4 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-100 dark:border-emerald-900/40 pb-3">
+              <div className="flex items-center gap-2 text-emerald-950 dark:text-emerald-200 font-extrabold text-sm">
+                <TrendingUp size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>Estimated Project Capital Capacity (10x Potential)</span>
               </div>
-              <span className="text-base sm:text-lg font-black text-emerald-700 bg-white px-3 py-1 rounded-lg border border-emerald-200 shadow-2xs self-start sm:self-auto">
+              <span className="text-base sm:text-lg font-black text-emerald-700 dark:text-emerald-300 bg-white dark:bg-zinc-900 px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800 shadow-2xs self-start sm:self-auto">
                 {formatIndianWords(estimatedProjectCapacity)}
               </span>
             </div>

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.http import JsonResponse
+import schemes.views
 
 def health_check(request):
     return JsonResponse({'status': 'ok'})
@@ -22,4 +23,10 @@ urlpatterns = [
     path('api/v1/chat/', include('chat.urls')),
     path('api/v1/health/', health_check, name='health_check'),
     path('api/locations/', include('geo.urls')),
+    path('api/schemes/', include('schemes.urls')),
+    path('api/v1/schemes/', include('schemes.urls')),
+    path('api/user/saved-schemes/', include([
+        path('', schemes.views.SavedSchemesView.as_view(), name='api-user-saved-schemes'),
+        path('<int:pk>/', schemes.views.SavedSchemeDeleteView.as_view(), name='api-user-saved-scheme-delete'),
+    ])),
 ]

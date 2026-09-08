@@ -95,7 +95,7 @@ export default function WizardLayout() {
     // and 10-11 into the final AI rendering screen.
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
             <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
                 <h1 className="font-bold text-xl text-gray-900">Business Assessment</h1>
                 <div className="text-sm text-gray-500 font-medium">Step {step} of 7</div>

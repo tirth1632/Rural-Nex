@@ -54,9 +54,9 @@ export default function BusinessCompare() {
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">{t('compare.title', 'Compare Businesses')}</h1>
-                <p className="mt-2 text-gray-600">
-                    {t('compare.subtitle', 'Select up to 3 business types to see a side-by-side feasibility comparison.')}
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('compare_title', 'Compare Businesses')}</h1>
+                <p className="mt-2 text-gray-600 dark:text-neutral-400">
+                    {t('compare_subtitle', 'Select up to 3 business types to see a side-by-side feasibility comparison.')}
                 </p>
             </div>
 
@@ -95,8 +95,8 @@ export default function BusinessCompare() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t('compare.select_categories', 'Select Businesses (Max 3)')}
+                    <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+                        {t('compare_choose_hint', 'Select Businesses (Max 3)')}
                     </label>
                     <div className="flex flex-wrap gap-3">
                         {categories.map((cat: any) => {
@@ -129,7 +129,7 @@ export default function BusinessCompare() {
                         className="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         {isLoading ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle size={20} />}
-                        {t('compare.run_comparison', 'Run Comparison')}
+                        {t('compare_button', 'Run Comparison')}
                     </button>
                 </div>
             </div>
@@ -146,30 +146,30 @@ export default function BusinessCompare() {
             {data && (
                 <div className="space-y-8 animate-fade-in">
                     {/* AI Recommendation Banner */}
-                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 dark:opacity-5">
                             <Sparkles size={100} />
                         </div>
                         <div className="relative z-10 space-y-4">
-                            <div className="flex items-center gap-2 text-purple-700 font-bold">
+                            <div className="flex items-center gap-2 text-purple-700 dark:text-purple-300 font-bold">
                                 <Sparkles size={24} />
                                 <h2 className="text-xl">AI Recommendation</h2>
                             </div>
                             
-                            <p className="text-2xl font-bold text-gray-900">
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
                                 Winner: <span className="text-primary">{data.ai_analysis.winner}</span>
                             </p>
                             
                             <div className="space-y-2">
-                                <h3 className="font-semibold text-gray-700">Why?</h3>
-                                <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                <h3 className="font-semibold text-gray-700 dark:text-zinc-200">Why?</h3>
+                                <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-zinc-400">
                                     {data.ai_analysis.reasons.map((reason: string, idx: number) => (
                                         <li key={idx}>{reason}</li>
                                     ))}
                                 </ul>
                             </div>
                             
-                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-4">
+                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400 mt-4">
                                 <span>Confidence: {(data.ai_analysis.confidence * 100).toFixed(0)}%</span>
                                 <span>•</span>
                                 <span>Based on deterministic scoring across {data.comparisons.length} options</span>
@@ -178,25 +178,25 @@ export default function BusinessCompare() {
                     </div>
 
                     {/* Comparison Matrix Table */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+                    <div className="bg-white dark:bg-zinc-900/90 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-x-auto">
                         <table className="w-full min-w-[800px]">
                             <thead>
-                                <tr className="border-b border-gray-200">
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-500 w-1/4">Metric</th>
+                                <tr className="border-b border-gray-200 dark:border-zinc-800">
+                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-500 dark:text-zinc-400 w-1/4">Metric</th>
                                     {data.comparisons.map((c: any) => (
-                                        <th key={c.category} className="py-4 px-6 text-left text-lg font-bold text-gray-900 w-1/4">
+                                        <th key={c.category} className="py-4 px-6 text-left text-lg font-bold text-gray-900 dark:text-white w-1/4">
                                             {getCategoryName(c.category)}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody className="divide-y divide-gray-100 dark:divide-zinc-800/80">
                                 <tr>
-                                    <td className="py-4 px-6 text-sm font-medium text-gray-700">Feasibility Score</td>
+                                    <td className="py-4 px-6 text-sm font-medium text-gray-700 dark:text-neutral-300">{t('compare_feasibility', 'Feasibility Score')}</td>
                                     {data.comparisons.map((c: any) => (
                                         <td key={c.category} className="py-4 px-6">
                                             <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-bold ${
-                                                c.feasibility.is_feasible ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                c.feasibility.is_feasible ? 'bg-green-100 dark:bg-emerald-950/80 text-green-700 dark:text-emerald-300 border border-green-200 dark:border-emerald-800/60' : 'bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/60'
                                             }`}>
                                                 {c.feasibility.overall_score}/100
                                             </span>
@@ -204,40 +204,40 @@ export default function BusinessCompare() {
                                     ))}
                                 </tr>
                                 <tr>
-                                    <td className="py-4 px-6 text-sm font-medium text-gray-700">Competitor Density</td>
+                                    <td className="py-4 px-6 text-sm font-medium text-gray-700 dark:text-neutral-300">{t('compare_competition', 'Competitor Density')}</td>
                                     {data.comparisons.map((c: any) => (
-                                        <td key={c.category} className="py-4 px-6 text-sm text-gray-600">
+                                        <td key={c.category} className="py-4 px-6 text-sm text-gray-600 dark:text-neutral-400">
                                             {c.feasibility.dimensions.competition.factors.competitor_count} nearby<br/>
-                                            <span className="text-xs text-gray-400">({c.feasibility.dimensions.competition.factors.density_per_sq_km.toFixed(2)} / sq km)</span>
+                                            <span className="text-xs text-gray-400 dark:text-neutral-500">({c.feasibility.dimensions.competition.factors.density_per_sq_km.toFixed(2)} / sq km)</span>
                                         </td>
                                     ))}
                                 </tr>
                                 <tr>
-                                    <td className="py-4 px-6 text-sm font-medium text-gray-700">Market Reach Score</td>
+                                    <td className="py-4 px-6 text-sm font-medium text-gray-700 dark:text-neutral-300">{t('compare_demand', 'Market Reach Score')}</td>
                                     {data.comparisons.map((c: any) => (
-                                        <td key={c.category} className="py-4 px-6 text-sm text-gray-600">
+                                        <td key={c.category} className="py-4 px-6 text-sm text-gray-600 dark:text-neutral-400">
                                             {c.feasibility.dimensions.market_reach.score}/100
                                         </td>
                                     ))}
                                 </tr>
                                 <tr>
-                                    <td className="py-4 px-6 text-sm font-medium text-gray-700">Risk Profile</td>
+                                    <td className="py-4 px-6 text-sm font-medium text-gray-700 dark:text-neutral-300">Risk Profile</td>
                                     {data.comparisons.map((c: any) => (
                                         <td key={c.category} className="py-4 px-6 text-sm font-medium">
-                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'LOW' && <span className="text-green-600">Low Risk</span>}
-                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'MEDIUM' && <span className="text-yellow-600">Medium Risk</span>}
-                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'HIGH' && <span className="text-red-600">High Risk</span>}
+                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'LOW' && <span className="text-green-600 dark:text-emerald-400">Low Risk</span>}
+                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'MEDIUM' && <span className="text-yellow-600 dark:text-amber-400">Medium Risk</span>}
+                                            {c.feasibility.dimensions.risk.factors.category_risk_tier === 'HIGH' && <span className="text-red-600 dark:text-rose-400">High Risk</span>}
                                         </td>
                                     ))}
                                 </tr>
-                                <tr className="bg-gray-50/50">
-                                    <td className="py-4 px-6 text-sm font-semibold text-gray-700">Financials (Constant across options)</td>
-                                    <td colSpan={data.comparisons.length} className="py-4 px-6 text-sm text-gray-600">
+                                <tr className="bg-gray-50/50 dark:bg-zinc-950/60">
+                                    <td className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-zinc-300">Financials (Constant across options)</td>
+                                    <td colSpan={data.comparisons.length} className="py-4 px-6 text-sm text-gray-600 dark:text-zinc-400">
                                         <div className="flex flex-wrap gap-x-8 gap-y-2">
-                                            <div><span className="font-medium">Project Cost:</span> ₹{Number(data.financials.feasible_project_cost).toLocaleString('en-IN')}</div>
-                                            <div><span className="font-medium">Loan:</span> ₹{Number(data.financials.loan_amount).toLocaleString('en-IN')}</div>
-                                            <div><span className="font-medium">Working Capital:</span> ₹{Number(data.financials.working_capital_estimate).toLocaleString('en-IN')}</div>
-                                            <div><span className="font-medium">Scheme:</span> {data.financials.scheme.name}</div>
+                                            <div><span className="font-medium text-gray-900 dark:text-white">Project Cost:</span> ₹{Number(data.financials.feasible_project_cost).toLocaleString('en-IN')}</div>
+                                            <div><span className="font-medium text-gray-900 dark:text-white">Loan:</span> ₹{Number(data.financials.loan_amount).toLocaleString('en-IN')}</div>
+                                            <div><span className="font-medium text-gray-900 dark:text-white">Working Capital:</span> ₹{Number(data.financials.working_capital_estimate).toLocaleString('en-IN')}</div>
+                                            <div><span className="font-medium text-gray-900 dark:text-white">Scheme:</span> {data.financials.scheme.name}</div>
                                         </div>
                                     </td>
                                 </tr>

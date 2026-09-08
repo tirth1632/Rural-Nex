@@ -1,10 +1,14 @@
+from decimal import Decimal
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from .models import BusinessProposal, AnalysisRun, FeasibilityReport, BusinessCategory
 from .serializers import BusinessProposalSerializer, AnalysisRunSerializer, FeasibilityReportSerializer, BusinessCategorySerializer
 from .tasks import generate_feasibility_report_task
+from .scoring import FeasibilityScoringService
+from .ai_services import BusinessAdvisorService
 from finance.services import FinancialAssessmentEngine
 from advisory.models import FinancialAssessment
 
@@ -19,8 +23,11 @@ class BusinessCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class BusinessProposalViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessProposalSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return BusinessProposal.objects.none()
         return BusinessProposal.objects.filter(user=self.request.user).select_related(
             'category', 'state', 'district', 'block', 'village', 'financial_assessment'
         )
@@ -36,7 +43,7 @@ class BusinessProposalViewSet(viewsets.ModelViewSet):
         
         # 1. Deterministically calculate financials
         try:
-            margin = float(proposal.margin_capital) if (proposal.margin_capital is not None and float(proposal.margin_capital) > 0) else 500000.0
+            margin = Decimal(str(proposal.margin_capital)) if (proposal.margin_capital is not None and float(proposal.margin_capital) > 0) else Decimal('500000.00')
             fin_result = FinancialAssessmentEngine.assess(margin)
             
             FinancialAssessment.objects.update_or_create(
@@ -92,7 +99,7 @@ class BusinessProposalViewSet(viewsets.ModelViewSet):
         proposal = self.get_object()
         
         try:
-            margin = float(proposal.margin_capital) if (proposal.margin_capital is not None and float(proposal.margin_capital) > 0) else 500000.0
+            margin = Decimal(str(proposal.margin_capital)) if (proposal.margin_capital is not None and float(proposal.margin_capital) > 0) else Decimal('500000.00')
             
             # Ensure financial assessment exists
             fin_assessment = getattr(proposal, 'financial_assessment', None)
@@ -406,9 +413,10 @@ class BusinessCompareAPIView(APIView):
 from finance.simulator import BusinessSimulatorEngine
 from decimal import Decimal
 import json
+from rest_framework.permissions import AllowAny
 
 class SimulationAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data

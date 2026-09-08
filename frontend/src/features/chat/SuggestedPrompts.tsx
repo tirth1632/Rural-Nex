@@ -24,7 +24,7 @@ export default function SuggestedPrompts({ onSelect, disabled }: SuggestedPrompt
         <div className="p-4 flex flex-col gap-3 max-w-4xl mx-auto w-full">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                 <HelpCircle size={16} />
-                <span>{t('chat.suggestedQuestions', 'Suggested Questions')}</span>
+                <span>{t('chat_suggested', 'Suggested Questions')}</span>
             </div>
             <div className="flex flex-wrap gap-2">
                 {prompts.map((prompt, idx) => (

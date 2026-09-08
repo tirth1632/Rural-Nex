@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SettingsProvider, useSettings } from './SettingsContext';
+import { useSettings } from './SettingsContext';
 import { SettingsSidebar } from './SettingsSidebar';
 import type { SettingsSectionId } from './SettingsSidebar';
 
@@ -75,9 +75,5 @@ const SettingsContent: React.FC = () => {
 };
 
 export default function SettingsPage() {
-  return (
-    <SettingsProvider>
-      <SettingsContent />
-    </SettingsProvider>
-  );
+  return <SettingsContent />;
 }

@@ -40,6 +40,11 @@ class LoanCalculator:
         """
         Project Cost = Beneficiary Margin / (1 - Funding Percentage)
         """
+        if not isinstance(margin, Decimal):
+            margin = Decimal(str(margin))
+        if not isinstance(funding_percentage, Decimal):
+            funding_percentage = Decimal(str(funding_percentage))
+            
         funding_fraction = funding_percentage / Decimal('100.0')
         if funding_fraction >= 1:
             raise ValueError("Funding percentage cannot be 100% or more when calculated from margin.")
@@ -165,6 +170,8 @@ class EMICalculator:
 class FinancialAssessmentEngine:
     @staticmethod
     def assess(margin_capital: Decimal) -> FinancialAssessmentResult:
+        if not isinstance(margin_capital, Decimal):
+            margin_capital = Decimal(str(margin_capital))
         # For simplicity in this logic, we attempt to find the highest possible project cost
         # The brief lists two schemes:
         # Micro Finance: max project 1.40L, max loan 1.25L, 90% funding

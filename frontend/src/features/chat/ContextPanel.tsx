@@ -18,7 +18,7 @@ export default function ContextPanel({ report }: ContextPanelProps) {
             <div className="p-6 space-y-6">
                 <div>
                     <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                        {t('businessContext', 'Business Context')}
+                        {t('chat_context', 'Business Context')}
                     </h2>
                     
                     <div className="space-y-4">

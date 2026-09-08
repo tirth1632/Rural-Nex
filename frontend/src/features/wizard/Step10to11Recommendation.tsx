@@ -68,8 +68,8 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
       {/* 1. Header Banner & Recommendation Verdict */}
       <div className={`p-6 sm:p-8 rounded-3xl border-2 transition-all relative overflow-hidden ${
         isFeasible 
-          ? 'bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-white border-emerald-500/40 shadow-sm' 
-          : 'bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-white border-amber-500/40 shadow-sm'
+          ? 'bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-white dark:from-emerald-950/40 dark:via-teal-950/20 dark:to-zinc-900/90 border-emerald-500/40 dark:border-emerald-500/30 shadow-sm' 
+          : 'bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-white dark:from-amber-950/40 dark:via-orange-950/20 dark:to-zinc-900/90 border-amber-500/40 dark:border-amber-500/30 shadow-sm'
       }`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
@@ -81,29 +81,29 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
-                  isFeasible ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'
+                  isFeasible ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800' : 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
                 }`}>
                   {isFeasible ? 'Highly Feasible Enterprise' : 'Moderate Feasibility Notice'}
                 </span>
-                <span className="text-xs font-bold text-gray-500">Proposal #{proposalId || '101'}</span>
+                <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">Proposal #{proposalId || '101'}</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                 {isFeasible ? 'Business Proposal Recommended' : 'Action Required Before Launch'}
               </h2>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 max-w-xl">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-zinc-300 max-w-xl">
                 {categoryName} • Projected Investment Outlay ~ ₹{estProjectCost}
               </p>
             </div>
           </div>
 
           {/* Overall Feasibility Score Gauge */}
-          <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-col items-center justify-center min-w-[140px] shrink-0 self-stretch sm:self-auto">
-            <span className="text-[10px] font-extrabold uppercase text-gray-400 tracking-wider">Feasibility Index</span>
+          <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-xs flex flex-col items-center justify-center min-w-[140px] shrink-0 self-stretch sm:self-auto">
+            <span className="text-[10px] font-extrabold uppercase text-gray-400 dark:text-zinc-400 tracking-wider">Feasibility Index</span>
             <div className="flex items-baseline gap-1 my-1">
-              <span className="text-3xl font-black text-emerald-600">{score.toFixed(0)}</span>
-              <span className="text-xs font-bold text-gray-400">/ 100</span>
+              <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{score.toFixed(0)}</span>
+              <span className="text-xs font-bold text-gray-400 dark:text-zinc-500">/ 100</span>
             </div>
-            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-gray-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
               <div 
                 style={{ width: `${Math.min(100, Math.max(10, score))}%` }} 
                 className="bg-emerald-600 h-full rounded-full transition-all duration-500" 
@@ -113,12 +113,12 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
         </div>
 
         {/* Executive AI Advisory Text */}
-        <div className="mt-6 pt-5 border-t border-gray-200/80 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-extrabold text-gray-700 uppercase tracking-wider">
-            <Sparkles size={15} className="text-emerald-600" />
+        <div className="mt-6 pt-5 border-t border-gray-200/80 dark:border-zinc-800 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-extrabold text-gray-700 dark:text-zinc-300 uppercase tracking-wider">
+            <Sparkles size={15} className="text-emerald-600 dark:text-emerald-400" />
             <span>Executive Advisory Summary</span>
           </div>
-          <p className="text-sm text-gray-800 font-medium leading-relaxed">
+          <p className="text-sm text-gray-800 dark:text-zinc-200 font-medium leading-relaxed">
             {aiSummary}
           </p>
         </div>

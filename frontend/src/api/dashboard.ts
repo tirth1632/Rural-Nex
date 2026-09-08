@@ -1,30 +1,121 @@
 const BASE_URL = '/api/v1/advisory/proposals';
 
-const getAuthHeaders = () => ({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-});
-
-export const getLatestAssessment = async () => {
-    // Fetch all proposals for the user, sort by created_at desc
-    const res = await fetch(`${BASE_URL}/`, {
-        headers: getAuthHeaders(),
-    });
-    
-    if (!res.ok) throw new Error('Failed to fetch assessments');
-    
-    const proposals = await res.json();
-    
-    // In a real app we'd filter or sort, but for now we just take the first one 
-    // assuming the API returns them in descending order or we sort it here
-    if (proposals.length === 0) return null;
-    
-    // Fetch full details of the latest one
-    const latestId = proposals[proposals.length - 1].id;
-    const detailRes = await fetch(`${BASE_URL}/${latestId}/`, {
-        headers: getAuthHeaders(),
-    });
-    
-    if (!detailRes.ok) throw new Error('Failed to fetch latest assessment details');
-    return detailRes.json();
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('access_token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
 };
+
+export interface ProposalItem {
+    id: number;
+    category?: { id: number; name: string; description?: string };
+    margin_capital?: string | number;
+    current_step?: number;
+    state?: number | string;
+    district?: number | string;
+    block?: number | string;
+    village?: number | string;
+    state_name?: string;
+    district_name?: string;
+    block_name?: string;
+    village_name?: string;
+    lat?: number;
+    lng?: number;
+    expected_scale?: string;
+    available_shop?: boolean;
+    experience_years?: number;
+    number_of_workers?: number;
+    target_customers?: string;
+    products?: string;
+    analysis_runs?: Array<{
+        id: number;
+        status: string;
+        started_at?: string;
+        completed_at?: string;
+        report?: {
+            id?: number;
+            overall_score?: number | string;
+            is_feasible?: boolean;
+            executive_summary?: string;
+            scoring_data?: any;
+            created_at?: string;
+        };
+    }>;
+    financial_assessment?: {
+        id?: number;
+        scheme?: number;
+        scheme_name?: string;
+        feasible_project_cost?: string | number;
+        constrained_project_cost?: string | number;
+        loan_amount?: string | number;
+        working_capital_estimate?: string | number;
+        cap_constrained?: boolean;
+        constraint_reason?: string;
+    };
+    created_at: string;
+}
+
+export const calculateEMI = (principal: number, annualRatePct: number = 9.5, tenureYears: number = 5): number => {
+    if (!principal || principal <= 0) return 0;
+    const monthlyRate = (annualRatePct / 12) / 100;
+    const totalMonths = tenureYears * 12;
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+    return Math.round(emi);
+};
+
+export const formatINR = (val: number | string | undefined | null): string => {
+    if (val === undefined || val === null || val === '') return '₹0';
+    const num = typeof val === 'string' ? parseFloat(val) : val;
+    if (isNaN(num)) return '₹0';
+    return `₹${num.toLocaleString('en-IN')}`;
+};
+
+export const getUserProposals = async (): Promise<ProposalItem[]> => {
+    try {
+        const res = await fetch(`${BASE_URL}/`, {
+            headers: getAuthHeaders(),
+        });
+        if (!res.ok) {
+            console.warn('Could not fetch proposals, status:', res.status);
+            return [];
+        }
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+    } catch (err) {
+        console.warn('Error fetching user proposals:', err);
+        return [];
+    }
+};
+
+export const getProposalDetail = async (id: number): Promise<ProposalItem | null> => {
+    try {
+        const res = await fetch(`${BASE_URL}/${id}/`, {
+            headers: getAuthHeaders(),
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (err) {
+        console.warn(`Error fetching proposal #${id}:`, err);
+        return null;
+    }
+};
+
+export const getLatestAssessment = async (): Promise<ProposalItem | null> => {
+    try {
+        const proposals = await getUserProposals();
+        if (proposals.length === 0) return null;
+
+        // Prefer proposal with completed analysis
+        const completed = proposals.filter(p => p.analysis_runs && p.analysis_runs.length > 0);
+        const target = completed.length > 0 ? completed[completed.length - 1] : proposals[proposals.length - 1];
+
+        const fullDetail = await getProposalDetail(target.id);
+        return fullDetail || target;
+    } catch (err) {
+        console.warn('Error in getLatestAssessment:', err);
+        return null;
+    }
+};
+

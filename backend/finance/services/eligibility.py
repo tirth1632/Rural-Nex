@@ -17,10 +17,9 @@ class SchemeEligibilityService:
             
         if project_cost <= micro_max:
             return Schemes.MICRO
-        elif project_cost <= term_max:
-            return Schemes.TERM
         else:
-            raise InvalidProjectCostError(f"Project cost exceeds maximum limit of {term_max}.")
+            return Schemes.TERM
+
 
     @staticmethod
     def get_scheme_rules(scheme: str) -> Dict[str, Any]:

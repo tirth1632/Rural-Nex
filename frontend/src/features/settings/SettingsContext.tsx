@@ -64,7 +64,7 @@ export interface UserProfileSettings {
 
   // Language & Appearance
   interfaceLanguage: string;
-  theme: 'Light' | 'Dark' | 'OLED';
+  theme: 'Light' | 'Dark';
   sidebarDensity: 'Comfortable' | 'Compact';
 
   // Currency & Units
@@ -138,6 +138,8 @@ interface SettingsContextType {
   settings: UserProfileSettings;
   draftSettings: UserProfileSettings;
   updateDraft: <K extends keyof UserProfileSettings>(key: K, value: UserProfileSettings[K]) => void;
+  toggleTheme: () => void;
+  isDarkMode: boolean;
   saveChanges: () => void;
   cancelChanges: () => void;
   hasUnsavedChanges: boolean;
@@ -156,13 +158,17 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   
   const [settings, setSettings] = useState<UserProfileSettings>(() => {
     const saved = localStorage.getItem('ruralnex_user_settings');
+    const savedTheme = localStorage.getItem('ruralnex_theme');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (parsed.phoneNumber === '+91 XXXXX XXXXX' || parsed.phoneNumber === '+91 98765 43210') {
           parsed.phoneNumber = '';
         }
-        return { ...defaultSettings, ...parsed };
+        // Normalize any old OLED theme to Dark
+        if (parsed.theme === 'OLED') parsed.theme = 'Dark';
+        if (savedTheme === 'OLED') localStorage.setItem('ruralnex_theme', 'Dark');
+        return { ...defaultSettings, ...parsed, ...(savedTheme ? { theme: savedTheme === 'Dark' ? 'Dark' : 'Light' } : {}) };
       } catch (e) {
         // fallback
       }
@@ -202,14 +208,20 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (draftSettings.theme === 'Dark') {
       root.classList.add('theme-dark', 'dark');
       root.setAttribute('data-theme', 'dark');
-    } else if (draftSettings.theme === 'OLED') {
-      root.classList.add('theme-oled', 'dark');
-      root.setAttribute('data-theme', 'oled');
+      localStorage.setItem('ruralnex_theme', 'Dark');
     } else {
       root.classList.add('theme-light');
       root.setAttribute('data-theme', 'light');
+      localStorage.setItem('ruralnex_theme', 'Light');
     }
   }, [draftSettings.theme]);
+
+  const toggleTheme = () => {
+    const nextTheme: 'Light' | 'Dark' = draftSettings.theme === 'Dark' ? 'Light' : 'Dark';
+    updateDraft('theme', nextTheme);
+  };
+
+  const isDarkMode = draftSettings.theme === 'Dark';
 
   const updateDraft = <K extends keyof UserProfileSettings>(key: K, value: UserProfileSettings[K]) => {
     setDraftSettings(prev => {
@@ -289,6 +301,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
         settings,
         draftSettings,
         updateDraft,
+        toggleTheme,
+        isDarkMode,
         saveChanges,
         cancelChanges,
         hasUnsavedChanges,

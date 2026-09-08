@@ -14,6 +14,14 @@ export interface User {
     face_verified?: boolean;
     face_data?: string;
     preferred_language?: string;
+    entrepreneur_type?: string;
+    experience?: string;
+    own_capital?: number | string;
+    business_interest?: string;
+    default_state?: string | number;
+    default_district?: string | number;
+    default_block?: string;
+    default_village?: string;
   };
 }
 
@@ -34,8 +42,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [isLoading, setIsLoading] = useState(true);
 
+  const DEMO_USER: User = {
+    id: 1,
+    username: 'demouser',
+    email: 'demo@ruralnex.org',
+    first_name: 'Demo',
+    last_name: 'User',
+    role: 'BENEFICIARY',
+    profile: {
+      preferred_language: 'en',
+      face_verified: true,
+      avatar_url: '',
+    }
+  };
+
   useEffect(() => {
     if (token) {
+      if (token.startsWith('demo_')) {
+        setUser(DEMO_USER);
+        setIsLoading(false);
+        return;
+      }
       // Fetch user profile
       fetch('/api/v1/auth/me/', {
         headers: {
@@ -65,6 +92,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('access_token', accessToken);
     localStorage.setItem('refresh_token', refreshToken);
     setToken(accessToken);
+
+    if (accessToken.startsWith('demo_')) {
+      setUser(DEMO_USER);
+      setIsLoading(false);
+      return DEMO_USER;
+    }
+
     setIsLoading(true);
 
     try {

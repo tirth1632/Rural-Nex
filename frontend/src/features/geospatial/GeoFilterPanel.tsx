@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   MapPin, 
   Sliders, 
@@ -35,6 +36,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
   savedCount,
   onOpenSavedModal,
 }) => {
+  const { t } = useTranslation();
   const [isLocating, setIsLocating] = useState(false);
   const [detectStatus, setDetectStatus] = useState<string | null>(null);
 
@@ -58,25 +60,25 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
         (s) => s.name.toLowerCase() === loc.state.toLowerCase() || loc.state.toLowerCase().includes(s.name.toLowerCase())
       ) || states[0];
 
-      const stateDistricts = geoService.getDistricts(matchedState.id);
-      const matchedDistrict = stateDistricts.find(
+      const matchedDistricts = geoService.getDistricts(matchedState.id);
+      const matchedDistrict = matchedDistricts.find(
         (d) => d.name.toLowerCase() === loc.district.toLowerCase() || loc.district.toLowerCase().includes(d.name.toLowerCase())
-      ) || stateDistricts[0];
+      ) || matchedDistricts[0];
 
-      const districtAreas = matchedDistrict ? geoService.getAreas(matchedDistrict.id) : [];
+      const matchedAreas = matchedDistrict ? geoService.getAreas(matchedDistrict.id) : [];
+      const matchedArea = matchedAreas.length > 0 ? matchedAreas[0] : null;
 
       onParamsChange({
         stateId: matchedState.id,
-        districtId: matchedDistrict?.id || '',
-        areaId: districtAreas.length > 0 ? districtAreas[0].id : '',
+        districtId: matchedDistrict ? matchedDistrict.id : '',
+        areaId: matchedArea ? matchedArea.id : '',
       });
 
-      setDetectStatus(`Detected: ${loc.village}, ${loc.district}, ${loc.state}`);
+      setDetectStatus(`Detected: ${loc.village ? `${loc.village}, ` : ''}${loc.district}, ${loc.state}`);
     } catch (err: any) {
-      setDetectStatus(err.message || 'Failed to detect location');
+      setDetectStatus(err.message || 'Could not auto-detect location');
     } finally {
       setIsLocating(false);
-      setTimeout(() => setDetectStatus(null), 5000);
     }
   };
 
@@ -124,17 +126,17 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
         <div>
           <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <MapPin size={18} className="text-primary shrink-0" />
-            <span>Find Business Locations</span>
+            <span>{t('geo_filter_title', 'Find Business Locations')}</span>
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Filter rural intelligence metrics</p>
         </div>
         <button
           onClick={onOpenSavedModal}
-          title="Saved Locations"
-          className="relative inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors shrink-0"
+          title={t('geo_saved_locations', 'Saved Locations')}
+          className="relative inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors shrink-0 cursor-pointer"
         >
           <BookmarkCheck size={15} />
-          <span className="hidden sm:inline">Saved</span>
+          <span className="hidden sm:inline">{t('geo_saved_locations', 'Saved')}</span>
           {savedCount > 0 && (
             <span className="ml-0.5 px-1.5 py-0.2 text-[10px] font-bold bg-primary text-white rounded-full">
               {savedCount}
@@ -149,7 +151,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-              1. Target Location (Hierarchical)
+              {t('geo_target_territory', '1. Target Location')}
             </label>
             <button
               type="button"
@@ -158,7 +160,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
               className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors cursor-pointer"
             >
               <Navigation size={12} className={isLocating ? 'animate-spin' : ''} />
-              <span>{isLocating ? 'Locating...' : 'Detect My Location'}</span>
+              <span>{isLocating ? t('geo_detecting', 'Locating...') : t('geo_auto_detect', 'Detect My Location')}</span>
             </button>
           </div>
           {detectStatus && (
@@ -169,7 +171,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
 
           {/* State Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">State</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_state', 'State')}</label>
             <select
               value={searchParams.stateId}
               onChange={handleStateChange}
@@ -185,7 +187,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
 
           {/* City / District Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">City / District</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_district', 'City / District')}</label>
             <select
               value={searchParams.districtId}
               onChange={handleDistrictChange}
@@ -202,7 +204,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
 
           {/* Area / Village Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Area / Village</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_area', 'Area / Village')}</label>
             <select
               value={searchParams.areaId}
               onChange={handleAreaChange}
@@ -225,7 +227,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
               <Sliders size={14} className="text-primary" />
-              <span>Search Radius</span>
+              <span>{t('geo_radius', 'Search Radius')}</span>
             </label>
             <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
               {searchParams.radiusKm} km radius
@@ -259,7 +261,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
           {/* Cross State Toggle */}
           <div className="pt-1 flex items-center justify-between bg-gray-50/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200/60 dark:border-slate-700">
             <div>
-              <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 block">Include neighboring states</span>
+              <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 block">{t('geo_cross_border', 'Include neighboring states')}</span>
               <span className="text-[10px] text-gray-500 dark:text-gray-400 block">Allow cross-border candidate locations</span>
             </div>
             <input
@@ -277,12 +279,12 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
         <div className="space-y-3">
           <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
             <Briefcase size={14} className="text-primary" />
-            <span>Business Category</span>
+            <span>{t('geo_biz_type', 'Business Category')}</span>
           </label>
 
           {/* Business Category */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Primary Sector</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_category', 'Category')}</label>
             <select
               value={searchParams.businessCategory}
               onChange={handleCategoryChange}
@@ -299,7 +301,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
           {/* Sub-type Select */}
           {selectedCategoryObj && selectedCategoryObj.subTypes.length > 0 && (
             <div>
-              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Specific Business Type</label>
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{t('geo_sub_type', 'Sub-type / Activity')}</label>
               <select
                 value={searchParams.subType || selectedCategoryObj.subTypes[0]}
                 onChange={(e) => onParamsChange({ subType: e.target.value })}
@@ -321,7 +323,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
         <div className="space-y-3">
           <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
             <IndianRupee size={14} className="text-primary" />
-            <span>Investment Range</span>
+            <span>{t('geo_capital_band', 'Investment Range')}</span>
           </label>
 
           <select
@@ -348,7 +350,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
               className="w-4 h-4 text-primary accent-primary rounded cursor-pointer"
             />
             <label htmlFor="constrainInvestment" className="text-xs font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-              Show locations suitable for this investment level
+              {t('geo_constrain_inv', 'Show locations suitable for this investment level')}
             </label>
           </div>
         </div>
@@ -369,7 +371,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
           ) : (
             <>
               <Search size={16} />
-              <span>Find Suitable Locations</span>
+              <span>{t('geo_search_btn', 'Search Candidate Locations')}</span>
             </>
           )}
         </button>
@@ -380,7 +382,7 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
           className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors cursor-pointer"
         >
           <RotateCcw size={13} />
-          <span>Reset Filters</span>
+          <span>{t('geo_reset', 'Reset Filters')}</span>
         </button>
       </div>
     </div>

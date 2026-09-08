@@ -9,55 +9,269 @@ import {
   Sun,
   Moon,
   ChevronDown,
-  Navigation
+  Navigation,
+  Plus,
+  Minus,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
-import { geoService, type CandidateLocation, type LayerFeature } from '../../services/geoService';
-import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION, createUserLocationIcon } from '../../config/maps';
+import { geoService, type CandidateLocation, type LayerFeature, type MapFeatureCategory } from '../../services/geoService';
+import { GOOGLE_MAPS_TILE_URLS, GOOGLE_MAPS_SUBDOMAINS, GOOGLE_MAPS_ATTRIBUTION } from '../../config/maps';
 
-// Custom SVG HTML Markers for Candidate Locations with score badges & visual accessibility
+// 1. Center Location Marker Icon (Green gradient teardrop pin with sleek badge and pointer)
+const createYourLocationPinIcon = (label: string = 'Your Location') => {
+  const html = `
+    <div style="position: relative; width: 44px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; transform: translate3d(0,0,0); pointer-events: auto;">
+      <!-- Subtle ground shadow -->
+      <div style="position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 22px; height: 8px; background: rgba(5, 150, 105, 0.35); border-radius: 50%; filter: blur(2px);"></div>
+      
+      <!-- Sleek Location Label Badge with Pointer Caret -->
+      <div style="
+        position: absolute;
+        bottom: 46px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 9999px;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(4, 120, 87, 0.45), 0 2px 4px rgba(0,0,0,0.25);
+        border: 2px solid #ffffff;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        pointer-events: none;
+        letter-spacing: 0.25px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      ">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 6px #34d399;"></span>
+        ${label}
+        <div style="position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #065f46;"></div>
+      </div>
+
+      <!-- Teardrop GPS Pin -->
+      <svg viewBox="0 0 24 24" width="36" height="44" style="filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+        <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8z" fill="#047857" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="12" cy="10" r="3.8" fill="#ffffff"/>
+        <circle cx="12" cy="10" r="2" fill="#047857"/>
+      </svg>
+    </div>
+  `;
+  return L.divIcon({
+    html,
+    className: 'your-location-pin',
+    iconSize: [44, 50],
+    iconAnchor: [22, 46],
+    popupAnchor: [0, -46],
+  });
+};
+
+// 2. Map Feature Circular Marker Icon (Competitors, Similar Businesses, Key POIs, Target Market)
+const createFeatureMarkerIcon = (category: MapFeatureCategory, type: string) => {
+  let bgColor = '#E11D48'; // Red for competitor
+  let shadowColor = 'rgba(225, 29, 72, 0.45)';
+  let svgContent = '';
+
+  if (category === 'competitor') {
+    bgColor = '#E11D48'; // Crimson Red
+    shadowColor = 'rgba(225, 29, 72, 0.45)';
+    // White Storefront with Awning
+    svgContent = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    `;
+  } else if (category === 'similar') {
+    bgColor = '#2563EB'; // Royal Blue
+    shadowColor = 'rgba(37, 99, 235, 0.45)';
+    // White Storefront with Awning
+    svgContent = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    `;
+  } else if (category === 'poi') {
+    bgColor = '#F59E0B'; // Amber Orange
+    shadowColor = 'rgba(245, 158, 11, 0.45)';
+    if (type === 'school') {
+      // Graduation Cap
+      svgContent = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      `;
+    } else if (type === 'hospital') {
+      // Heartpulse line
+      svgContent = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      `;
+    } else if (type === 'transport') {
+      // Bus
+      svgContent = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="16" height="16" x="4" y="3" rx="2"/>
+          <path d="M4 11h16"/>
+          <circle cx="8" cy="15" r="1" fill="#FFFFFF"/>
+          <circle cx="16" cy="15" r="1" fill="#FFFFFF"/>
+          <path d="M6 19v2"/>
+          <path d="M18 19v2"/>
+        </svg>
+      `;
+    } else {
+      // Bank / Landmark
+      svgContent = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="21" x2="21" y2="21"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <polyline points="5 6 12 3 19 6"/>
+          <line x1="6" y1="10" x2="6" y2="21"/>
+          <line x1="10" y1="10" x2="10" y2="21"/>
+          <line x1="14" y1="10" x2="14" y2="21"/>
+          <line x1="18" y1="10" x2="18" y2="21"/>
+        </svg>
+      `;
+    }
+  } else if (category === 'market') {
+    bgColor = '#0D9488'; // Teal Green
+    shadowColor = 'rgba(13, 148, 136, 0.45)';
+    // Shopping Cart
+    svgContent = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="21" r="1" fill="#FFFFFF"/>
+        <circle cx="19" cy="21" r="1" fill="#FFFFFF"/>
+        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+      </svg>
+    `;
+  }
+
+  const html = `
+    <div style="
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: ${bgColor};
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 3px 8px ${shadowColor}, 0 2px 4px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transform: translate3d(0,0,0);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    ">
+      ${svgContent}
+    </div>
+  `;
+
+  return L.divIcon({
+    html,
+    className: 'category-marker-icon',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+  });
+};
+
+// 3. Custom SVG HTML Markers for Candidate Evaluated Locations
 const createCustomScoreIcon = (score: number, isSelected: boolean) => {
   let bgColor = '#10B981'; // Emerald
   let borderColor = '#047857';
 
   if (score >= 90) {
-    bgColor = '#059669'; // Dark emerald
+    bgColor = '#059669';
     borderColor = '#022c22';
   } else if (score >= 75) {
-    bgColor = '#10B981'; // Primary green
+    bgColor = '#10B981';
     borderColor = '#047857';
   } else if (score >= 60) {
-    bgColor = '#F59E0B'; // Amber
+    bgColor = '#F59E0B';
     borderColor = '#B45309';
   } else {
-    bgColor = '#EF4444'; // Red
+    bgColor = '#EF4444';
     borderColor = '#991B1B';
   }
 
-  const selectedRing = isSelected ? 'box-shadow: 0 0 0 4px #10B981, 0 8px 16px rgba(0,0,0,0.3); z-index: 999;' : 'box-shadow: 0 4px 10px rgba(0,0,0,0.25);';
+  const selectedRing = isSelected ? 'box-shadow: 0 0 0 4px #10B981, 0 8px 16px rgba(0,0,0,0.35); z-index: 999; transform: scale(1.1);' : 'box-shadow: 0 3px 8px rgba(0,0,0,0.25);';
 
   const html = `
-    <div style="position: relative; display: flex; flex-direction: column; items-center: center; align-items: center;">
-      <div style="background-color: ${bgColor}; color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 12px; font-family: sans-serif; border: 2px solid ${borderColor}; ${selectedRing} display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+    <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);">
+      <div style="background-color: ${bgColor}; color: white; padding: 3px 7px; border-radius: 12px; font-weight: 800; font-size: 11px; font-family: 'Plus Jakarta Sans', sans-serif; border: 2px solid ${borderColor}; ${selectedRing} display: flex; align-items: center; gap: 3px; white-space: nowrap;">
         <span>★</span>
         <span>${score}</span>
       </div>
-      <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid ${bgColor}; margin-top: -1px;"></div>
+      <div style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid ${bgColor}; margin-top: -1px;"></div>
     </div>
   `;
 
-  return L.divIcon({ html, className: 'custom-score-marker', iconSize: [50, 36], iconAnchor: [25, 36] });
+  return L.divIcon({ html, className: 'custom-score-marker', iconSize: [46, 32], iconAnchor: [23, 32], popupAnchor: [0, -32] });
 };
 
-// Component to dynamically adjust map view when search center or radius changes
-const MapRecenter: React.FC<{ lat: number; lng: number; radiusKm: number }> = ({ lat, lng, radiusKm }) => {
+// Map Controller for Smooth flyTo Navigation and InvalidateSize handling
+const MapController: React.FC<{
+  centerLat: number;
+  centerLng: number;
+  radiusKm: number;
+  recenterTrigger: number;
+  isFullscreen: boolean;
+}> = ({ centerLat, centerLng, radiusKm, recenterTrigger, isFullscreen }) => {
   const map = useMap();
+
+  // Silky-smooth cinematic flyTo navigation
   useEffect(() => {
-    map.setView([lat, lng], radiusKm > 80 ? 9 : radiusKm > 40 ? 10 : 11, { animate: true });
-  }, [lat, lng, radiusKm, map]);
+    const targetZoom = radiusKm > 80 ? 9 : radiusKm > 40 ? 10 : radiusKm > 15 ? 11 : 12;
+    map.flyTo([centerLat, centerLng], targetZoom, {
+      duration: 1.25,
+      easeLinearity: 0.25,
+    });
+  }, [centerLat, centerLng, radiusKm, recenterTrigger, map]);
+
+  // Handle map canvas redraw on fullscreen or container resize
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize({ animate: true });
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [isFullscreen, map]);
+
   return null;
 };
 
-// Map click listener for 100% pinpoint location adjustment
+// Modern Floating Glassmorphic Zoom Controls
+const CustomZoomControls: React.FC = () => {
+  const map = useMap();
+  return (
+    <div className="absolute right-4 bottom-16 sm:bottom-18 z-[1000] flex flex-col bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-md border border-gray-200/90 dark:border-zinc-800 rounded-xl shadow-lg overflow-hidden pointer-events-auto transition-all">
+      <button
+        type="button"
+        onClick={() => map.zoomIn(1, { animate: true })}
+        title="Zoom In"
+        aria-label="Zoom in"
+        className="p-2 text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-primary transition-all active:scale-90 cursor-pointer border-b border-gray-100 dark:border-zinc-800 flex items-center justify-center"
+      >
+        <Plus size={16} strokeWidth={2.5} />
+      </button>
+      <button
+        type="button"
+        onClick={() => map.zoomOut(1, { animate: true })}
+        title="Zoom Out"
+        aria-label="Zoom out"
+        className="p-2 text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-primary transition-all active:scale-90 cursor-pointer flex items-center justify-center"
+      >
+        <Minus size={16} strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+};
+
+// Map click listener for fine-tuning center coordinates
 const MapClickListener: React.FC<{ onMapClick: (lat: number, lng: number) => void }> = ({ onMapClick }) => {
   useMapEvents({
     click(e) {
@@ -77,6 +291,8 @@ interface GeoMapContainerProps {
   onOpen3DView?: () => void;
   isSearching: boolean;
   onResetFilters: () => void;
+  districtName?: string;
+  businessCategory?: string;
 }
 
 export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
@@ -88,31 +304,63 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
   onSelectLocation,
   isSearching,
   onResetFilters,
+  districtName = 'Anand',
+  businessCategory = 'Dairy Farming',
 }) => {
   const [mapTileMode, setMapTileMode] = useState<'standard' | 'satellite' | 'terrain'>('standard');
-  const [isNightMode, setIsNightMode] = useState<boolean>(false);
+  const [isNightMode, setIsNightMode] = useState<boolean>(() => {
+    return document.documentElement.classList.contains('dark') || document.documentElement.getAttribute('data-theme') === 'dark';
+  });
   const [isLocationOn, setIsLocationOn] = useState<boolean>(true);
   const [userPinPos, setUserPinPos] = useState<[number, number]>([centerLat, centerLng]);
   const [isLayersOpen, setIsLayersOpen] = useState<boolean>(false);
-  const [activeLayers, setActiveLayers] = useState<Record<string, boolean>>({
-    competitors: true,
-    transport: true,
-    markets: false,
-    banks: false,
-    hospitals: false,
-    infrastructure: false,
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [recenterTrigger, setRecenterTrigger] = useState<number>(0);
+
+  // Layer category filters matching the screenshot
+  const [visibleCategories, setVisibleCategories] = useState<Record<string, boolean>>({
+    competitor: true,
+    similar: true,
+    poi: true,
+    market: true,
   });
 
   const [layerFeatures, setLayerFeatures] = useState<LayerFeature[]>([]);
 
+  // Sync isNightMode with document dark mode state
+  useEffect(() => {
+    const checkDark = () => {
+      const darkNow = document.documentElement.classList.contains('dark') || document.documentElement.getAttribute('data-theme') === 'dark';
+      setIsNightMode(darkNow);
+    };
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // Sync userPinPos with props
   useEffect(() => {
     setUserPinPos([centerLat, centerLng]);
   }, [centerLat, centerLng]);
 
-  // Load map overlay features
+  // Handle ESC key to exit fullscreen
   useEffect(() => {
-    geoService.getLayersData(centerLat, centerLng).then(setLayerFeatures);
-  }, [centerLat, centerLng]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // Load accurately located map layer features based on chosen location & parameters
+  useEffect(() => {
+    geoService
+      .getLayersData(centerLat, centerLng, radiusKm, districtName, businessCategory)
+      .then(setLayerFeatures);
+  }, [centerLat, centerLng, radiusKm, districtName, businessCategory]);
 
   // Tile Layer URLs (Google Maps API)
   const tileUrls = {
@@ -121,182 +369,197 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
     terrain: GOOGLE_MAPS_TILE_URLS.terrain,
   };
 
-  const activeTileUrl = isNightMode
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : tileUrls[mapTileMode];
+  const activeTileUrl = tileUrls[mapTileMode];
+  const activeAttribution = GOOGLE_MAPS_ATTRIBUTION;
 
-  const tileAttributions = {
-    standard: GOOGLE_MAPS_ATTRIBUTION,
-    satellite: GOOGLE_MAPS_ATTRIBUTION,
-    terrain: GOOGLE_MAPS_ATTRIBUTION,
+  const toggleCategory = (cat: string) => {
+    setVisibleCategories((prev) => ({ ...prev, [cat]: !prev[cat] }));
   };
 
-  const activeAttribution = isNightMode
-    ? '&copy; OpenStreetMap contributors &copy; CARTO'
-    : tileAttributions[mapTileMode];
-
-  const toggleLayer = (layerKey: string) => {
-    setActiveLayers((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
+  // Counts for legend
+  const counts = {
+    competitors: layerFeatures.filter((f) => f.category === 'competitor').length,
+    similar: layerFeatures.filter((f) => f.category === 'similar').length,
+    pois: layerFeatures.filter((f) => f.category === 'poi').length,
+    markets: layerFeatures.filter((f) => f.category === 'market').length,
   };
 
   return (
-    <div className="relative w-full h-full min-h-[500px] bg-gray-100 flex flex-col overflow-hidden">
-      {/* Top Map Control Bar (Positioned Top Right) */}
-      <div className="absolute top-3 right-3 z-[1000] flex items-center gap-2 pointer-events-auto">
-        {/* Map View Selector, Layers Dropdown & Day/Night Toggle */}
-        <div className="flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-300 dark:border-slate-700 rounded-xl p-1 shadow-md">
+    <div className={`relative w-full h-full flex flex-col overflow-hidden transition-all duration-300 ${
+      isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen bg-black' : 'min-h-[500px] bg-white dark:bg-black'
+    } ${isNightMode && mapTileMode !== 'satellite' ? 'leaflet-night-mode' : ''}`}>
+      {/* Top Left: Map Style Selector Pills (Positioned cleanly with no overlapping zoom box) */}
+      <div className="absolute top-4 left-4 z-[1000] flex items-center gap-1 bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-md border border-gray-200/90 dark:border-zinc-800 rounded-xl p-1 shadow-md pointer-events-auto">
+        <button
+          onClick={() => { setMapTileMode('standard'); setIsNightMode(false); }}
+          className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            mapTileMode === 'standard' && !isNightMode ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          Map
+        </button>
+        <button
+          onClick={() => setMapTileMode('satellite')}
+          className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            mapTileMode === 'satellite' ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          Satellite
+        </button>
+        <button
+          onClick={() => { setMapTileMode('terrain'); setIsNightMode(false); }}
+          className={`px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer hidden sm:block ${
+            mapTileMode === 'terrain' && !isNightMode ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          Terrain
+        </button>
+      </div>
+
+      {/* Top Right: Actions & Tools (Recenter, Layers Popover, Day/Night, Fullscreen) */}
+      <div className="absolute top-4 right-4 z-[1000] flex items-center gap-2 pointer-events-auto">
+        {/* Recenter / GPS Target Button (Triggers Silky flyTo to Center Location) */}
+        <button
+          onClick={() => {
+            setUserPinPos([centerLat, centerLng]);
+            setRecenterTrigger((prev) => prev + 1);
+          }}
+          title="Recenter Map to Search Location"
+          aria-label="Recenter map"
+          className="p-2 rounded-xl bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-md border border-gray-200/90 dark:border-zinc-800 text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-800 shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center group"
+        >
+          <Navigation size={16} className="text-primary group-hover:rotate-45 transition-transform duration-300" />
+        </button>
+
+        {/* Map Layers Dropdown Button */}
+        <div className="relative">
           <button
-            onClick={() => { setMapTileMode('standard'); setIsNightMode(false); }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-              mapTileMode === 'standard' && !isNightMode ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800'
+            onClick={() => setIsLayersOpen(!isLayersOpen)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl backdrop-blur-md border transition-all cursor-pointer shadow-md active:scale-95 ${
+              isLayersOpen 
+                ? 'bg-primary text-white border-primary' 
+                : 'bg-white/95 dark:bg-[#0a0a0c]/95 text-gray-700 dark:text-zinc-200 border-gray-200/90 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800'
             }`}
           >
-            Standard Map
-          </button>
-          <button
-            onClick={() => setMapTileMode('satellite')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-              mapTileMode === 'satellite' ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            Satellite
-          </button>
-          <button
-            onClick={() => { setMapTileMode('terrain'); setIsNightMode(false); }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-              mapTileMode === 'terrain' && !isNightMode ? 'bg-primary text-white shadow-xs' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            Terrain
+            <Layers size={14} className={isLayersOpen ? 'text-white' : 'text-primary'} />
+            <span>Layers</span>
+            <ChevronDown size={13} className={`transition-transform duration-200 ${isLayersOpen ? 'rotate-180' : ''}`} />
           </button>
 
-          <div className="w-px h-5 bg-gray-300 dark:bg-slate-700 mx-0.5" />
-
-          {/* Map Layers Dropdown Button */}
-          <div className="relative">
-            <button
-              onClick={() => setIsLayersOpen(!isLayersOpen)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-                isLayersOpen ? 'bg-primary/10 text-primary border border-primary/30 font-bold' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <Layers size={14} className="text-primary" />
-              <span>Layers</span>
-              <ChevronDown size={13} className={`transition-transform duration-200 ${isLayersOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Menu Popover */}
-            {isLayersOpen && (
-              <div className="absolute right-0 top-full mt-2 z-[1001] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 p-3 rounded-xl shadow-xl w-52 animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2 mb-2">
-                  <span className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Layers size={14} className="text-primary" /> Map Layers
-                  </span>
-                </div>
-                <div className="space-y-2 text-xs font-medium text-gray-700 dark:text-gray-200">
-                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={activeLayers.competitors}
-                      onChange={() => toggleLayer('competitors')}
-                      className="w-4 h-4 accent-primary rounded cursor-pointer"
-                    />
-                    <span>Competitor Density</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={activeLayers.transport}
-                      onChange={() => toggleLayer('transport')}
-                      className="w-4 h-4 accent-primary rounded cursor-pointer"
-                    />
-                    <span>Transport & Roads</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={activeLayers.markets}
-                      onChange={() => toggleLayer('markets')}
-                      className="w-4 h-4 accent-primary rounded cursor-pointer"
-                    />
-                    <span>Markets & Mandis</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={activeLayers.banks}
-                      onChange={() => toggleLayer('banks')}
-                      className="w-4 h-4 accent-primary rounded cursor-pointer"
-                    />
-                    <span>Banks / ATMs</span>
-                  </label>
-                </div>
+          {/* Dropdown Menu Popover */}
+          {isLayersOpen && (
+            <div className="absolute right-0 top-full mt-2 z-[1001] bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 p-3 rounded-2xl shadow-2xl w-56 animate-in fade-in zoom-in-95 duration-150">
+              <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2 mb-2">
+                <span className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers size={14} className="text-primary" /> Map Overlays
+                </span>
               </div>
-            )}
-          </div>
-
-          <div className="w-px h-5 bg-gray-300 dark:bg-slate-700 mx-0.5" />
-
-          {/* Location ON / OFF Toggle Button */}
-          <button
-            onClick={() => setIsLocationOn(!isLocationOn)}
-            title={isLocationOn ? 'GPS Location ON (Click to turn OFF)' : 'GPS Location OFF (Click to turn ON)'}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-              isLocationOn
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-slate-700'
-            }`}
-          >
-            <Navigation size={13} className={isLocationOn ? 'animate-pulse text-white' : 'text-gray-400'} />
-            <span>Location {isLocationOn ? 'ON' : 'OFF'}</span>
-          </button>
-
-          <div className="w-px h-5 bg-gray-300 dark:bg-slate-700 mx-0.5" />
-
-          {/* Google Maps Style Day / Night Mode Toggle Icon (Logo Only) */}
-          <button
-            onClick={() => setIsNightMode(!isNightMode)}
-            title={isNightMode ? 'Night Mode Active (Click for Day Mode)' : 'Day Mode Active (Click for Night Mode)'}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-center ${
-              isNightMode 
-                ? 'bg-slate-800 text-indigo-300 border border-slate-700 shadow-xs font-bold' 
-                : 'bg-amber-100 text-amber-600 border border-amber-300 shadow-xs font-bold'
-            }`}
-          >
-            {isNightMode ? <Moon size={15} /> : <Sun size={15} />}
-          </button>
+              <div className="space-y-2 text-xs font-medium text-gray-700 dark:text-zinc-200">
+                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={visibleCategories.competitor}
+                    onChange={() => toggleCategory('competitor')}
+                    className="w-4 h-4 accent-[#E11D48] rounded cursor-pointer"
+                  />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]"></span>
+                    <span>Competitors ({counts.competitors})</span>
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={visibleCategories.similar}
+                    onChange={() => toggleCategory('similar')}
+                    className="w-4 h-4 accent-[#2563EB] rounded cursor-pointer"
+                  />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span>
+                    <span>Similar Businesses ({counts.similar})</span>
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={visibleCategories.poi}
+                    onChange={() => toggleCategory('poi')}
+                    className="w-4 h-4 accent-[#F59E0B] rounded cursor-pointer"
+                  />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span>
+                    <span>Key POIs ({counts.pois})</span>
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={visibleCategories.market}
+                    onChange={() => toggleCategory('market')}
+                    className="w-4 h-4 accent-[#0D9488] rounded cursor-pointer"
+                  />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488]"></span>
+                    <span>Target Market ({counts.markets})</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Day / Night Mode Toggle Icon */}
+        <button
+          onClick={() => setIsNightMode(!isNightMode)}
+          title={isNightMode ? 'Night Mode Active (Click for Day Mode)' : 'Day Mode Active (Click for Night Mode)'}
+          aria-label="Toggle Night/Day Mode"
+          className={`p-2 rounded-xl backdrop-blur-md transition-all active:scale-95 cursor-pointer flex items-center justify-center shadow-md border ${
+            isNightMode 
+              ? 'bg-zinc-900 text-indigo-300 border-zinc-700' 
+              : 'bg-white/95 text-amber-600 border-gray-200/90'
+          }`}
+        >
+          {isNightMode ? <Moon size={16} /> : <Sun size={16} />}
+        </button>
+
+        {/* Fullscreen / Maximize Map Toggle */}
+        <button
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          title={isFullscreen ? 'Exit Fullscreen (Esc)' : 'Expand Map Fullscreen'}
+          aria-label={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Map'}
+          className={`p-2 rounded-xl backdrop-blur-md transition-all active:scale-95 cursor-pointer flex items-center justify-center shadow-md border ${
+            isFullscreen
+              ? 'bg-primary text-white border-primary shadow-emerald-500/30'
+              : 'bg-white/95 dark:bg-[#0a0a0c]/95 text-gray-700 dark:text-zinc-200 border-gray-200/90 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800'
+          }`}
+        >
+          {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+        </button>
       </div>
 
       {/* Loading Overlay */}
       {isSearching && (
-        <div className="absolute inset-0 z-[1001] bg-white/70 backdrop-blur-xs flex items-center justify-center">
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center space-y-3">
+        <div className="absolute inset-0 z-[1001] bg-white/70 dark:bg-black/80 backdrop-blur-xs flex items-center justify-center">
+          <div className="bg-white dark:bg-[#0a0a0c] p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-zinc-800 flex flex-col items-center space-y-3">
             <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm font-bold text-gray-900">Analyzing candidate locations...</p>
-            <p className="text-xs text-gray-500">Calculating opportunity scores & geospatial telemetry</p>
+            <p className="text-sm font-bold text-gray-900 dark:text-white">Locating verified markers & telemetry...</p>
+            <p className="text-xs text-gray-500 dark:text-zinc-400">Positioning competitors, similar businesses & POIs</p>
           </div>
         </div>
       )}
 
       {/* Empty State Overlay */}
       {!isSearching && candidates.length === 0 && (
-        <div className="absolute inset-0 z-[999] bg-white/90 backdrop-blur-xs flex items-center justify-center p-6 text-center">
-          <div className="max-w-md bg-white border border-gray-200 p-8 rounded-2xl shadow-xl space-y-4">
-            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+        <div className="absolute inset-0 z-[999] bg-white/90 dark:bg-black/90 backdrop-blur-xs flex items-center justify-center p-6 text-center">
+          <div className="max-w-md bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 p-8 rounded-2xl shadow-xl space-y-4">
+            <div className="w-14 h-14 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center mx-auto">
               <AlertCircle size={28} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900">No suitable locations found</h3>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                No location nodes matched your strict location, business sector, and investment filters within this zone.
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">No suitable locations found</h3>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                No location nodes matched your strict criteria. Try expanding radius or toggling neighboring zones.
               </p>
-            </div>
-            <div className="text-left bg-gray-50 p-3.5 rounded-xl border border-gray-200/80 text-xs space-y-1.5 text-gray-700">
-              <span className="font-bold text-gray-900 block">Suggested actions:</span>
-              <p>• Increase your search radius slider</p>
-              <p>• Expand business category or investment range</p>
-              <p>• Turn ON "Include neighboring states" cross-border toggle</p>
             </div>
             <button
               onClick={onResetFilters}
@@ -308,48 +571,76 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
         </div>
       )}
 
-      {/* Leaflet React Map Container */}
+      {/* Leaflet React Map Container (Custom Zoom, High Smoothness) */}
       <MapContainer
         center={[centerLat, centerLng]}
-        zoom={radiusKm > 80 ? 9 : radiusKm > 40 ? 10 : 11}
+        zoom={radiusKm > 80 ? 9 : radiusKm > 40 ? 10 : radiusKm > 15 ? 11 : 12}
         scrollWheelZoom={true}
+        zoomControl={false}
+        zoomAnimation={true}
+        fadeAnimation={true}
+        markerZoomAnimation={true}
+        wheelPxPerZoomLevel={120}
+        wheelDebounceTime={40}
         style={{ width: '100%', height: '100%', zIndex: 1 }}
       >
         <TileLayer url={activeTileUrl} attribution={activeAttribution} subdomains={GOOGLE_MAPS_SUBDOMAINS} />
 
-        <MapRecenter lat={centerLat} lng={centerLng} radiusKm={radiusKm} />
+        {/* Cinematic Map Smooth Controller */}
+        <MapController
+          centerLat={centerLat}
+          centerLng={centerLng}
+          radiusKm={radiusKm}
+          recenterTrigger={recenterTrigger}
+          isFullscreen={isFullscreen}
+        />
         <MapClickListener onMapClick={(lat, lng) => setUserPinPos([lat, lng])} />
 
-        {/* Visible Search Radius Circle */}
+        {/* Custom Modern Floating Zoom In / Zoom Out Controls */}
+        <CustomZoomControls />
+
+        {/* Concentric Circle 1: Inner Core Zone Circle */}
+        <Circle
+          center={[centerLat, centerLng]}
+          radius={radiusKm * 400}
+          pathOptions={{
+            color: '#10B981',
+            fillColor: '#10B981',
+            fillOpacity: 0.05,
+            weight: 1,
+          }}
+        />
+
+        {/* Concentric Circle 2: Outer Search Radius Circle */}
         <Circle
           center={[centerLat, centerLng]}
           radius={radiusKm * 1000}
           pathOptions={{
             color: '#10B981',
             fillColor: '#10B981',
-            fillOpacity: 0.08,
+            fillOpacity: 0.09,
             weight: 2,
             dashArray: '6, 6',
           }}
         />
 
-        {/* User Current / Search Center Logo Marker (Visible only when Location is ON) */}
+        {/* User Current / Search Center Pin Marker */}
         {isLocationOn && (
           <>
-            {/* High-accuracy precision aura ring */}
+            {/* Center Pulsing Aura Ring */}
             <Circle
               center={userPinPos}
               radius={80}
               pathOptions={{
-                color: '#2563eb',
-                fillColor: '#3b82f6',
+                color: '#059669',
+                fillColor: '#10B981',
                 fillOpacity: 0.25,
                 weight: 1.5,
               }}
             />
             <Marker
               position={userPinPos}
-              icon={createUserLocationIcon('You Are Here (Drag to fine-tune)')}
+              icon={createYourLocationPinIcon('Your Location')}
               draggable={true}
               eventHandlers={{
                 dragend: (e) => {
@@ -360,19 +651,56 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
             >
               <Popup>
                 <div className="p-1 text-xs font-sans">
-                  <strong className="text-gray-900 block font-bold">100% High Precision Location</strong>
-                  <p className="text-[11px] text-emerald-600 font-semibold mt-0.5">GPS Position Active</p>
+                  <strong className="text-gray-900 font-bold block">Your Location (Center)</strong>
+                  <p className="text-[11px] text-emerald-600 font-semibold mt-0.5">GPS Search Center Active</p>
                   <span className="text-gray-500 font-mono text-[10px] block mt-1">
-                    {userPinPos[0].toFixed(6)}, {userPinPos[1].toFixed(6)}
+                    {userPinPos[0].toFixed(5)}, {userPinPos[1].toFixed(5)}
                   </span>
-                  <p className="text-[10px] text-gray-400 mt-1 italic">Tip: Drag pin anytime to adjust precise coordinates</p>
+                  <p className="text-[10px] text-gray-400 mt-1 italic">Tip: Drag pin anytime to adjust search center</p>
                 </div>
               </Popup>
             </Marker>
           </>
         )}
 
-        {/* Candidate Location Markers */}
+        {/* Map Categorized Feature Markers (Competitors, Similar Businesses, Key POIs, Target Market) */}
+        {layerFeatures.map((feat) => {
+          if (!visibleCategories[feat.category]) return null;
+          return (
+            <Marker
+              key={feat.id}
+              position={[feat.lat, feat.lng]}
+              icon={createFeatureMarkerIcon(feat.category, feat.type)}
+            >
+              <Popup className="custom-popup">
+                <div className="p-1.5 text-xs space-y-1.5 font-sans min-w-[210px]">
+                  <div className="flex items-center justify-between gap-2 border-b border-gray-100 dark:border-zinc-800 pb-1.5">
+                    <span className="font-bold text-gray-900 leading-tight">{feat.name}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase shrink-0 ${
+                      feat.category === 'competitor' ? 'bg-red-100 text-red-700' :
+                      feat.category === 'similar' ? 'bg-blue-100 text-blue-700' :
+                      feat.category === 'poi' ? 'bg-amber-100 text-amber-800' :
+                      'bg-emerald-100 text-emerald-800'
+                    }`}>
+                      {feat.category === 'competitor' ? 'Competitor' :
+                       feat.category === 'similar' ? 'Similar Biz' :
+                       feat.category === 'poi' ? 'Key POI' : 'Target Market'}
+                    </span>
+                  </div>
+                  {feat.details && (
+                    <p className="text-[11px] text-gray-600 leading-snug">{feat.details}</p>
+                  )}
+                  <div className="flex items-center justify-between text-[10px] text-gray-500 pt-1 border-t border-gray-50">
+                    <span>Distance: <strong className="text-gray-800 font-semibold">{feat.distanceKm || '1.2'} km</strong></span>
+                    <span className="font-mono text-[9px] text-gray-400">{feat.lat.toFixed(4)}, {feat.lng.toFixed(4)}</span>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {/* Evaluated Opportunity Candidate Location Nodes */}
         {candidates.map((cand) => {
           const isSelected = selectedLocation?.id === cand.id;
           return (
@@ -385,66 +713,88 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
               }}
             >
               <Popup className="custom-popup">
-                <div className="p-1 text-xs space-y-1 font-sans">
+                <div className="p-1.5 text-xs space-y-1 font-sans min-w-[220px]">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-bold text-gray-900">{cand.name}</span>
                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${cand.scoreResult.tier.badgeColor}`}>
-                      {cand.scoreResult.overallScore}
+                      ★ {cand.scoreResult.overallScore}
                     </span>
                   </div>
                   <p className="text-[11px] text-gray-500">{cand.areaName}, {cand.districtName}</p>
-                  <p className="text-[11px] text-emerald-600 font-semibold">Est. Profit: {cand.estimatedAnnualProfit}/yr</p>
+                  <p className="text-[11px] text-emerald-600 font-semibold">Est. Profit: {cand.estimatedAnnualProfit}</p>
                   <button
                     onClick={() => onSelectLocation(cand)}
-                    className="w-full mt-1.5 px-2 py-1 text-[11px] font-bold text-white bg-primary rounded hover:bg-emerald-600 cursor-pointer"
+                    className="w-full mt-1.5 px-2.5 py-1 text-[11px] font-bold text-white bg-primary rounded-lg hover:bg-emerald-600 cursor-pointer transition-colors"
                   >
-                    View Full Location Insights
+                    View Location Insights Below ↓
                   </button>
                 </div>
               </Popup>
             </Marker>
           );
         })}
-
-        {/* Optional Map Layer Markers (Competitors, Transport, Markets, Banks) */}
-        {layerFeatures.map((feat) => {
-          if (!activeLayers[feat.type] && !activeLayers.competitors) return null;
-          return (
-            <Circle
-              key={feat.id}
-              center={[feat.lat, feat.lng]}
-              radius={400}
-              pathOptions={{
-                color: feat.type === 'competitor' ? '#EF4444' : '#3B82F6',
-                fillColor: feat.type === 'competitor' ? '#EF4444' : '#3B82F6',
-                fillOpacity: 0.3,
-                weight: 1,
-              }}
-            />
-          );
-        })}
       </MapContainer>
 
-      {/* Map Footer Legend */}
-      <div className="absolute bottom-3 left-3 z-[1000] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-md flex items-center gap-4 text-xs font-semibold text-gray-700 dark:text-gray-200">
-        <span className="text-gray-400 dark:text-gray-400 font-bold uppercase tracking-wider text-[10px]">Score Tier Legend:</span>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-          <span>90+ Excellent</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-          <span>75-89 High</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-          <span>60-74 Moderate</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-          <span>&lt;60 Low</span>
-        </div>
+      {/* Map Footer Legend (Crisp Single-Line Pill Bar - Fits Perfectly Without Awkward Wrapping) */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] max-w-[calc(100%-2rem)] bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-xl flex items-center justify-center gap-2.5 sm:gap-4 whitespace-nowrap overflow-x-auto no-scrollbar pointer-events-auto text-[11.5px] font-bold text-gray-700 dark:text-zinc-200">
+        {/* Your Location */}
+        <button
+          type="button"
+          onClick={() => setIsLocationOn(!isLocationOn)}
+          className={`flex items-center gap-1.5 cursor-pointer transition-all px-2 py-1 rounded-lg hover:bg-gray-100/80 dark:hover:bg-zinc-800/80 ${!isLocationOn ? 'opacity-40 line-through' : ''}`}
+          title="Click to toggle Your Location pin"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 ring-2 ring-emerald-300 dark:ring-emerald-900 shrink-0"></span>
+          <span>Your Location</span>
+        </button>
+
+        {/* Competitors (Red) */}
+        <button
+          type="button"
+          onClick={() => toggleCategory('competitor')}
+          className={`flex items-center gap-1.5 cursor-pointer transition-all px-2 py-1 rounded-lg hover:bg-gray-100/80 dark:hover:bg-zinc-800/80 ${!visibleCategories.competitor ? 'opacity-40 line-through' : ''}`}
+          title="Click to toggle Competitor markers"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48] ring-2 ring-rose-300 dark:ring-rose-900 shrink-0"></span>
+          <span>Competitors</span>
+        </button>
+
+        {/* Similar Businesses (Blue) */}
+        <button
+          type="button"
+          onClick={() => toggleCategory('similar')}
+          className={`flex items-center gap-1.5 cursor-pointer transition-all px-2 py-1 rounded-lg hover:bg-gray-100/80 dark:hover:bg-zinc-800/80 ${!visibleCategories.similar ? 'opacity-40 line-through' : ''}`}
+          title="Click to toggle Similar Business markers"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB] ring-2 ring-blue-300 dark:ring-blue-900 shrink-0"></span>
+          <span>Similar Businesses</span>
+        </button>
+
+        {/* Key POIs (Orange) */}
+        <button
+          type="button"
+          onClick={() => toggleCategory('poi')}
+          className={`flex items-center gap-1.5 cursor-pointer transition-all px-2 py-1 rounded-lg hover:bg-gray-100/80 dark:hover:bg-zinc-800/80 ${!visibleCategories.poi ? 'opacity-40 line-through' : ''}`}
+          title="Click to toggle Key POI markers"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] ring-2 ring-amber-300 dark:ring-amber-900 shrink-0"></span>
+          <span>Key POIs</span>
+        </button>
+
+        {/* Target Market (Green/Teal) */}
+        <button
+          type="button"
+          onClick={() => toggleCategory('market')}
+          className={`flex items-center gap-1.5 cursor-pointer transition-all px-2 py-1 rounded-lg hover:bg-gray-100/80 dark:hover:bg-zinc-800/80 ${!visibleCategories.market ? 'opacity-40 line-through' : ''}`}
+          title="Click to toggle Target Market markers"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488] ring-2 ring-teal-300 dark:ring-teal-900 shrink-0"></span>
+          <span>Target Market</span>
+        </button>
       </div>
     </div>
   );
 };
+
+export default GeoMapContainer;
+

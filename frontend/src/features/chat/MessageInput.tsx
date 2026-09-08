@@ -95,9 +95,9 @@ export default function MessageInput({ onSend, isLoading }: MessageInputProps) {
                 
                 <input
                     type="text"
-                    value={isTranscribing ? 'Transcribing...' : input}
+                    value={isTranscribing ? t('chat_transcribing', 'Transcribing...') : input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={isRecording ? 'Listening...' : t('chat.placeholder', 'Ask a question about your business plan...')}
+                    placeholder={isRecording ? t('chat_listening', 'Listening...') : t('chat_placeholder', 'Ask a question about your business plan, schemes, or local market...')}
                     disabled={isLoading || isRecording || isTranscribing}
                     className={`flex-1 px-4 py-3 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
                         isRecording || isTranscribing ? 'bg-gray-100 border-gray-200 text-gray-500' : 'border-gray-300'
@@ -107,6 +107,7 @@ export default function MessageInput({ onSend, isLoading }: MessageInputProps) {
                 <button
                     type="submit"
                     disabled={!input.trim() || isLoading || isRecording || isTranscribing}
+                    title={t('chat_send', 'Send')}
                     className="w-12 h-12 shrink-0 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
                 >
                     {isTranscribing ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} className="ml-1" />}

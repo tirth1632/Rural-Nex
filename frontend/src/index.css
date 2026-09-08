@@ -1,7 +1,12 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *));
 
 /* Register CSS custom properties as Tailwind v4 theme tokens */
 @theme inline {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -25,8 +30,30 @@
 }
 
 @layer base {
+  :root,
+  html,
+  body,
+  #root {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.01em;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+
+  /* ==========================================================================
+     LIGHT THEME (Pure White Background #ffffff, Crisp Dark Text #0f172a)
+     ========================================================================== */
   :root, html[data-theme="light"], html.theme-light {
-    --background: 210 20% 98%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -57,54 +84,27 @@
     --radius-val: 0.5rem;
   }
 
+  /* ==========================================================================
+     DARK THEME (Deep Pitch Black #000000, Crisp White Text #ffffff, Sleek Cards #0a0a0c)
+     ========================================================================== */
   html[data-theme="dark"], html.theme-dark, html.dark {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 7%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 158 64% 48%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 158 64% 48%;
-  }
-
-  html[data-theme="oled"], html.theme-oled {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
-    --card: 0 0% 5%;
+    --card: 0 0% 4%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 5%;
+    --popover: 0 0% 4%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 158 64% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 65%;
+    --muted-foreground: 0 0% 68%;
 
     --accent: 0 0% 12%;
     --accent-foreground: 0 0% 100%;
@@ -114,13 +114,79 @@
 
     --border: 0 0% 18%;
     --input: 0 0% 18%;
-    --ring: 0 0% 100%;
+    --ring: 158 64% 48%;
+
+    --radius-val: 0.5rem;
   }
 }
 
-/* Specific Theme Classes for Settings Sidebar & Segmented Control */
+/* ==========================================================================
+   GLOBAL LIGHT THEME OVERRIDES (Pure White Cleanliness Everywhere)
+   ========================================================================== */
+html:not(.dark):not([data-theme="dark"]),
+html.theme-light {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
 
-/* Settings Sidebar Nav Items */
+html:not(.dark):not([data-theme="dark"]) body,
+html:not(.dark):not([data-theme="dark"]) #root,
+html:not(.dark):not([data-theme="dark"]) main,
+html:not(.dark):not([data-theme="dark"]) .min-h-screen,
+html:not(.dark):not([data-theme="dark"]) .bg-gray-50,
+html:not(.dark):not([data-theme="dark"]) .bg-gray-100,
+html.theme-light body,
+html.theme-light #root,
+html.theme-light main,
+html.theme-light .min-h-screen,
+html.theme-light .bg-gray-50,
+html.theme-light .bg-gray-100 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark):not([data-theme="dark"]) header,
+html.theme-light header {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Light Theme Cards & Containers: Pure White Background */
+html:not(.dark):not([data-theme="dark"]) .bg-white,
+html.theme-light .bg-white {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Light Theme Text Visibility */
+html:not(.dark):not([data-theme="dark"]) .text-gray-900,
+html.theme-light .text-gray-900 {
+  color: #0f172a !important;
+}
+
+html:not(.dark):not([data-theme="dark"]) .text-gray-800,
+html:not(.dark):not([data-theme="dark"]) .text-gray-700,
+html.theme-light .text-gray-800,
+html.theme-light .text-gray-700 {
+  color: #334155 !important;
+}
+
+html:not(.dark):not([data-theme="dark"]) .text-gray-600,
+html:not(.dark):not([data-theme="dark"]) .text-gray-500,
+html.theme-light .text-gray-600,
+html.theme-light .text-gray-500 {
+  color: #64748b !important;
+}
+
+/* Light Theme Borders */
+html:not(.dark):not([data-theme="dark"]) .border-gray-200,
+html:not(.dark):not([data-theme="dark"]) .border-gray-300,
+html.theme-light .border-gray-200,
+html.theme-light .border-gray-300 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Settings Sidebar Nav Items (Light Mode) */
 .settings-nav-active {
   background-color: #e5e7eb;
   color: #111827;
@@ -134,39 +200,7 @@
   background-color: #f3f4f6;
 }
 
-html[data-theme="dark"] .settings-nav-active,
-html.theme-dark .settings-nav-active {
-  background-color: #374151 !important;
-  color: #ffffff !important;
-}
-
-html[data-theme="dark"] .settings-nav-inactive,
-html.theme-dark .settings-nav-inactive {
-  color: #9ca3af !important;
-}
-html[data-theme="dark"] .settings-nav-inactive:hover,
-html.theme-dark .settings-nav-inactive:hover {
-  color: #ffffff !important;
-  background-color: #1f2937 !important;
-}
-
-html[data-theme="oled"] .settings-nav-active,
-html.theme-oled .settings-nav-active {
-  background-color: #27272a !important;
-  color: #ffffff !important;
-}
-
-html[data-theme="oled"] .settings-nav-inactive,
-html.theme-oled .settings-nav-inactive {
-  color: #a1a1aa !important;
-}
-html[data-theme="oled"] .settings-nav-inactive:hover,
-html.theme-oled .settings-nav-inactive:hover {
-  color: #ffffff !important;
-  background-color: #18181b !important;
-}
-
-/* Segmented Control Component */
+/* Segmented Control Component (Light Mode) */
 .segmented-container {
   background-color: #f3f4f6;
   border-color: #e5e7eb;
@@ -186,468 +220,485 @@ html.theme-oled .settings-nav-inactive:hover {
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-html[data-theme="dark"] .segmented-container,
-html.theme-dark .segmented-container {
-  background-color: #111827 !important;
-  border-color: #374151 !important;
-}
+/* ==========================================================================
+   GLOBAL DARK THEME OVERRIDES (Deep Black #000000 & Crisp High-Contrast)
+   ========================================================================== */
 
-html[data-theme="dark"] .segmented-active,
-html.theme-dark .segmented-active {
-  background-color: #374151 !important;
+/* Full Deep Black Background for Base Layout */
+html[data-theme="dark"] body,
+html.dark body,
+html.theme-dark body,
+html[data-theme="dark"] main,
+html.dark main,
+html.theme-dark main,
+html[data-theme="dark"] .bg-gray-50,
+html.dark .bg-gray-50,
+html[data-theme="dark"] .bg-slate-50,
+html.dark .bg-slate-50,
+html.dark .bg-slate-950,
+html[data-theme="dark"] .bg-slate-950 {
+  background-color: #000000 !important;
   color: #ffffff !important;
-  border-color: #4b5563 !important;
 }
 
-html[data-theme="dark"] .segmented-inactive,
-html.theme-dark .segmented-inactive {
-  color: #9ca3af !important;
-}
-html[data-theme="dark"] .segmented-inactive:hover,
-html.theme-dark .segmented-inactive:hover {
-  color: #ffffff !important;
-  background-color: #1f2937 !important;
-}
-
-html[data-theme="oled"] .segmented-container,
-html.theme-oled .segmented-container {
-  background-color: #121212 !important;
+/* Deep Pitch Black Header */
+html[data-theme="dark"] header,
+html.dark header {
+  background-color: #000000 !important;
   border-color: #27272a !important;
 }
 
-html[data-theme="oled"] .segmented-active,
-html.theme-oled .segmented-active {
+/* Card & Box Containers in Dark Mode */
+html[data-theme="dark"] .bg-white,
+html.dark .bg-white,
+html[data-theme="dark"] .bg-slate-900,
+html.dark .bg-slate-900 {
+  background-color: #09090b !important;
+  color: #ffffff !important;
+}
+
+/* Secondary Panels / Subtle Container Backgrounds */
+html[data-theme="dark"] .bg-gray-100,
+html.dark .bg-gray-100,
+html[data-theme="dark"] .bg-slate-100,
+html.dark .bg-slate-100,
+html[data-theme="dark"] .bg-slate-200,
+html.dark .bg-slate-200,
+html[data-theme="dark"] .bg-slate-800,
+html.dark .bg-slate-800,
+html[data-theme="dark"] .bg-zinc-800,
+html.dark .bg-zinc-800,
+html[data-theme="dark"] .bg-zinc-900,
+html.dark .bg-zinc-900,
+html[data-theme="dark"] [class*="bg-slate-50/"],
+html.dark [class*="bg-slate-50/"],
+html[data-theme="dark"] [class*="bg-gray-50/"],
+html.dark [class*="bg-gray-50/"] {
+  background-color: #121215 !important;
+  color: #ffffff !important;
+}
+
+/* Hover Backgrounds in Dark Mode */
+html[data-theme="dark"] .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-slate-50:hover,
+html[data-theme="dark"] .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-slate-100:hover,
+html[data-theme="dark"] .hover\:bg-slate-200:hover,
+html.dark .hover\:bg-slate-200:hover,
+html[data-theme="dark"] .hover\:bg-gray-50:hover,
+html.dark .hover\:bg-gray-50:hover,
+html[data-theme="dark"] .hover\:bg-gray-100:hover,
+html.dark .hover\:bg-gray-100:hover,
+html[data-theme="dark"] .hover\:bg-gray-200:hover,
+html.dark .hover\:bg-gray-200:hover,
+html[data-theme="dark"] [class*="hover:bg-slate-50"]:hover,
+html.dark [class*="hover:bg-slate-50"]:hover {
+  background-color: #18181b !important;
+}
+
+/* All High-Contrast Crisp Borders in Dark Mode */
+html[data-theme="dark"] .border-gray-50,
+html.dark .border-gray-50,
+html[data-theme="dark"] .border-gray-100,
+html.dark .border-gray-100,
+html[data-theme="dark"] .border-gray-200,
+html.dark .border-gray-200,
+html[data-theme="dark"] .border-gray-300,
+html.dark .border-gray-300,
+html[data-theme="dark"] .border-slate-100,
+html.dark .border-slate-100,
+html[data-theme="dark"] .border-slate-200,
+html.dark .border-slate-200,
+html[data-theme="dark"] .border-slate-300,
+html.dark .border-slate-300,
+html[data-theme="dark"] .border-slate-700,
+html.dark .border-slate-700,
+html[data-theme="dark"] .border-slate-800,
+html.dark .border-slate-800,
+html[data-theme="dark"] .border-zinc-800,
+html.dark .border-zinc-800,
+html[data-theme="dark"] .border-neutral-800,
+html.dark .border-neutral-800,
+html[data-theme="dark"] .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="dark"] .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="dark"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="dark"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #27272a !important;
+}
+
+/* Text Hierarchy in Dark Mode (Pure White & Bright Slate) */
+html[data-theme="dark"] .text-gray-900,
+html.dark .text-gray-900,
+html[data-theme="dark"] .text-slate-900,
+html.dark .text-slate-900,
+html[data-theme="dark"] .text-zinc-900,
+html.dark .text-zinc-900,
+html[data-theme="dark"] .text-neutral-900,
+html.dark .text-neutral-900,
+html[data-theme="dark"] .text-gray-800,
+html.dark .text-gray-800,
+html[data-theme="dark"] .text-slate-800,
+html.dark .text-slate-800 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .text-gray-700,
+html.dark .text-gray-700,
+html[data-theme="dark"] .text-slate-700,
+html.dark .text-slate-700,
+html[data-theme="dark"] .text-zinc-700,
+html.dark .text-zinc-700,
+html[data-theme="dark"] .text-neutral-700,
+html.dark .text-neutral-700 {
+  color: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] .text-gray-600,
+html.dark .text-gray-600,
+html[data-theme="dark"] .text-slate-600,
+html.dark .text-slate-600,
+html[data-theme="dark"] .text-gray-500,
+html.dark .text-gray-500,
+html[data-theme="dark"] .text-slate-500,
+html.dark .text-slate-500,
+html[data-theme="dark"] .text-zinc-500,
+html.dark .text-zinc-500,
+html[data-theme="dark"] .text-neutral-500,
+html.dark .text-neutral-500 {
+  color: #a1a1aa !important;
+}
+
+html[data-theme="dark"] .text-gray-400,
+html.dark .text-gray-400,
+html[data-theme="dark"] .text-slate-400,
+html.dark .text-slate-400,
+html[data-theme="dark"] .text-zinc-400,
+html.dark .text-zinc-400,
+html[data-theme="dark"] .text-neutral-400,
+html.dark .text-neutral-400 {
+  color: #71717a !important;
+}
+
+/* Navigation Links in Dark Mode */
+html[data-theme="dark"] aside a.text-gray-700,
+html.dark aside a.text-gray-700,
+html[data-theme="dark"] header a.text-gray-700,
+html.dark header a.text-gray-700,
+html[data-theme="dark"] nav a.text-gray-700,
+html.dark nav a.text-gray-700 {
+  color: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] aside a.text-gray-700:hover,
+html.dark aside a.text-gray-700:hover,
+html[data-theme="dark"] header a.text-gray-700:hover,
+html.dark header a.text-gray-700:hover,
+html[data-theme="dark"] nav a.text-gray-700:hover,
+html.dark nav a.text-gray-700:hover {
+  color: #ffffff !important;
+  background-color: #18181b !important;
+}
+
+/* Settings Sidebar Nav Items (Dark Mode) */
+html[data-theme="dark"] .settings-nav-active,
+html.dark .settings-nav-active {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .settings-nav-inactive,
+html.dark .settings-nav-inactive {
+  color: #a1a1aa !important;
+}
+html[data-theme="dark"] .settings-nav-inactive:hover,
+html.dark .settings-nav-inactive:hover {
+  color: #ffffff !important;
+  background-color: #18181b !important;
+}
+
+/* Segmented Control Component (Dark Mode) */
+html[data-theme="dark"] .segmented-container,
+html.dark .segmented-container {
+  background-color: #121215 !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="dark"] .segmented-active,
+html.dark .segmented-active {
   background-color: #27272a !important;
   color: #ffffff !important;
   border-color: #3f3f46 !important;
 }
 
-html[data-theme="oled"] .segmented-inactive,
-html.theme-oled .segmented-inactive {
+html[data-theme="dark"] .segmented-inactive,
+html.dark .segmented-inactive {
   color: #a1a1aa !important;
 }
-html[data-theme="oled"] .segmented-inactive:hover,
-html.theme-oled .segmented-inactive:hover {
+html[data-theme="dark"] .segmented-inactive:hover,
+html.dark .segmented-inactive:hover {
   color: #ffffff !important;
   background-color: #18181b !important;
 }
 
-/* Global Primary Accent Rules */
+/* Form Elements (input, select, textarea) in Dark Mode */
+html[data-theme="dark"] select,
+html.dark select,
+html[data-theme="dark"] input[type="text"],
+html.dark input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html.dark input[type="number"],
+html[data-theme="dark"] input[type="password"],
+html.dark input[type="password"],
+html[data-theme="dark"] input[type="email"],
+html.dark input[type="email"],
+html[data-theme="dark"] textarea,
+html.dark textarea {
+  background-color: #0a0a0c !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="dark"] select option,
+html.dark select option {
+  background-color: #121215 !important;
+  color: #ffffff !important;
+}
+
+/* Secondary Action Buttons in Dark Mode */
+html[data-theme="dark"] button.bg-white,
+html.dark button.bg-white,
+html[data-theme="dark"] a.bg-white,
+html.dark a.bg-white {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+/* Primary Accents in Dark Mode */
 html[data-theme="dark"] .bg-primary,
-html[data-theme="oled"] .bg-primary {
+html.dark .bg-primary {
   background-color: #10b981 !important;
   color: #ffffff !important;
 }
 
 html[data-theme="dark"] .text-primary,
-html[data-theme="oled"] .text-primary {
+html.dark .text-primary {
   color: #34d399 !important;
 }
 
-/* Main Navigation Inactive Links in Dark & OLED */
-html[data-theme="dark"] aside a.text-gray-700,
-html[data-theme="dark"] header a.text-gray-700,
-html[data-theme="dark"] nav a.text-gray-700,
-html[data-theme="oled"] aside a.text-gray-700,
-html[data-theme="oled"] header a.text-gray-700,
-html[data-theme="oled"] nav a.text-gray-700 {
-  color: #e4e4e7 !important;
-}
-
-html[data-theme="dark"] aside a.text-gray-700:hover,
-html[data-theme="dark"] header a.text-gray-700:hover,
-html[data-theme="dark"] nav a.text-gray-700:hover,
-html[data-theme="oled"] aside a.text-gray-700:hover,
-html[data-theme="oled"] header a.text-gray-700:hover,
-html[data-theme="oled"] nav a.text-gray-700:hover {
-  color: #ffffff !important;
-  background-color: #18181b !important;
-}
-
-/* Global Theme Overrides for Dark & OLED Themes */
-html[data-theme="dark"] body,
-html[data-theme="dark"].theme-dark body,
-html[data-theme="dark"] main,
-html[data-theme="dark"] .bg-gray-50 {
-  background-color: #0b0f19 !important;
-  color: #f9fafb !important;
-}
-
-html[data-theme="oled"] body,
-html[data-theme="oled"].theme-oled body,
-html[data-theme="oled"] main,
-html[data-theme="oled"] .bg-gray-50 {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-}
-
-html[data-theme="oled"] header,
-html.theme-oled header {
-  background-color: #000000 !important;
-  border-color: #18181b !important;
-}
-
-/* Card & Box Containers */
-html[data-theme="dark"] .bg-white,
-html[data-theme="dark"] .bg-white\/90,
-html[data-theme="dark"] .bg-white\/80,
-html[data-theme="dark"] .bg-white\/70,
-html[data-theme="dark"] .bg-white\/60,
-html[data-theme="dark"] .bg-white\/50,
-html[data-theme="dark"] .bg-gray-50\/50,
-html[data-theme="dark"] .bg-gray-50\/60,
-html[data-theme="dark"] .bg-gray-50\/70,
-html[data-theme="dark"] .bg-gray-50\/80 {
-  background-color: #111827 !important;
-  color: #f9fafb !important;
-}
-
-html[data-theme="dark"] .bg-gray-100,
-html[data-theme="dark"] .bg-slate-100,
-html[data-theme="dark"] .bg-gray-50,
-html[data-theme="dark"] .bg-slate-50,
-html.dark .bg-gray-100,
-html.dark .bg-slate-100 {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-html[data-theme="oled"] .bg-white,
-html[data-theme="oled"] .bg-white\/90,
-html[data-theme="oled"] .bg-white\/80,
-html[data-theme="oled"] .bg-white\/70,
-html[data-theme="oled"] .bg-white\/60,
-html[data-theme="oled"] .bg-white\/50,
-html[data-theme="oled"] .bg-gray-50\/50,
-html[data-theme="oled"] .bg-gray-50\/60,
-html[data-theme="oled"] .bg-gray-50\/70,
-html[data-theme="oled"] .bg-gray-50\/80 {
-  background-color: #09090b !important;
-  color: #ffffff !important;
-}
-
-html[data-theme="oled"] .bg-gray-100,
-html[data-theme="oled"] .bg-slate-100,
-html[data-theme="oled"] .bg-gray-50,
-html[data-theme="oled"] .bg-slate-50,
-html.theme-oled .bg-gray-100,
-html.theme-oled .bg-slate-100 {
-  background-color: #18181b !important;
-  color: #ffffff !important;
-}
-
-/* Leaflet Popups in Dark & OLED Themes */
-html[data-theme="dark"] .leaflet-popup-content-wrapper,
-html.theme-dark .leaflet-popup-content-wrapper,
-html.dark .leaflet-popup-content-wrapper {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-  border: 1px solid #334155 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-}
-
-html[data-theme="dark"] .leaflet-popup-tip,
-html.theme-dark .leaflet-popup-tip,
-html.dark .leaflet-popup-tip {
-  background-color: #1e293b !important;
-}
-
-html[data-theme="oled"] .leaflet-popup-content-wrapper,
-html.theme-oled .leaflet-popup-content-wrapper {
-  background-color: #09090b !important;
-  color: #ffffff !important;
-  border: 1px solid #27272a !important;
-  border-radius: 12px !important;
-}
-
-html[data-theme="oled"] .leaflet-popup-tip,
-html.theme-oled .leaflet-popup-tip {
-  background-color: #09090b !important;
-}
-
-/* Text Colors */
-html[data-theme="dark"] .text-gray-900,
-html[data-theme="dark"] .text-gray-800,
-html[data-theme="dark"] .text-gray-700 {
-  color: #f9fafb !important;
-}
-
-html[data-theme="dark"] .text-gray-600,
-html[data-theme="dark"] .text-gray-500 {
-  color: #9ca3af !important;
-}
-
-html[data-theme="dark"] .text-gray-400 {
-  color: #6b7280 !important;
-}
-
-html[data-theme="oled"] .text-gray-900,
-html[data-theme="oled"] .text-gray-800,
-html[data-theme="oled"] .text-gray-700 {
-  color: #ffffff !important;
-}
-
-html[data-theme="oled"] .text-gray-600,
-html[data-theme="oled"] .text-gray-500 {
-  color: #a1a1aa !important;
-}
-
-html[data-theme="oled"] .text-gray-400 {
-  color: #71717a !important;
-}
-
-/* Color overrides for dark banner texts & nested text elements */
-html[data-theme="dark"] .text-blue-950,
-html[data-theme="dark"] .text-blue-900,
-html[data-theme="dark"] .text-blue-800,
-html[data-theme="dark"] .text-blue-700,
-html[data-theme="dark"] .text-blue-600,
-html[data-theme="oled"] .text-blue-950,
-html[data-theme="oled"] .text-blue-900,
-html[data-theme="oled"] .text-blue-800,
-html[data-theme="oled"] .text-blue-700,
-html[data-theme="oled"] .text-blue-600 {
-  color: #bfdbfe !important;
-}
-
-html[data-theme="dark"] .text-emerald-950,
-html[data-theme="dark"] .text-emerald-900,
-html[data-theme="dark"] .text-emerald-800,
-html[data-theme="dark"] .text-emerald-700,
-html[data-theme="dark"] .text-emerald-600,
-html[data-theme="dark"] .text-green-950,
-html[data-theme="dark"] .text-green-900,
-html[data-theme="dark"] .text-green-800,
-html[data-theme="dark"] .text-green-700,
-html[data-theme="oled"] .text-emerald-950,
-html[data-theme="oled"] .text-emerald-900,
-html[data-theme="oled"] .text-emerald-800,
-html[data-theme="oled"] .text-emerald-700,
-html[data-theme="oled"] .text-emerald-600,
-html[data-theme="oled"] .text-green-950,
-html[data-theme="oled"] .text-green-900,
-html[data-theme="oled"] .text-green-800,
-html[data-theme="oled"] .text-green-700 {
-  color: #a7f3d0 !important;
-}
-
-html[data-theme="dark"] .text-amber-950,
-html[data-theme="dark"] .text-amber-900,
-html[data-theme="dark"] .text-amber-800,
-html[data-theme="dark"] .text-amber-700,
-html[data-theme="dark"] .text-yellow-950,
-html[data-theme="dark"] .text-yellow-900,
-html[data-theme="dark"] .text-yellow-800,
-html[data-theme="oled"] .text-amber-950,
-html[data-theme="oled"] .text-amber-900,
-html[data-theme="oled"] .text-amber-800,
-html[data-theme="oled"] .text-amber-700,
-html[data-theme="oled"] .text-yellow-950,
-html[data-theme="oled"] .text-yellow-900,
-html[data-theme="oled"] .text-yellow-800 {
-  color: #fde68a !important;
-}
-
-html[data-theme="dark"] .text-red-950,
-html[data-theme="dark"] .text-red-900,
-html[data-theme="dark"] .text-red-800,
-html[data-theme="dark"] .text-red-700,
-html[data-theme="dark"] .text-red-600,
-html[data-theme="oled"] .text-red-950,
-html[data-theme="oled"] .text-red-900,
-html[data-theme="oled"] .text-red-800,
-html[data-theme="oled"] .text-red-700,
-html[data-theme="oled"] .text-red-600 {
-  color: #fca5a5 !important;
-}
-
-html[data-theme="dark"] .text-purple-950,
-html[data-theme="dark"] .text-purple-900,
-html[data-theme="dark"] .text-purple-800,
-html[data-theme="dark"] .text-indigo-900,
-html[data-theme="dark"] .text-indigo-800,
-html[data-theme="oled"] .text-purple-950,
-html[data-theme="oled"] .text-purple-900,
-html[data-theme="oled"] .text-purple-800,
-html[data-theme="oled"] .text-indigo-900,
-html[data-theme="oled"] .text-indigo-800 {
-  color: #e9d5ff !important;
-}
-
-/* Borders */
-html[data-theme="dark"] .border-gray-200,
-html[data-theme="dark"] .border-gray-300,
-html[data-theme="dark"] .border-gray-100,
-html[data-theme="dark"] .border-gray-200\/80,
-html[data-theme="dark"] .border-gray-200\/70,
-html[data-theme="dark"] .border-gray-200\/60,
-html[data-theme="dark"] .border-gray-200\/50 {
-  border-color: #374151 !important;
-}
-
-html[data-theme="oled"] .border-gray-200,
-html[data-theme="oled"] .border-gray-300,
-html[data-theme="oled"] .border-gray-100,
-html[data-theme="oled"] .border-gray-200\/80,
-html[data-theme="oled"] .border-gray-200\/70,
-html[data-theme="oled"] .border-gray-200\/60,
-html[data-theme="oled"] .border-gray-200\/50 {
-  border-color: #27272a !important;
-}
-
-/* Form Elements (select, input, option) */
-html[data-theme="dark"] select,
-html[data-theme="dark"] input[type="text"],
-html[data-theme="dark"] input[type="number"],
-html[data-theme="dark"] input[type="password"],
-html[data-theme="dark"] input[type="email"],
-html[data-theme="dark"] textarea {
-  background-color: #111827 !important;
-  color: #f9fafb !important;
-  border-color: #374151 !important;
-}
-
-html[data-theme="dark"] select option {
-  background-color: #1f2937 !important;
-  color: #ffffff !important;
-}
-
-html[data-theme="oled"] select,
-html[data-theme="oled"] input[type="text"],
-html[data-theme="oled"] input[type="number"],
-html[data-theme="oled"] input[type="password"],
-html[data-theme="oled"] input[type="email"],
-html[data-theme="oled"] textarea {
-  background-color: #121212 !important;
-  color: #ffffff !important;
-  border-color: #27272a !important;
-}
-
-html[data-theme="oled"] select option {
-  background-color: #18181b !important;
-  color: #ffffff !important;
-}
-
-/* Toggle Unchecked State Override */
-html[data-theme="dark"] .bg-gray-200 {
-  background-color: #374151 !important;
-}
-
-html[data-theme="oled"] .bg-gray-200 {
+/* Toggle Switch Track in Dark Mode */
+html[data-theme="dark"] .bg-gray-200,
+html.dark .bg-gray-200 {
   background-color: #27272a !important;
 }
 
-/* Universal Alert Boxes, Banners & Status Containers Overrides */
+/* ==========================================================================
+   ALERT BANNERS & STATUS BADGES (High Contrast Glowing in Dark Mode)
+   ========================================================================== */
 
-/* Blue / Sky Banners & Badges */
+/* Blue / Sky */
 html[data-theme="dark"] [class*="bg-blue-50"],
+html.dark [class*="bg-blue-50"],
 html[data-theme="dark"] [class*="bg-blue-100"],
+html.dark [class*="bg-blue-100"],
 html[data-theme="dark"] [class*="bg-sky-50"],
-html[data-theme="dark"] [class*="bg-sky-100"] {
-  background-color: #1e293b !important;
-  border-color: #3b82f6 !important;
-  color: #bfdbfe !important;
-}
-
-html[data-theme="oled"] [class*="bg-blue-50"],
-html[data-theme="oled"] [class*="bg-blue-100"],
-html[data-theme="oled"] [class*="bg-sky-50"],
-html[data-theme="oled"] [class*="bg-sky-100"] {
+html.dark [class*="bg-sky-50"] {
   background-color: #0c192c !important;
   border-color: #1d4ed8 !important;
   color: #bfdbfe !important;
 }
-
-/* Emerald / Green Banners & Badges */
-html[data-theme="dark"] [class*="bg-emerald-50"],
-html[data-theme="dark"] [class*="bg-emerald-100"],
-html[data-theme="dark"] [class*="bg-green-50"],
-html[data-theme="dark"] [class*="bg-green-100"] {
-  background-color: #064e3b !important;
-  border-color: #10b981 !important;
-  color: #a7f3d0 !important;
+html[data-theme="dark"] [class*="text-blue-9"],
+html.dark [class*="text-blue-9"],
+html[data-theme="dark"] [class*="text-blue-8"],
+html.dark [class*="text-blue-8"],
+html[data-theme="dark"] [class*="text-blue-7"],
+html.dark [class*="text-blue-7"],
+html[data-theme="dark"] [class*="text-blue-6"],
+html.dark [class*="text-blue-6"] {
+  color: #93c5fd !important;
 }
 
-html[data-theme="oled"] [class*="bg-emerald-50"],
-html[data-theme="oled"] [class*="bg-emerald-100"],
-html[data-theme="oled"] [class*="bg-green-50"],
-html[data-theme="oled"] [class*="bg-green-100"] {
+/* Emerald / Green */
+html[data-theme="dark"] [class*="bg-emerald-50"],
+html.dark [class*="bg-emerald-50"],
+html[data-theme="dark"] [class*="bg-emerald-100"],
+html.dark [class*="bg-emerald-100"],
+html[data-theme="dark"] [class*="bg-green-50"],
+html.dark [class*="bg-green-50"],
+html[data-theme="dark"] [class*="bg-green-100"],
+html.dark [class*="bg-green-100"] {
   background-color: #022c22 !important;
   border-color: #059669 !important;
   color: #a7f3d0 !important;
 }
-
-/* Amber / Yellow Banners & Badges */
-html[data-theme="dark"] [class*="bg-amber-50"],
-html[data-theme="dark"] [class*="bg-amber-100"],
-html[data-theme="dark"] [class*="bg-yellow-50"],
-html[data-theme="dark"] [class*="bg-yellow-100"] {
-  background-color: #451a03 !important;
-  border-color: #f59e0b !important;
-  color: #fde68a !important;
+html[data-theme="dark"] [class*="text-emerald-9"],
+html.dark [class*="text-emerald-9"],
+html[data-theme="dark"] [class*="text-emerald-8"],
+html.dark [class*="text-emerald-8"],
+html[data-theme="dark"] [class*="text-emerald-7"],
+html.dark [class*="text-emerald-7"],
+html[data-theme="dark"] [class*="text-emerald-6"],
+html.dark [class*="text-emerald-6"],
+html[data-theme="dark"] [class*="text-green-9"],
+html.dark [class*="text-green-9"],
+html[data-theme="dark"] [class*="text-green-8"],
+html.dark [class*="text-green-8"],
+html[data-theme="dark"] [class*="text-green-7"],
+html.dark [class*="text-green-7"] {
+  color: #6ee7b7 !important;
 }
 
-html[data-theme="oled"] [class*="bg-amber-50"],
-html[data-theme="oled"] [class*="bg-amber-100"],
-html[data-theme="oled"] [class*="bg-yellow-50"],
-html[data-theme="oled"] [class*="bg-yellow-100"] {
+/* Amber / Yellow */
+html[data-theme="dark"] [class*="bg-amber-50"],
+html.dark [class*="bg-amber-50"],
+html[data-theme="dark"] [class*="bg-amber-100"],
+html.dark [class*="bg-amber-100"],
+html[data-theme="dark"] [class*="bg-yellow-50"],
+html.dark [class*="bg-yellow-50"] {
   background-color: #2e1002 !important;
   border-color: #d97706 !important;
   color: #fde68a !important;
 }
-
-/* Red / Rose Banners & Badges */
-html[data-theme="dark"] [class*="bg-red-50"],
-html[data-theme="dark"] [class*="bg-red-100"],
-html[data-theme="dark"] [class*="bg-rose-50"],
-html[data-theme="dark"] [class*="bg-rose-100"] {
-  background-color: #450a0a !important;
-  border-color: #ef4444 !important;
-  color: #fca5a5 !important;
+html[data-theme="dark"] [class*="text-amber-9"],
+html.dark [class*="text-amber-9"],
+html[data-theme="dark"] [class*="text-amber-8"],
+html.dark [class*="text-amber-8"],
+html[data-theme="dark"] [class*="text-amber-7"],
+html.dark [class*="text-amber-7"],
+html[data-theme="dark"] [class*="text-yellow-9"],
+html.dark [class*="text-yellow-9"] {
+  color: #fcd34d !important;
 }
 
-html[data-theme="oled"] [class*="bg-red-50"],
-html[data-theme="oled"] [class*="bg-red-100"],
-html[data-theme="oled"] [class*="bg-rose-50"],
-html[data-theme="oled"] [class*="bg-rose-100"] {
+/* Red / Rose */
+html[data-theme="dark"] [class*="bg-red-50"],
+html.dark [class*="bg-red-50"],
+html[data-theme="dark"] [class*="bg-red-100"],
+html.dark [class*="bg-red-100"],
+html[data-theme="dark"] [class*="bg-rose-50"],
+html.dark [class*="bg-rose-50"] {
   background-color: #2a0808 !important;
   border-color: #dc2626 !important;
   color: #fca5a5 !important;
 }
-
-/* Purple / Indigo Banners & Badges */
-html[data-theme="dark"] [class*="bg-purple-50"],
-html[data-theme="dark"] [class*="bg-purple-100"],
-html[data-theme="dark"] [class*="bg-indigo-50"],
-html[data-theme="dark"] [class*="bg-indigo-100"] {
-  background-color: #3b0764 !important;
-  border-color: #a855f7 !important;
-  color: #e9d5ff !important;
+html[data-theme="dark"] [class*="text-red-9"],
+html.dark [class*="text-red-9"],
+html[data-theme="dark"] [class*="text-red-8"],
+html.dark [class*="text-red-8"],
+html[data-theme="dark"] [class*="text-red-7"],
+html.dark [class*="text-red-7"],
+html[data-theme="dark"] [class*="text-red-6"],
+html.dark [class*="text-red-6"] {
+  color: #fca5a5 !important;
 }
 
-html[data-theme="oled"] [class*="bg-purple-50"],
-html[data-theme="oled"] [class*="bg-purple-100"],
-html[data-theme="oled"] [class*="bg-indigo-50"],
-html[data-theme="oled"] [class*="bg-indigo-100"] {
+/* Purple / Indigo */
+html[data-theme="dark"] [class*="bg-purple-50"],
+html.dark [class*="bg-purple-50"],
+html[data-theme="dark"] [class*="bg-purple-100"],
+html.dark [class*="bg-purple-100"],
+html[data-theme="dark"] [class*="bg-indigo-50"],
+html.dark [class*="bg-indigo-50"] {
   background-color: #240046 !important;
   border-color: #9333ea !important;
   color: #e9d5ff !important;
 }
-
-/* Secondary Action Buttons (e.g. Discard, Cancel, Edit) */
-html[data-theme="dark"] button.bg-white,
-html[data-theme="dark"] a.bg-white {
-  background-color: #1f2937 !important;
-  color: #f9fafb !important;
-  border-color: #374151 !important;
+html[data-theme="dark"] [class*="text-purple-9"],
+html.dark [class*="text-purple-9"],
+html[data-theme="dark"] [class*="text-purple-8"],
+html.dark [class*="text-purple-8"],
+html[data-theme="dark"] [class*="text-purple-7"],
+html.dark [class*="text-purple-7"] {
+  color: #d8b4fe !important;
 }
 
-html[data-theme="oled"] button.bg-white,
-html[data-theme="oled"] a.bg-white {
+/* ==========================================================================
+   LEAFLET MAP CONTROLS & POPUPS IN DARK MODE
+   ========================================================================== */
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html.dark .leaflet-popup-content-wrapper {
+  background-color: #0a0a0c !important;
+  color: #ffffff !important;
+  border: 1px solid #27272a !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8) !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-tip,
+html.dark .leaflet-popup-tip {
+  background-color: #0a0a0c !important;
+}
+
+html[data-theme="dark"] .leaflet-bar a,
+html.dark .leaflet-bar a {
+  background-color: #0a0a0c !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #27272a !important;
+}
+
+html[data-theme="dark"] .leaflet-bar a:hover,
+html.dark .leaflet-bar a:hover {
   background-color: #18181b !important;
   color: #ffffff !important;
+}
+
+/* High-Performance Night Mode Map Tiles (Zero watermarks, crisp high-contrast dark theme) */
+.leaflet-night-mode .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(88%) contrast(115%);
+}
+
+/* Smooth Leaflet Map & Interactive Marker Polish */
+.leaflet-container {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+}
+
+.leaflet-control-zoom {
+  display: none !important;
+}
+
+.category-marker-icon,
+.your-location-pin,
+.custom-score-marker {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  will-change: transform;
+}
+
+.category-marker-icon:hover,
+.your-location-pin:hover,
+.custom-score-marker:hover {
+  transform: scale(1.15) !important;
+  z-index: 9999 !important;
+}
+
+
+/* ==========================================================================
+   TABLES & DATA GRIDS IN DARK MODE
+   ========================================================================== */
+html[data-theme="dark"] table,
+html.dark table {
   border-color: #27272a !important;
+}
+
+html[data-theme="dark"] table th,
+html.dark table th {
+  background-color: #0a0a0c !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+html[data-theme="dark"] table td,
+html.dark table td {
+  border-color: #27272a !important;
+  color: #e4e4e7 !important;
+}
+
+html[data-theme="dark"] table tr:hover,
+html.dark table tr:hover {
+  background-color: #121215 !important;
 }
 
 @layer base {
@@ -673,7 +724,7 @@ html[data-theme="oled"] a.bg-white {
   }
 }
 
-/* User Logo Marker Custom Styles & Pulse Animation */
+/* User Location Marker Custom Styles & Pulse Animation */
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), 0 0 0 0px rgba(37, 99, 235, 0.4);
@@ -693,3 +744,35 @@ html[data-theme="oled"] a.bg-white {
   margin: 0 !important;
 }
 
+/* ==========================================================================
+   UNIVERSAL FONT-FAMILY ENFORCEMENT ACROSS ALL PAGES & MODULES
+   Ensures 'Plus Jakarta Sans' (the Dashboard font) is active across all pages
+   ========================================================================== */
+html,
+body,
+#root,
+.font-sans,
+button,
+input,
+select,
+textarea,
+optgroup,
+dialog,
+table,
+th,
+td {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+*,
+*::before,
+*::after {
+  font-family: inherit;
+}
+
+/* Maintain JetBrains Mono specifically for numeric monospace tags and code blocks */
+.font-mono,
+.font-mono *,
+[class*="font-mono"] {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}

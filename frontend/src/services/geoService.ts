@@ -96,13 +96,17 @@ export interface CandidateLocation {
   yearsOperating?: number;
 }
 
+export type MapFeatureCategory = 'competitor' | 'similar' | 'poi' | 'market';
+
 export interface LayerFeature {
   id: string;
-  type: 'competitor' | 'transport' | 'market' | 'bank' | 'hospital' | 'school' | 'industrial' | 'agricultural';
+  category: MapFeatureCategory;
+  type: 'competitor' | 'similar' | 'transport' | 'market' | 'bank' | 'hospital' | 'school' | 'industrial' | 'agricultural';
   name: string;
   lat: number;
   lng: number;
   details?: string;
+  distanceKm?: number;
 }
 
 export interface GeoSearchParams {
@@ -393,6 +397,8 @@ const AREAS: Record<string, AreaLocation[]> = {
     { id: 'GJ_RAJ_MORBI', districtId: 'GJ_RAJ', name: 'Morbi Rural Peripheral', lat: 22.8112, lng: 70.8312 },
   ],
   GJ_ANAND: [
+    { id: 'GJ_ANAND_CENTRAL', districtId: 'GJ_ANAND', name: 'Anand City & Vidyanagar Corridor', lat: 22.5645, lng: 72.9289 },
+    { id: 'GJ_ANAND_BAKROL', districtId: 'GJ_ANAND', name: 'Bakrol - V.V. Nagar Educational & Agri Hub', lat: 22.5532, lng: 72.9242 },
     { id: 'GJ_ANAND_PETLAD', districtId: 'GJ_ANAND', name: 'Petlad Dairy & Farming Zone', lat: 22.4744, lng: 72.8012 },
     { id: 'GJ_ANAND_UMRETH', districtId: 'GJ_ANAND', name: 'Umreth Cooperative Belt', lat: 22.6988, lng: 73.1124 },
   ],
@@ -868,16 +874,67 @@ export const geoService = {
     return candidates;
   },
 
-  async getLayersData(centerLat: number, centerLng: number): Promise<LayerFeature[]> {
+  async getLayersData(
+    centerLat: number, 
+    centerLng: number, 
+    radiusKm: number = 25, 
+    districtName: string = 'Anand',
+    category: string = 'Dairy Farming'
+  ): Promise<LayerFeature[]> {
+    const isAnand = Math.abs(centerLat - 22.5645) < 0.12 && Math.abs(centerLng - 72.9289) < 0.12;
+
+    if (isAnand) {
+      return [
+        // 🔴 Competitors (Red)
+        { id: 'comp_1', category: 'competitor', type: 'competitor', name: 'Private Milk Chilling & Procurement Plant', lat: centerLat + 0.0075, lng: centerLng - 0.0082, details: 'Direct Dairy Competitor (Milk Chilling & Bulk Handling)', distanceKm: 1.1 },
+        { id: 'comp_2', category: 'competitor', type: 'competitor', name: 'Local Agri Input & Feed Store', lat: centerLat - 0.0062, lng: centerLng - 0.0065, details: 'Cattle Feed & Veterinary Supplies Retailer', distanceKm: 0.9 },
+        { id: 'comp_3', category: 'competitor', type: 'competitor', name: 'Regional Cattle Feed Distributor', lat: centerLat - 0.0125, lng: centerLng - 0.0035, details: 'Wholesale Cattle Feed Depot & Fodder Supplier', distanceKm: 1.4 },
+        { id: 'comp_4', category: 'competitor', type: 'competitor', name: 'Amul Cattle Feed Dealership', lat: centerLat + 0.0088, lng: centerLng + 0.0062, details: 'Authorized Dairy Cattle Inputs & Nutrition Hub', distanceKm: 1.2 },
+        { id: 'comp_5', category: 'competitor', type: 'competitor', name: 'Bulk Milk Collection Depot', lat: centerLat - 0.0042, lng: centerLng + 0.0078, details: 'Competing Bulk Milk Procurement Station', distanceKm: 0.8 },
+
+        // 🔵 Similar Businesses (Blue)
+        { id: 'sim_1', category: 'similar', type: 'similar', name: 'Vallabh Vidyanagar Dairy Co-op Society', lat: centerLat + 0.0085, lng: centerLng - 0.0125, details: 'Local Dairy Cooperative Milk Collection Center', distanceKm: 1.6 },
+        { id: 'sim_2', category: 'similar', type: 'similar', name: 'Bakrol Artisan Ghee & Milk Products', lat: centerLat + 0.0038, lng: centerLng + 0.0142, details: 'Traditional Desi Ghee & Fresh Paneer Unit', distanceKm: 1.5 },
+        { id: 'sim_3', category: 'similar', type: 'similar', name: 'Mogri Gir Cow Organic Milk Farm', lat: centerLat - 0.0092, lng: centerLng + 0.0128, details: 'A2 Gir Cow Organic Dairy Farm & Processing Hub', distanceKm: 1.6 },
+        { id: 'sim_4', category: 'similar', type: 'similar', name: 'Sardar Dairy Allied Products', lat: centerLat - 0.0175, lng: centerLng - 0.0122, details: 'Packaged Dairy Products & Buttermilk Hub', distanceKm: 2.3 },
+
+        // 🟠 Key POIs (Orange)
+        { id: 'poi_edu', category: 'poi', type: 'school', name: 'Anand Agricultural University (AAU)', lat: centerLat + 0.0032, lng: centerLng - 0.0035, details: 'Premier Agricultural & Dairy Science Research University', distanceKm: 0.5 },
+        { id: 'poi_bus', category: 'poi', type: 'transport', name: 'Anand Central Bus Stand', lat: centerLat - 0.0142, lng: centerLng + 0.0032, details: 'GSRTC Regional Transit Bus Station & Depot', distanceKm: 1.6 },
+        { id: 'poi_hosp', category: 'poi', type: 'hospital', name: 'Zydus Hospital Anand', lat: centerLat - 0.0155, lng: centerLng + 0.0152, details: 'Multi-Specialty Healthcare & 24/7 Trauma Center', distanceKm: 2.3 },
+        { id: 'poi_bank', category: 'poi', type: 'bank', name: 'State Bank of India (SBI) Agri Branch', lat: centerLat + 0.0022, lng: centerLng + 0.0025, details: 'Specialized Rural Credit, Kisan Credit & Micro-ATM', distanceKm: 0.3 },
+
+        // 🟢 Target Market (Green/Teal)
+        { id: 'mkt_1', category: 'market', type: 'market', name: 'APMC Market Yard & Wholesale Mandi', lat: centerLat + 0.0145, lng: centerLng + 0.0055, details: 'Daily Agricultural Produce & Milk Trade Mandi', distanceKm: 1.6 },
+        { id: 'mkt_2', category: 'market', type: 'market', name: 'Vidyanagar Commercial Retail Hub', lat: centerLat - 0.0015, lng: centerLng - 0.0165, details: 'High-Density Consumer Market & Grocery Cluster', distanceKm: 1.7 },
+      ];
+    }
+
+    // Dynamic accurate scale for any coordinates across India
+    const scale = Math.max(0.012, Math.min(radiusKm, 40) * 0.0032);
     return [
-      { id: 'f1', type: 'competitor', name: 'Competing Milk Chilling Plant', lat: centerLat + 0.012, lng: centerLng + 0.018, details: 'Competitor - Dairy' },
-      { id: 'f2', type: 'competitor', name: 'Local Agri Input Shop', lat: centerLat - 0.015, lng: centerLng + 0.022, details: 'Competitor - Agri' },
-      { id: 'f3', type: 'transport', name: 'Inter-Taluka Bus Depot', lat: centerLat + 0.025, lng: centerLng - 0.010, details: 'Transport Hub' },
-      { id: 'f4', type: 'market', name: 'Weekly Rural APMC Mandi', lat: centerLat - 0.008, lng: centerLng - 0.025, details: 'Agricultural Market' },
-      { id: 'f5', type: 'bank', name: 'State Bank of India & Micro-ATM', lat: centerLat + 0.005, lng: centerLng + 0.008, details: 'Financial Access' },
-      { id: 'f6', type: 'hospital', name: 'Taluka Primary Health Center', lat: centerLat - 0.020, lng: centerLng - 0.015, details: 'Healthcare Facility' },
-      { id: 'f7', type: 'industrial', name: 'GIDC Agro-Processing Cluster', lat: centerLat + 0.032, lng: centerLng + 0.035, details: 'Industrial Park' },
-      { id: 'f8', type: 'agricultural', name: 'Organic Farming Cooperative Field', lat: centerLat - 0.035, lng: centerLng + 0.012, details: 'Agri Zone' },
+      // 🔴 Competitors (Red)
+      { id: 'comp_1', category: 'competitor', type: 'competitor', name: `${category} Competitor Unit A`, lat: centerLat + scale * 0.45, lng: centerLng - scale * 0.55, details: `Competing ${category} Processing Unit`, distanceKm: Math.round(radiusKm * 0.28 * 10) / 10 },
+      { id: 'comp_2', category: 'competitor', type: 'competitor', name: `${category} Local Retail Competitor`, lat: centerLat - scale * 0.35, lng: centerLng - scale * 0.45, details: `Retail Competitor Outlet`, distanceKm: Math.round(radiusKm * 0.22 * 10) / 10 },
+      { id: 'comp_3', category: 'competitor', type: 'competitor', name: `Allied ${category} Input Supplier`, lat: centerLat - scale * 0.70, lng: centerLng - scale * 0.20, details: `Input & Feed Supplier Competitor`, distanceKm: Math.round(radiusKm * 0.35 * 10) / 10 },
+      { id: 'comp_4', category: 'competitor', type: 'competitor', name: `Regional Wholesale Competitor`, lat: centerLat + scale * 0.55, lng: centerLng + scale * 0.40, details: `Regional Wholesale Competitor`, distanceKm: Math.round(radiusKm * 0.33 * 10) / 10 },
+      { id: 'comp_5', category: 'competitor', type: 'competitor', name: `Commercial Operator Unit`, lat: centerLat - scale * 0.25, lng: centerLng + scale * 0.50, details: `Nearby Commercial Competitor`, distanceKm: Math.round(radiusKm * 0.27 * 10) / 10 },
+
+      // 🔵 Similar Businesses (Blue)
+      { id: 'sim_1', category: 'similar', type: 'similar', name: `${districtName} Cooperative Producer Society`, lat: centerLat + scale * 0.55, lng: centerLng - scale * 0.75, details: `Cooperative Producer Unit`, distanceKm: Math.round(radiusKm * 0.45 * 10) / 10 },
+      { id: 'sim_2', category: 'similar', type: 'similar', name: `Independent ${category} Unit`, lat: centerLat + scale * 0.30, lng: centerLng + scale * 0.85, details: `Value-Added Processing Enterprise`, distanceKm: Math.round(radiusKm * 0.42 * 10) / 10 },
+      { id: 'sim_3', category: 'similar', type: 'similar', name: `Rural Artisan & Farm Hub`, lat: centerLat - scale * 0.60, lng: centerLng + scale * 0.70, details: `Micro-Enterprise Cluster`, distanceKm: Math.round(radiusKm * 0.44 * 10) / 10 },
+      { id: 'sim_4', category: 'similar', type: 'similar', name: `Allied Product Producer Hub`, lat: centerLat - scale * 0.85, lng: centerLng - scale * 0.50, details: `Packaged Goods & Supply Outlet`, distanceKm: Math.round(radiusKm * 0.49 * 10) / 10 },
+
+      // 🟠 Key POIs (Orange)
+      { id: 'poi_edu', category: 'poi', type: 'school', name: `${districtName} Polytechnic & Agri Research Institute`, lat: centerLat + scale * 0.20, lng: centerLng - scale * 0.25, details: `Educational & Skill Training Institute`, distanceKm: Math.round(radiusKm * 0.15 * 10) / 10 },
+      { id: 'poi_bus', category: 'poi', type: 'transport', name: `${districtName} Central Bus Terminal`, lat: centerLat - scale * 0.75, lng: centerLng + scale * 0.20, details: `Regional Bus Stand & Transit Interchange`, distanceKm: Math.round(radiusKm * 0.38 * 10) / 10 },
+      { id: 'poi_hosp', category: 'poi', type: 'hospital', name: `${districtName} General Hospital & Healthcare Center`, lat: centerLat - scale * 0.80, lng: centerLng + scale * 0.80, details: `Emergency & Primary Health Facility`, distanceKm: Math.round(radiusKm * 0.55 * 10) / 10 },
+      { id: 'poi_bank', category: 'poi', type: 'bank', name: `State Bank & Agri-Credit Center`, lat: centerLat + scale * 0.15, lng: centerLng + scale * 0.15, details: `Banking, Micro-Credit & ATM Center`, distanceKm: Math.round(radiusKm * 0.10 * 10) / 10 },
+
+      // 🟢 Target Market (Green/Teal)
+      { id: 'mkt_1', category: 'market', type: 'market', name: `${districtName} APMC Market Yard & Wholesale Mandi`, lat: centerLat + scale * 0.80, lng: centerLng + scale * 0.30, details: `Daily Wholesale Trading Mandi`, distanceKm: Math.round(radiusKm * 0.42 * 10) / 10 },
+      { id: 'mkt_2', category: 'market', type: 'market', name: `Central Commercial Bazaar & Consumer Hub`, lat: centerLat - scale * 0.10, lng: centerLng - scale * 0.85, details: `High-Traffic Retail & Household Market`, distanceKm: Math.round(radiusKm * 0.43 * 10) / 10 },
     ];
   },
 };

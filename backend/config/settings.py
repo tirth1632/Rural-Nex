@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'integrations',
     'drf_spectacular',
     'business',
+    'schemes',
     'corsheaders',
 ]
 
