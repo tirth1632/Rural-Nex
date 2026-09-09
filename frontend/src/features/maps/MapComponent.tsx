@@ -29,7 +29,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   radiusKm = 5 
 }) => {
   return (
-    <div className="h-[400px] w-full rounded-lg overflow-hidden border shadow-sm">
+    <div className="h-[400px] w-full rounded-lg overflow-hidden border shadow-sm relative z-0 isolate">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} className="h-full w-full">
         <TileLayer
           attribution={GOOGLE_MAPS_ATTRIBUTION}

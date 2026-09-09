@@ -34,7 +34,7 @@ export default function CompetitorMap({ userLat, userLng, radiusKm, competitors 
     const [pinPos, setPinPos] = useState<[number, number]>([userLat, userLng]);
 
     return (
-        <div className="relative h-[400px] w-full rounded-xl overflow-hidden border shadow-sm">
+        <div className="relative h-[400px] w-full rounded-xl overflow-hidden border shadow-sm z-0 isolate">
             {/* Map Controls */}
             <div className="absolute top-3 right-3 z-[1000]">
                 <button

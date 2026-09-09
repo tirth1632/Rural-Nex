@@ -36,7 +36,11 @@ class ChatMessageAPIView(APIView):
         ]
 
         # Call AI Service
-        service = ChatService()
+        ai_provider = request.data.get('ai_provider') or request.headers.get('X-AI-Provider')
+        ai_model = request.data.get('ai_model') or request.headers.get('X-AI-Model')
+        api_key = request.data.get('api_key') or request.headers.get('X-AI-Key')
+
+        service = ChatService(provider_name=ai_provider, model_name=ai_model, api_key=api_key)
         ai_response_text = service.converse(context, history, message)
 
         # Save AI Message

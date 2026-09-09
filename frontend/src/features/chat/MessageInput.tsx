@@ -76,31 +76,41 @@ export default function MessageInput({ onSend, isLoading }: MessageInputProps) {
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+        }
+    };
+
     return (
-        <div className="p-4 bg-white border-t border-gray-200">
+        <div className="p-3 px-4 bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800">
             <form onSubmit={handleSubmit} className="flex gap-2 max-w-4xl mx-auto items-center">
                 <button
                     type="button"
                     onClick={toggleRecording}
                     disabled={isLoading || isTranscribing}
-                    className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center transition-colors ${
+                    className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center transition-colors ${
                         isRecording 
                         ? 'bg-red-500 text-white animate-pulse' 
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50'
+                        : 'bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50'
                     }`}
                     title="Voice Input"
                 >
-                    {isRecording ? <Square size={20} /> : <Mic size={20} />}
+                    {isRecording ? <Square size={18} /> : <Mic size={18} />}
                 </button>
                 
                 <input
                     type="text"
                     value={isTranscribing ? t('chat_transcribing', 'Transcribing...') : input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder={isRecording ? t('chat_listening', 'Listening...') : t('chat_placeholder', 'Ask a question about your business plan, schemes, or local market...')}
                     disabled={isLoading || isRecording || isTranscribing}
-                    className={`flex-1 px-4 py-3 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                        isRecording || isTranscribing ? 'bg-gray-100 border-gray-200 text-gray-500' : 'border-gray-300'
+                    className={`flex-1 px-4 py-3 rounded-full border text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                        isRecording || isTranscribing 
+                        ? 'bg-gray-100 dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400' 
+                        : 'border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white'
                     }`}
                 />
                 
@@ -108,9 +118,9 @@ export default function MessageInput({ onSend, isLoading }: MessageInputProps) {
                     type="submit"
                     disabled={!input.trim() || isLoading || isRecording || isTranscribing}
                     title={t('chat_send', 'Send')}
-                    className="w-12 h-12 shrink-0 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                    className="w-11 h-11 shrink-0 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors shadow-xs"
                 >
-                    {isTranscribing ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} className="ml-1" />}
+                    {isTranscribing ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} className="ml-0.5" />}
                 </button>
             </form>
         </div>

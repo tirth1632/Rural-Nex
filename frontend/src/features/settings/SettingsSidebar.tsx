@@ -77,14 +77,14 @@ interface SettingsSidebarProps {
 export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeSection, onSelectSection }) => {
   return (
     <>
-      {/* Desktop Compact Vertical Sidebar Navigation */}
-      <nav className="hidden md:block w-56 shrink-0 space-y-4">
+      {/* Desktop Vertical Sidebar Navigation */}
+      <nav className="hidden md:block w-64 lg:w-72 shrink-0 space-y-5">
         {NAV_GROUPS.map((group, groupIdx) => (
-          <div key={group.title} className={groupIdx > 0 ? 'pt-3 border-t border-gray-200/70' : ''}>
-            <h4 className="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+          <div key={group.title} className={groupIdx > 0 ? 'pt-4 border-t border-gray-200/80 dark:border-zinc-800/80' : ''}>
+            <h4 className="px-3.5 text-xs font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
               {group.title}
             </h4>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {group.items.map(item => {
                 const isActive = activeSection === item.id;
                 const Icon = item.icon;
@@ -93,13 +93,13 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeSection,
                     key={item.id}
                     type="button"
                     onClick={() => onSelectSection(item.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors text-left ${
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all text-left cursor-pointer ${
                       isActive
-                        ? 'settings-nav-active shadow-2xs font-bold'
-                        : 'settings-nav-inactive font-medium'
+                        ? 'settings-nav-active shadow-sm font-bold scale-[1.01]'
+                        : 'settings-nav-inactive font-medium hover:scale-[1.005]'
                     }`}
                   >
-                    <Icon size={15} className="shrink-0" />
+                    <Icon size={18} className="shrink-0" />
                     <span>{item.label}</span>
                   </button>
                 );

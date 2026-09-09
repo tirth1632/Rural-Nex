@@ -203,7 +203,7 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
           </div>
         </div>
 
-        <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-xs h-[520px] bg-white">
+        <div className="border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-xs h-[720px] max-h-[85vh] min-h-[600px] bg-white dark:bg-black">
           <ChatLayout />
         </div>
       </div>

@@ -50,17 +50,17 @@ const SettingsContent: React.FC = () => {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-[1020px] mx-auto space-y-6 pb-24">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 pb-24">
       {/* Page Header */}
-      <div className="border-b border-gray-200/80 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Settings</h1>
-        <p className="text-xs text-gray-500 mt-1">
+      <div className="border-b border-gray-200/80 dark:border-zinc-800 pb-5">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Settings</h1>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1.5 font-medium">
           Manage your RuralNex account, business preferences, AI preferences, and application settings.
         </p>
       </div>
 
       {/* Main Layout Grid */}
-      <div className="flex flex-col md:flex-row gap-8 items-start">
+      <div className="flex flex-col md:flex-row gap-8 lg:gap-10 items-start">
         <SettingsSidebar activeSection={activeSection} onSelectSection={setActiveSection} />
         
         <main className="flex-1 w-full min-w-0">

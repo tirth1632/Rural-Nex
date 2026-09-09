@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/v1/chat/', include('chat.urls')),
     path('api/v1/health/', health_check, name='health_check'),
     path('api/locations/', include('geo.urls')),
+    path('api/v1/geo/', include('geo.urls')),
     path('api/schemes/', include('schemes.urls')),
     path('api/v1/schemes/', include('schemes.urls')),
     path('api/user/saved-schemes/', include([

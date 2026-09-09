@@ -44,7 +44,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
     };
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y p-4 space-y-6">
             {messages.map((msg) => (
                 <div key={msg.id} className={`flex gap-4 max-w-3xl ${msg.role === 'USER' ? 'ml-auto flex-row-reverse' : ''}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${

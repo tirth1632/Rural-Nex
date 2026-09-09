@@ -54,9 +54,9 @@ class MockLLMProvider(BaseLLMProvider):
         return f"Mock AI Response to: '{user_message}'. I have read the context with score {context.get('feasibility_score')}."
 
 class OpenRouterProvider(BaseLLMProvider):
-    def __init__(self):
-        self.api_key = os.environ.get("OPENROUTER_API_KEY", "")
-        self.model = os.environ.get("OPENROUTER_MODEL", "openrouter/auto")
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
+        self.model = model or os.environ.get("OPENROUTER_MODEL", "openrouter/auto")
         self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
@@ -106,9 +106,9 @@ class OpenRouterProvider(BaseLLMProvider):
         return res.json()["choices"][0]["message"]["content"]
 
 class GeminiProvider(BaseLLMProvider):
-    def __init__(self):
-        self.api_key = os.environ.get("GEMINI_API_KEY", "")
-        self.model = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
 
     def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
         safe_ctx = sanitize_context(context)
@@ -142,9 +142,9 @@ class GeminiProvider(BaseLLMProvider):
         return res.json()["candidates"][0]["content"]["parts"][0]["text"]
 
 class GrokProvider(BaseLLMProvider):
-    def __init__(self):
-        self.api_key = os.environ.get("GROK_API_KEY", os.environ.get("XAI_API_KEY", ""))
-        self.model = os.environ.get("GROK_MODEL", "grok-2-latest")
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("GROK_API_KEY", os.environ.get("XAI_API_KEY", ""))
+        self.model = model or os.environ.get("GROK_MODEL", "grok-2-latest")
         self.url = "https://api.x.ai/v1/chat/completions"
 
     def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
@@ -189,13 +189,228 @@ class GrokProvider(BaseLLMProvider):
         res.raise_for_status()
         return res.json()["choices"][0]["message"]["content"]
 
+class OpenAIProvider(BaseLLMProvider):
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
+        self.model = model or os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+        self.url = "https://api.openai.com/v1/chat/completions"
+
+    def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
+        safe_ctx = sanitize_context(context)
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Context Data:\n{safe_ctx}\n\nREQUIRED OUTPUT: Provide ONLY a valid JSON object matching the requested advisory schema."}
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.2
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        content = res.json()["choices"][0]["message"]["content"]
+        return json.loads(content)
+
+    def generate_chat_response(self, system_prompt: str, context: Dict[str, Any], chat_history: list, user_message: str) -> str:
+        safe_ctx = sanitize_context(context)
+        messages = [{"role": "system", "content": f"{system_prompt}\n\nReport Context:\n{safe_ctx}"}]
+        messages.extend(chat_history)
+        messages.append({"role": "user", "content": user_message})
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0.5
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        return res.json()["choices"][0]["message"]["content"]
+
+
+class AnthropicProvider(BaseLLMProvider):
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        self.model = model or os.environ.get("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022")
+        self.url = "https://api.anthropic.com/v1/messages"
+
+    def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
+        safe_ctx = sanitize_context(context)
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "max_tokens": 2048,
+            "system": system_prompt,
+            "messages": [{"role": "user", "content": f"Context:\n{safe_ctx}\nOutput ONLY valid raw JSON matching schema."}],
+            "temperature": 0.2
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        content = res.json()["content"][0]["text"]
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+        return json.loads(content)
+
+    def generate_chat_response(self, system_prompt: str, context: Dict[str, Any], chat_history: list, user_message: str) -> str:
+        safe_ctx = sanitize_context(context)
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
+        messages = []
+        for msg in chat_history:
+            messages.append({"role": msg.get("role", "user"), "content": msg.get("content", "")})
+        messages.append({"role": "user", "content": user_message})
+
+        payload = {
+            "model": self.model,
+            "max_tokens": 1024,
+            "system": f"{system_prompt}\n\nContext:\n{safe_ctx}",
+            "messages": messages,
+            "temperature": 0.5
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        return res.json()["content"][0]["text"]
+
+
+class DeepSeekProvider(BaseLLMProvider):
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY", "")
+        self.model = model or os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+        self.url = "https://api.deepseek.com/v1/chat/completions"
+
+    def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
+        safe_ctx = sanitize_context(context)
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Context:\n{safe_ctx}\nOutput JSON only."}
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.2
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        content = res.json()["choices"][0]["message"]["content"]
+        return json.loads(content)
+
+    def generate_chat_response(self, system_prompt: str, context: Dict[str, Any], chat_history: list, user_message: str) -> str:
+        safe_ctx = sanitize_context(context)
+        messages = [{"role": "system", "content": f"{system_prompt}\n\nReport Context:\n{safe_ctx}"}]
+        messages.extend(chat_history)
+        messages.append({"role": "user", "content": user_message})
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0.5
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        return res.json()["choices"][0]["message"]["content"]
+
+
+class GroqProvider(BaseLLMProvider):
+    def __init__(self, api_key=None, model=None):
+        self.api_key = api_key or os.environ.get("GROQ_API_KEY", "")
+        self.model = model or os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+        self.url = "https://api.groq.com/openai/v1/chat/completions"
+
+    def generate_advisory_report(self, system_prompt: str, context: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
+        safe_ctx = sanitize_context(context)
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Context:\n{safe_ctx}\nOutput JSON only."}
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.2
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        content = res.json()["choices"][0]["message"]["content"]
+        return json.loads(content)
+
+    def generate_chat_response(self, system_prompt: str, context: Dict[str, Any], chat_history: list, user_message: str) -> str:
+        safe_ctx = sanitize_context(context)
+        messages = [{"role": "system", "content": f"{system_prompt}\n\nReport Context:\n{safe_ctx}"}]
+        messages.extend(chat_history)
+        messages.append({"role": "user", "content": user_message})
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0.5
+        }
+        res = requests.post(self.url, headers=headers, json=payload, timeout=30)
+        res.raise_for_status()
+        return res.json()["choices"][0]["message"]["content"]
+
+
 class MultiFallbackLLMProvider(BaseLLMProvider):
-    def __init__(self):
+    def __init__(self, custom_key=None, custom_provider=None, custom_model=None):
         self.providers = []
+        
+        if custom_provider and custom_key:
+            prov = custom_provider.lower()
+            if prov == "gemini":
+                self.providers.append(("CustomGemini", GeminiProvider(api_key=custom_key, model=custom_model)))
+            elif prov == "openai":
+                self.providers.append(("CustomOpenAI", OpenAIProvider(api_key=custom_key, model=custom_model)))
+            elif prov == "anthropic":
+                self.providers.append(("CustomAnthropic", AnthropicProvider(api_key=custom_key, model=custom_model)))
+            elif prov == "deepseek":
+                self.providers.append(("CustomDeepSeek", DeepSeekProvider(api_key=custom_key, model=custom_model)))
+            elif prov == "groq":
+                self.providers.append(("CustomGroq", GroqProvider(api_key=custom_key, model=custom_model)))
+            elif prov == "openrouter":
+                self.providers.append(("CustomOpenRouter", OpenRouterProvider(api_key=custom_key, model=custom_model)))
+
         if os.environ.get("OPENROUTER_API_KEY"):
             self.providers.append(("OpenRouter", OpenRouterProvider()))
         if os.environ.get("GEMINI_API_KEY"):
             self.providers.append(("Gemini", GeminiProvider()))
+        if os.environ.get("OPENAI_API_KEY"):
+            self.providers.append(("OpenAI", OpenAIProvider()))
+        if os.environ.get("ANTHROPIC_API_KEY"):
+            self.providers.append(("Anthropic", AnthropicProvider()))
+        if os.environ.get("DEEPSEEK_API_KEY"):
+            self.providers.append(("DeepSeek", DeepSeekProvider()))
+        if os.environ.get("GROQ_API_KEY"):
+            self.providers.append(("Groq", GroqProvider()))
         if os.environ.get("GROK_API_KEY") or os.environ.get("XAI_API_KEY"):
             self.providers.append(("Grok", GrokProvider()))
         
@@ -222,15 +437,24 @@ class MultiFallbackLLMProvider(BaseLLMProvider):
 
         return self.mock.generate_chat_response(system_prompt, context, chat_history, user_message)
 
-def get_llm_provider() -> BaseLLMProvider:
-    provider = os.environ.get("LLM_PROVIDER", "multi_fallback").lower()
+def get_llm_provider(provider_name=None, model_name=None, api_key=None) -> BaseLLMProvider:
+    provider = (provider_name or os.environ.get("LLM_PROVIDER", "multi_fallback")).lower()
     if provider == "openrouter":
-        return OpenRouterProvider()
+        return OpenRouterProvider(api_key=api_key, model=model_name)
     elif provider == "gemini":
-        return GeminiProvider()
+        return GeminiProvider(api_key=api_key, model=model_name)
+    elif provider == "openai":
+        return OpenAIProvider(api_key=api_key, model=model_name)
+    elif provider == "anthropic":
+        return AnthropicProvider(api_key=api_key, model=model_name)
+    elif provider == "deepseek":
+        return DeepSeekProvider(api_key=api_key, model=model_name)
+    elif provider == "groq":
+        return GroqProvider(api_key=api_key, model=model_name)
     elif provider == "grok":
-        return GrokProvider()
+        return GrokProvider(api_key=api_key, model=model_name)
     elif provider == "mock":
         return MockLLMProvider()
-    return MultiFallbackLLMProvider()
+    return MultiFallbackLLMProvider(custom_key=api_key, custom_provider=provider_name, custom_model=model_name)
+
 

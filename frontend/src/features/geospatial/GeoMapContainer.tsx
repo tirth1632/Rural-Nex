@@ -538,7 +538,7 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
 
   return (
     <div className={`relative w-full h-full flex flex-col overflow-hidden transition-all duration-300 ${
-      isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen bg-black' : 'min-h-[500px] bg-white dark:bg-black'
+      isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen bg-black' : 'min-h-[500px] bg-white dark:bg-black z-0 isolate'
     } ${isNightMode && mapTileMode !== 'satellite' ? 'leaflet-night-mode' : ''}`}>
       {/* Top Left: Map Style Selector Pills (Positioned cleanly with no overlapping zoom box) */}
       <div className="absolute top-4 left-4 z-[1000] flex items-center gap-1 bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-md border border-gray-200/90 dark:border-zinc-800 rounded-xl p-1 shadow-md pointer-events-auto">

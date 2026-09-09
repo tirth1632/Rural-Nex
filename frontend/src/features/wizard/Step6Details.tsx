@@ -10,9 +10,11 @@ import {
   CheckCircle2,
   Briefcase,
   Store,
-  Layers
+  Layers,
+  Settings2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import AIModelModal from '../chat/AIModelModal';
 
 const SCALE_OPTIONS = [
   {
@@ -47,6 +49,7 @@ const EXPERIENCE_PRESETS = [
 
 export default function Step6Details({ data, onNext, onBack }: any) {
   const { t } = useTranslation();
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [details, setDetails] = useState({
     expected_scale: data.expected_scale || 'Small',
     available_shop: data.available_shop || false,
@@ -55,6 +58,41 @@ export default function Step6Details({ data, onNext, onBack }: any) {
     target_customers: data.target_customers || 'Local & District Market',
     products: data.products || ''
   });
+
+  const handleScaleChange = (scaleId: string) => {
+    let defaultWorkers = details.number_of_workers;
+    if (scaleId === 'Micro') {
+      if (details.number_of_workers > 2) defaultWorkers = 1;
+    } else if (scaleId === 'Small') {
+      if (details.number_of_workers < 2 || details.number_of_workers > 5) defaultWorkers = 3;
+    } else if (scaleId === 'Medium') {
+      if (details.number_of_workers < 6) defaultWorkers = 6;
+    }
+
+    setDetails(prev => ({
+      ...prev,
+      expected_scale: scaleId,
+      number_of_workers: defaultWorkers
+    }));
+  };
+
+  const handleWorkersChange = (newCount: number) => {
+    const count = Math.max(1, newCount);
+    let autoScale = details.expected_scale;
+    if (count <= 2) {
+      autoScale = 'Micro';
+    } else if (count <= 5) {
+      autoScale = 'Small';
+    } else {
+      autoScale = 'Medium';
+    }
+
+    setDetails(prev => ({
+      ...prev,
+      number_of_workers: count,
+      expected_scale: autoScale
+    }));
+  };
 
   const handleChange = (field: string, value: any) => {
     setDetails(prev => ({ ...prev, [field]: value }));
@@ -67,10 +105,21 @@ export default function Step6Details({ data, onNext, onBack }: any) {
   return (
     <div className="space-y-7 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/90 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-0.5">
-          <Sparkles size={14} className="text-emerald-600" />
-          <span>AI Risk & Feasibility Calibration</span>
+      <div className="text-center space-y-2 relative">
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/90 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+            <Sparkles size={14} className="text-emerald-600" />
+            <span>AI Risk & Feasibility Calibration</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsAiModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 border border-gray-200 text-gray-700 text-xs font-bold transition-colors cursor-pointer"
+            title="Choose AI Model or Add API Keys"
+          >
+            <Settings2 size={13} />
+            <span>AI Models & Keys</span>
+          </button>
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
           Operational Details <span className="text-gray-400 font-normal text-lg">(Optional)</span>
@@ -97,7 +146,7 @@ export default function Step6Details({ data, onNext, onBack }: any) {
               return (
                 <div
                   key={opt.id}
-                  onClick={() => handleChange('expected_scale', opt.id)}
+                  onClick={() => handleScaleChange(opt.id)}
                   className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between relative ${
                     isSelected
                       ? 'border-emerald-600 bg-emerald-50/50 shadow-xs ring-2 ring-emerald-500/20'
@@ -169,8 +218,8 @@ export default function Step6Details({ data, onNext, onBack }: any) {
             <div className="flex items-center gap-3 bg-gray-50/70 border border-gray-200/90 rounded-xl p-1.5 max-w-[180px]">
               <button
                 type="button"
-                onClick={() => handleChange('number_of_workers', Math.max(1, details.number_of_workers - 1))}
-                className="w-8 h-8 rounded-lg bg-white border border-gray-200 font-bold text-gray-700 hover:bg-gray-100 flex items-center justify-center text-sm"
+                onClick={() => handleWorkersChange(details.number_of_workers - 1)}
+                className="w-8 h-8 rounded-lg bg-white border border-gray-200 font-bold text-gray-700 hover:bg-gray-100 flex items-center justify-center text-sm cursor-pointer"
               >
                 -
               </button>
@@ -179,8 +228,8 @@ export default function Step6Details({ data, onNext, onBack }: any) {
               </span>
               <button
                 type="button"
-                onClick={() => handleChange('number_of_workers', details.number_of_workers + 1)}
-                className="w-8 h-8 rounded-lg bg-white border border-gray-200 font-bold text-gray-700 hover:bg-gray-100 flex items-center justify-center text-sm"
+                onClick={() => handleWorkersChange(details.number_of_workers + 1)}
+                className="w-8 h-8 rounded-lg bg-white border border-gray-200 font-bold text-gray-700 hover:bg-gray-100 flex items-center justify-center text-sm cursor-pointer"
               >
                 +
               </button>
@@ -256,6 +305,12 @@ export default function Step6Details({ data, onNext, onBack }: any) {
           <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
+
+      {/* AI Model & Key Manager Modal */}
+      <AIModelModal 
+        isOpen={isAiModalOpen} 
+        onClose={() => setIsAiModalOpen(false)} 
+      />
     </div>
   );
 }

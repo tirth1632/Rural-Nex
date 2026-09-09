@@ -224,27 +224,24 @@ html.theme-light .border-gray-300 {
    GLOBAL DARK THEME OVERRIDES (Deep Black #000000 & Crisp High-Contrast)
    ========================================================================== */
 
-/* Full Deep Black Background for Base Layout */
+/* Full Base Layout in Dark Mode */
 html[data-theme="dark"] body,
 html.dark body,
 html.theme-dark body,
-html[data-theme="dark"] main,
-html.dark main,
-html.theme-dark main,
 html[data-theme="dark"] .bg-gray-50,
 html.dark .bg-gray-50,
 html[data-theme="dark"] .bg-slate-50,
 html.dark .bg-slate-50,
 html.dark .bg-slate-950,
 html[data-theme="dark"] .bg-slate-950 {
-  background-color: #000000 !important;
+  background-color: #0a0a0c !important;
   color: #ffffff !important;
 }
 
 /* Deep Pitch Black Header */
 html[data-theme="dark"] header,
 html.dark header {
-  background-color: #000000 !important;
+  background-color: #0a0a0c !important;
   border-color: #27272a !important;
 }
 
@@ -253,7 +250,7 @@ html[data-theme="dark"] .bg-white,
 html.dark .bg-white,
 html[data-theme="dark"] .bg-slate-900,
 html.dark .bg-slate-900 {
-  background-color: #09090b !important;
+  background-color: #0d0e12 !important;
   color: #ffffff !important;
 }
 
@@ -274,7 +271,7 @@ html[data-theme="dark"] [class*="bg-slate-50/"],
 html.dark [class*="bg-slate-50/"],
 html[data-theme="dark"] [class*="bg-gray-50/"],
 html.dark [class*="bg-gray-50/"] {
-  background-color: #121215 !important;
+  background-color: #14151a !important;
   color: #ffffff !important;
 }
 

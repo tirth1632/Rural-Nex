@@ -72,9 +72,9 @@ export default function DashboardLayout() {
     ];
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex flex-col transition-colors duration-150 font-sans">
+        <div className="min-h-screen bg-white dark:bg-[#0a0a0c] text-gray-900 dark:text-white flex flex-col transition-colors duration-150 font-sans">
             {/* Top Horizontal Navigation Bar */}
-            <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-zinc-800 sticky top-0 z-40 shadow-xs">
+            <header className="bg-white dark:bg-[#0a0a0c] border-b border-gray-200 dark:border-zinc-800 sticky top-0 z-50 shadow-xs">
                 <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                     
                     {/* Left: Brand Logo */}

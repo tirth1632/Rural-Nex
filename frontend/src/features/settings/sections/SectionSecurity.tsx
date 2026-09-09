@@ -71,33 +71,33 @@ export const SectionSecurity: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 tracking-tight">Security</h2>
-        <p className="text-xs text-gray-500 mt-1">Manage your password and account security.</p>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Security</h2>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1 font-medium">Manage your password and account security.</p>
       </div>
 
       {toastMessage && (
-        <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-800 flex items-center gap-2">
-          <ShieldCheck size={16} className="shrink-0 text-emerald-600" />
+        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 rounded-xl text-xs sm:text-sm font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5">
+          <ShieldCheck size={18} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Password Section */}
-      <div className="p-6 bg-white border border-gray-200 rounded-xl space-y-4 shadow-2xs">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gray-100 text-gray-700">
-              <Lock size={18} />
+      <div className="p-6 sm:p-8 bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 rounded-2xl space-y-4 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="p-2.5 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-200">
+              <Lock size={20} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Password</h3>
-              <p className="text-xs text-gray-500 font-mono mt-0.5">••••••••••••</p>
+              <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Password</h3>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 font-mono mt-0.5">••••••••••••</p>
             </div>
           </div>
           <button
             type="button"
             onClick={() => setIsPasswordModalOpen(true)}
-            className="px-3.5 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-2xs cursor-pointer whitespace-nowrap shrink-0"
+            className="px-4 py-2 text-xs sm:text-sm font-bold text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors shadow-xs cursor-pointer whitespace-nowrap shrink-0"
           >
             Change Password
           </button>

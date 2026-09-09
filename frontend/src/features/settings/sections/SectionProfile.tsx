@@ -222,29 +222,29 @@ export const SectionProfile: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 tracking-tight">Profile</h2>
-        <p className="text-xs text-gray-500 mt-1">Manage your personal information.</p>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Profile</h2>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1 font-medium">Manage your personal information.</p>
       </div>
 
       {/* Main Profile Card */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-2xs overflow-hidden">
+      <div className="bg-white dark:bg-[#0a0a0c] border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
         {/* Top Profile Section: Avatar & Account Info */}
-        <div className="p-6 flex items-center gap-5 border-b border-gray-100">
+        <div className="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6 border-b border-gray-100 dark:border-zinc-800/80">
           <div className="relative shrink-0">
             {draftSettings.avatarUrl ? (
               <img
                 src={draftSettings.avatarUrl}
                 alt={draftSettings.fullName}
-                className="w-16 h-16 rounded-full object-cover border border-gray-200 shadow-xs"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-gray-200 dark:border-zinc-700 shadow-sm"
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-primary/10 text-primary font-bold text-xl flex items-center justify-center border border-primary/20 shadow-xs">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary/10 dark:bg-primary/20 text-primary font-extrabold text-2xl sm:text-3xl flex items-center justify-center border-2 border-primary/20 shadow-sm">
                 {initials}
               </div>
             )}
-            <label className="absolute bottom-0 right-0 p-1.5 bg-white border border-gray-200 rounded-full text-gray-600 hover:text-primary hover:border-primary shadow-xs cursor-pointer transition-colors">
-              <Camera size={13} />
+            <label className="absolute bottom-0 right-0 p-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-full text-gray-700 dark:text-zinc-200 hover:text-primary hover:border-primary shadow-md cursor-pointer transition-colors">
+              <Camera size={15} />
               <input
                 type="file"
                 accept="image/*"
@@ -254,12 +254,12 @@ export const SectionProfile: React.FC = () => {
             </label>
           </div>
 
-          <div className="space-y-1">
-            <h3 className="text-base font-bold text-gray-900">{draftSettings.fullName || 'User'}</h3>
-            <p className="text-xs text-gray-500 font-medium">{draftSettings.email}</p>
+          <div className="space-y-1.5">
+            <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">{draftSettings.fullName || 'User'}</h3>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 font-medium">{draftSettings.email}</p>
             <div className="flex items-center gap-3 pt-1">
-              <label className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 cursor-pointer transition-colors">
-                <Camera size={13} />
+              <label className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary/80 cursor-pointer transition-colors">
+                <Camera size={15} />
                 Upload Photo
                 <input
                   type="file"
@@ -270,11 +270,11 @@ export const SectionProfile: React.FC = () => {
               </label>
               {draftSettings.avatarUrl && (
                 <>
-                  <span className="text-xs text-gray-300">•</span>
+                  <span className="text-xs text-gray-300 dark:text-zinc-700">•</span>
                   <button
                     type="button"
                     onClick={handleRemoveAvatar}
-                    className="text-xs font-semibold text-red-600 hover:text-red-700 transition-colors"
+                    className="text-xs sm:text-sm font-bold text-red-600 dark:text-red-400 hover:text-red-700 transition-colors"
                   >
                     Remove Photo
                   </button>
@@ -285,49 +285,49 @@ export const SectionProfile: React.FC = () => {
         </div>
 
         {/* Personal Information Fields */}
-        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">Full Name</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-2">Full Name</label>
             <input
               type="text"
               value={draftSettings.fullName}
               onChange={e => updateDraft('fullName', e.target.value)}
-              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
+              className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 dark:border-zinc-800 rounded-xl text-sm sm:text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-zinc-900/90 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-xs"
               placeholder="Tirth Patel"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">Email Address</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-2">Email Address</label>
             <input
               type="email"
               value={draftSettings.email}
               readOnly
-              className="w-full px-3.5 py-2 border border-gray-200 bg-gray-50 rounded-lg text-sm font-medium text-gray-600 cursor-not-allowed outline-none"
+              className="w-full px-4 py-2.5 sm:py-3 border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-950/80 rounded-xl text-sm sm:text-base font-medium text-gray-600 dark:text-zinc-400 cursor-not-allowed outline-none"
             />
-            <span className="text-[11px] text-gray-400 mt-1 block">Account primary email (Read-only)</span>
+            <span className="text-xs text-gray-400 dark:text-zinc-500 mt-1.5 block">Account primary email (Read-only)</span>
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-gray-700">
-                Phone Number <span className="text-gray-400 font-normal">(Optional)</span>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
+                Phone Number <span className="text-gray-400 dark:text-zinc-500 font-normal lowercase">(optional)</span>
               </label>
               <div className="flex items-center gap-1.5">
                 {draftSettings.phoneVerified ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
-                    <CheckCircle2 size={12} className="text-emerald-600" /> Verified
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-emerald-800/60">
+                    <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400" /> Verified
                   </span>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700">
-                      <ShieldAlert size={14} className="text-amber-600" /> Not verified
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-400">
+                      <ShieldAlert size={14} className="text-amber-600 dark:text-amber-400" /> Not verified
                     </span>
                     <button
                       type="button"
                       onClick={sendOtp}
                       disabled={isSendingOtp}
-                      className="text-xs font-bold text-gray-900 hover:text-primary transition-colors cursor-pointer ml-1 disabled:opacity-50"
+                      className="text-xs font-bold text-gray-900 dark:text-white hover:text-primary transition-colors cursor-pointer ml-1 disabled:opacity-50"
                     >
                       {isSendingOtp ? 'Sending...' : 'Verify'}
                     </button>
@@ -335,8 +335,8 @@ export const SectionProfile: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="relative flex items-center">
-              <span className="absolute left-3 text-sm font-bold text-gray-700 select-none border-r border-gray-200 pr-2">
+            <div className="flex items-center bg-white dark:bg-[#14151a] border border-gray-300 dark:border-zinc-800 rounded-xl overflow-hidden shadow-xs focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all">
+              <span className="px-4 py-2.5 sm:py-3 text-sm sm:text-base font-extrabold text-gray-700 dark:text-zinc-300 select-none border-r border-gray-300 dark:border-zinc-700/80 bg-gray-50 dark:bg-zinc-800/30 shrink-0 flex items-center">
                 +91
               </span>
               <input
@@ -351,17 +351,17 @@ export const SectionProfile: React.FC = () => {
                   }
                 }}
                 placeholder="99791 37649"
-                className="w-full pl-14 pr-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
+                className="w-full px-4 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-gray-900 dark:text-white bg-transparent outline-none border-none focus:ring-0"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">Account Type</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-2">Account Type</label>
             <select
               value={draftSettings.accountType}
               onChange={e => updateDraft('accountType', e.target.value as any)}
-              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-white"
+              className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 dark:border-zinc-800 rounded-xl text-sm sm:text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-zinc-900/90 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-xs"
             >
               <option value="Entrepreneur">Entrepreneur</option>
               <option value="Business Owner">Business Owner</option>
@@ -370,8 +370,6 @@ export const SectionProfile: React.FC = () => {
             </select>
           </div>
         </div>
-
-
       </div>
 
       {/* Phone OTP Verification Modal */}

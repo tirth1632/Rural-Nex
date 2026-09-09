@@ -4,8 +4,8 @@ from .prompts import ADVISORY_SYSTEM_PROMPT, ADVISORY_JSON_SCHEMA
 from .scoring import FeasibilityScoringService
 
 class BusinessAdvisorService:
-    def __init__(self):
-        self.provider = get_llm_provider()
+    def __init__(self, provider_name=None, model_name=None, api_key=None):
+        self.provider = get_llm_provider(provider_name, model_name, api_key)
         self.scoring_engine = FeasibilityScoringService()
 
     def generate_full_advisory(self, lat: float, lng: float, radius: float, category: str, project_size: float, financial_data: Dict[str, Any] = None, language: str = 'en') -> Dict[str, Any]:
@@ -66,13 +66,11 @@ class BusinessAdvisorService:
 
 # Sub-services for specialized operations, delegating to the provider
 class SWOTGeneratorService:
-    # MVP: Handled entirely within the main BusinessAdvisorService JSON schema.
-    # Can be isolated later if we want independent endpoints.
     pass
 
 class ChatService:
-    def __init__(self):
-        self.provider = get_llm_provider()
+    def __init__(self, provider_name=None, model_name=None, api_key=None):
+        self.provider = get_llm_provider(provider_name, model_name, api_key)
         
     def converse(self, report_context: Dict[str, Any], chat_history: list, user_message: str) -> str:
         from .prompts import CHAT_SYSTEM_PROMPT

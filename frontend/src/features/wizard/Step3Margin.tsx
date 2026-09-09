@@ -45,10 +45,57 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
     return isNaN(parsed) || parsed < 0 ? 0 : parsed;
   }, [margin]);
 
-  // Financial leverage metrics
+  // Area Dependency Helper based on location passed from Step 2
+  const areaInfo = useMemo(() => {
+    const address = (data.formatted_address || data.village || data.district || data.state || '').toLowerCase();
+    const stateName = (data.state || '').toLowerCase();
+
+    // Check for Hilly / Special / Border / North-East States
+    const isSpecialState = ['arunachal pradesh', 'assam', 'manipur', 'meghalaya', 'mizoram', 'nagaland', 'sikkim', 'tripura', 'jammu and kashmir', 'ladakh', 'himachal pradesh', 'uttarakhand', 'andaman'].some(s => stateName.includes(s) || address.includes(s));
+
+    // Check if Urban / Metro
+    const isUrban = ['city', 'metro', 'urban', 'corporation', 'municipal', 'town', 'mumbai', 'delhi', 'bengaluru', 'hyderabad', 'kolkata', 'chennai', 'ahmedabad city', 'pune city'].some(u => address.includes(u) && !address.includes('rural') && !address.includes('village'));
+
+    if (isUrban) {
+      return {
+        type: 'Urban Area',
+        subsidyPct: 15,
+        subsidyLabel: 'Est. Govt Subsidy (15%)',
+        badgeColor: 'bg-sky-100 text-sky-800 border-sky-200',
+        desc: 'Urban Category PMEGP Subsidy Rate (15% Subsidy / 75% Bank Loan)'
+      };
+    }
+
+    if (isSpecialState) {
+      return {
+        type: 'Special / Hilly / Border Rural Area',
+        subsidyPct: 35,
+        subsidyLabel: 'Est. Govt Subsidy (35%)',
+        badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        desc: 'Special / Hilly / Border Rural Area PMEGP Rate (35% Subsidy / 55% Bank Loan)'
+      };
+    }
+
+    // Default Rural Area
+    return {
+      type: 'Rural Area',
+      subsidyPct: 25,
+      subsidyLabel: 'Est. Govt Subsidy (25%)',
+      badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
+      desc: 'Standard Rural Area PMEGP Scheme Rate (25% Subsidy / 65% Bank Loan)'
+    };
+  }, [data]);
+
+  // Financial leverage metrics (Area-Dependent)
   const estimatedProjectCapacity = useMemo(() => numericValue * 10, [numericValue]);
-  const estimatedSubsidy = useMemo(() => Math.round(estimatedProjectCapacity * 0.25), [estimatedProjectCapacity]);
+  const estimatedSubsidy = useMemo(() => Math.round(estimatedProjectCapacity * (areaInfo.subsidyPct / 100)), [estimatedProjectCapacity, areaInfo]);
   const estimatedBankLoan = useMemo(() => Math.max(0, estimatedProjectCapacity - numericValue - estimatedSubsidy), [estimatedProjectCapacity, numericValue, estimatedSubsidy]);
+
+  const equityPct = 10;
+  const subsidyPct = areaInfo.subsidyPct;
+  const loanPct = Math.max(0, 100 - equityPct - subsidyPct);
+
+  const locationDisplayName = data.village || data.district || data.state || '';
 
   const handleInputChange = (val: string) => {
     // Sanitize input to digits only
@@ -58,7 +105,14 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
 
   const handleContinue = () => {
     if (numericValue > 0) {
-      onNext({ margin_capital: numericValue });
+      onNext({ 
+        margin_capital: numericValue,
+        area_type: areaInfo.type,
+        subsidy_pct: areaInfo.subsidyPct,
+        estimated_capacity: estimatedProjectCapacity,
+        estimated_subsidy: estimatedSubsidy,
+        estimated_loan: estimatedBankLoan
+      });
     }
   };
 
@@ -76,6 +130,13 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
         <p className="text-gray-500 text-sm font-medium max-w-md mx-auto">
           {t('wizard_step3_desc', 'Enter your personal equity investment to calculate eligible bank credit and govt subsidies.')}
         </p>
+
+        {/* Location Area Dependency Badge */}
+        <div className="pt-1 flex items-center justify-center">
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold border ${areaInfo.badgeColor} shadow-2xs`}>
+            📍 Location Classification: <strong>{areaInfo.type}</strong> ({areaInfo.subsidyPct}% Subsidy){locationDisplayName ? ` — ${locationDisplayName}` : ''}
+          </span>
+        </div>
       </div>
 
       {/* Main Interactive Card */}
@@ -165,19 +226,19 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
             <div className="space-y-2">
               <div className="h-3.5 w-full bg-gray-200/80 rounded-full overflow-hidden flex shadow-inner">
                 <div 
-                  style={{ width: '10%' }} 
+                  style={{ width: `${equityPct}%` }} 
                   className="bg-emerald-600 h-full transition-all duration-300" 
-                  title="Your Equity Margin (10%)"
+                  title={`Your Equity Margin (${equityPct}%)`}
                 />
                 <div 
-                  style={{ width: '25%' }} 
+                  style={{ width: `${subsidyPct}%` }} 
                   className="bg-amber-500 h-full transition-all duration-300" 
-                  title="Govt Subsidy (25%)"
+                  title={`Govt Subsidy (${subsidyPct}%)`}
                 />
                 <div 
-                  style={{ width: '65%' }} 
+                  style={{ width: `${loanPct}%` }} 
                   className="bg-sky-600 h-full transition-all duration-300" 
-                  title="Bank Credit Loan (65%)"
+                  title={`Bank Credit Loan (${loanPct}%)`}
                 />
               </div>
 
@@ -186,7 +247,7 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
                 <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
                   <div className="w-3.5 h-3.5 rounded-full bg-emerald-600 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Your Equity</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Your Equity ({equityPct}%)</p>
                     <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(numericValue)}</p>
                   </div>
                 </div>
@@ -194,7 +255,7 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
                 <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
                   <div className="w-3.5 h-3.5 rounded-full bg-amber-500 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Est. Govt Subsidy (25%)</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{areaInfo.subsidyLabel}</p>
                     <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(estimatedSubsidy)}</p>
                   </div>
                 </div>
@@ -202,7 +263,7 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
                 <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
                   <div className="w-3.5 h-3.5 rounded-full bg-sky-600 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Bank Credit Loan</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Bank Credit Loan ({loanPct}%)</p>
                     <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(estimatedBankLoan)}</p>
                   </div>
                 </div>

@@ -10,7 +10,8 @@ from .views import (
     TranscribeAudioAPIView,
     SynthesizeAudioAPIView,
     BusinessCompareAPIView,
-    SimulationAPIView
+    SimulationAPIView,
+    AIStatusAPIView
 )
 
 router = DefaultRouter()
@@ -28,4 +29,5 @@ urlpatterns = [
     path('voice/transcribe/', TranscribeAudioAPIView.as_view(), name='voice-transcribe'),
     path('voice/synthesize/', SynthesizeAudioAPIView.as_view(), name='voice-synthesize'),
     path('simulate/', SimulationAPIView.as_view(), name='simulate'),
+    path('ai-status/', AIStatusAPIView.as_view(), name='ai-status'),
 ]

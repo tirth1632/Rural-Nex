@@ -134,8 +134,12 @@ class BusinessProposalViewSet(viewsets.ModelViewSet):
             
             language = request.user.profile.preferred_language if hasattr(request.user, 'profile') else 'en'
             
+            ai_provider = request.data.get('ai_provider') or request.headers.get('X-AI-Provider')
+            ai_model = request.data.get('ai_model') or request.headers.get('X-AI-Model')
+            api_key = request.data.get('api_key') or request.headers.get('X-AI-Key')
+            
             try:
-                service = BusinessAdvisorService()
+                service = BusinessAdvisorService(provider_name=ai_provider, model_name=ai_model, api_key=api_key)
                 ai_result = service.generate_full_advisory(
                     lat=lat, 
                     lng=lng, 
@@ -252,7 +256,11 @@ class GenerateAdvisoryAPIView(APIView):
             return Response({"error": "Invalid numeric formats"}, status=status.HTTP_400_BAD_REQUEST)
 
         language = request.user.profile.preferred_language if hasattr(request.user, 'profile') else 'en'
-        service = BusinessAdvisorService()
+        ai_provider = request.data.get('ai_provider') or request.headers.get('X-AI-Provider')
+        ai_model = request.data.get('ai_model') or request.headers.get('X-AI-Model')
+        api_key = request.data.get('api_key') or request.headers.get('X-AI-Key')
+
+        service = BusinessAdvisorService(provider_name=ai_provider, model_name=ai_model, api_key=api_key)
         result = service.generate_full_advisory(lat, lng, radius, category, project_size, financial_data, language)
 
         # In a real flow, this would save to FeasibilityReport linked to AnalysisRun
@@ -380,7 +388,11 @@ class BusinessCompareAPIView(APIView):
             })
 
         # 3. AI Comparison
-        advisor_service = BusinessAdvisorService()
+        ai_provider = request.data.get('ai_provider') or request.headers.get('X-AI-Provider')
+        ai_model = request.data.get('ai_model') or request.headers.get('X-AI-Model')
+        api_key = request.data.get('api_key') or request.headers.get('X-AI-Key')
+
+        advisor_service = BusinessAdvisorService(provider_name=ai_provider, model_name=ai_model, api_key=api_key)
         language = request.user.profile.preferred_language if hasattr(request.user, 'profile') else 'en'
         
         context = {
@@ -484,3 +496,21 @@ class SimulationAPIView(APIView):
         }
         
         return Response(response_data)
+
+class AIStatusAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        import os
+        return Response({
+            "configured_providers": {
+                "gemini": bool(os.environ.get("GEMINI_API_KEY")),
+                "openrouter": bool(os.environ.get("OPENROUTER_API_KEY")),
+                "grok": bool(os.environ.get("GROK_API_KEY") or os.environ.get("XAI_API_KEY")),
+                "openai": bool(os.environ.get("OPENAI_API_KEY")),
+                "anthropic": bool(os.environ.get("ANTHROPIC_API_KEY")),
+                "deepseek": bool(os.environ.get("DEEPSEEK_API_KEY")),
+                "groq": bool(os.environ.get("GROQ_API_KEY")),
+            }
+        })
+
