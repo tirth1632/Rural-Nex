@@ -16,6 +16,7 @@ import {
   ArrowRight, 
   Clock, 
   AlertCircle, 
+  AlertTriangle,
   RefreshCw
 } from 'lucide-react';
 
@@ -27,7 +28,9 @@ import type {
   SchemeMatchItem,
   SchemeComparisonItem,
   SavedSchemeItem,
-  BenefitCalculationResult
+  BenefitCalculationResult,
+  PlanProfile,
+  SchemeApplicabilityResult
 } from '../../api/schemes';
 
 import {
@@ -42,7 +45,8 @@ import {
   fetchSavedSchemes,
   saveScheme,
   deleteSavedScheme,
-  addSchemeToFinancialPlan
+  addSchemeToFinancialPlan,
+  checkSchemeApplicability
 } from '../../api/schemes';
 
 export const ALL_INDIAN_STATES_AND_UTS = [
@@ -156,6 +160,8 @@ export default function GovtSchemesPage() {
   const [matchingInProgress, setMatchingInProgress] = useState(false);
   const [matcherHasSearched, setMatcherHasSearched] = useState(false);
   const [matcherMobileOpen, setMatcherMobileOpen] = useState(false);
+  const [matcherFormCollapsed, setMatcherFormCollapsed] = useState(false);
+  const matcherCardRef = React.useRef<HTMLDivElement>(null);
 
   // Scheme Detail Modal
   const [detailSchemeId, setDetailSchemeId] = useState<string | null>(null);
@@ -178,6 +184,11 @@ export default function GovtSchemesPage() {
   // Saved Schemes Drawer
   const [savedSchemes, setSavedSchemes] = useState<SavedSchemeItem[]>([]);
   const [savedDrawerOpen, setSavedDrawerOpen] = useState(false);
+
+  // Applicability Warning Modal State
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [warningScheme, setWarningScheme] = useState<any>(null);
+  const [warningResult, setWarningResult] = useState<SchemeApplicabilityResult | null>(null);
 
   // Active Proposal synchronization from LocalStorage
   useEffect(() => {
@@ -344,6 +355,12 @@ export default function GovtSchemesPage() {
         special_category: matcherSpecial
       });
       setMatcherResults(res.matched_schemes);
+      setMatcherFormCollapsed(true);
+
+      // Auto-scroll smooth focus directly to results
+      setTimeout(() => {
+        matcherCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err) {
       console.error('Error running instant scheme matcher:', err);
     } finally {
@@ -390,16 +407,68 @@ export default function GovtSchemesPage() {
     }
   };
 
-  // Handoff to Financial Plan Module
-  const handleAddToFinancialPlan = async (schemeId: string) => {
+  // Helper to extract active financial plan profile
+  const getActivePlanProfile = useCallback((): PlanProfile => {
+    let planDraft: any = null;
+    try {
+      const raw = localStorage.getItem('ruralnex_financial_plan_draft_v2');
+      if (raw) planDraft = JSON.parse(raw);
+    } catch {
+      // ignore
+    }
+
+    const calculatedCost = planDraft?.capexItems
+      ? planDraft.capexItems.reduce((acc: number, item: any) => acc + (item.total_amount || 0), 0)
+      : 0;
+
+    return {
+      project_cost: calculatedCost > 0 ? calculatedCost : matcherCost,
+      state: planDraft?.promoter?.state || matcherState || selectedState || 'Gujarat',
+      sector: planDraft?.selectedBusiness?.sector || matcherSector || 'Agriculture & Food',
+      gender: planDraft?.promoter?.gender || matcherGender || 'male',
+      age: planDraft?.promoter?.age || matcherAge || 28,
+      social_category: planDraft?.promoter?.socialCategory || matcherCategory || 'general',
+      area_type: planDraft?.promoter?.areaType || matcherRuralUrban || 'rural'
+    };
+  }, [matcherCost, matcherState, selectedState, matcherSector, matcherGender, matcherAge, matcherCategory, matcherRuralUrban]);
+
+  // Execute add to financial plan
+  const confirmAddToFinancialPlan = async (schemeId: string, bypassWarning: boolean = false) => {
     try {
       const res = await addSchemeToFinancialPlan(schemeId);
-      localStorage.setItem('ruralnex_selected_scheme', JSON.stringify(res));
+      localStorage.setItem('ruralnex_selected_scheme', JSON.stringify({
+        ...res,
+        warning_bypassed: bypassWarning,
+        warning_details: warningResult?.warnings || []
+      }));
+      setWarningModalOpen(false);
       navigate(res.redirect_url || `/finance?scheme_id=${res.official_id}`);
     } catch (err) {
       console.error('Error adding scheme to financial plan:', err);
       navigate(`/finance?scheme_id=${schemeId}`);
     }
+  };
+
+  // Handoff to Financial Plan Module with Applicability Check
+  const handleAddToFinancialPlan = async (schemeId: string, targetSchemeObj?: any) => {
+    const scheme = targetSchemeObj || 
+      schemes.find(s => s.id === schemeId || s.official_id === schemeId) || 
+      matcherResults.find(m => m.id === schemeId || m.official_id === schemeId) ||
+      detailScheme;
+
+    if (scheme) {
+      const activeProfile = getActivePlanProfile();
+      const appResult = checkSchemeApplicability(scheme, activeProfile);
+      
+      if (!appResult.isApplicable) {
+        setWarningScheme(scheme);
+        setWarningResult(appResult);
+        setWarningModalOpen(true);
+        return;
+      }
+    }
+
+    await confirmAddToFinancialPlan(schemeId, false);
   };
 
   return (
@@ -429,7 +498,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-primary">
-                    {loadingStats ? '...' : `${stats?.verified_schemes || 14}+`}
+                    {loadingStats ? '...' : `${(stats?.verified_schemes || 4520).toLocaleString('en-IN')}+`}
                   </div>
                   <ShieldCheck className="text-primary/70 shrink-0" size={20} />
                 </div>
@@ -441,7 +510,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-gray-950 dark:text-white">
-                    {loadingStats ? '...' : `${stats?.central_schemes || 8}`}
+                    {loadingStats ? '...' : `${(stats?.central_schemes || 1250).toLocaleString('en-IN')}+`}
                   </div>
                   <Landmark className="text-blue-500/70 shrink-0" size={20} />
                 </div>
@@ -453,7 +522,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-gray-950 dark:text-white">
-                    {loadingStats ? '...' : `${stats?.state_schemes || 6}`}
+                    {loadingStats ? '...' : `${(stats?.state_schemes || 3270).toLocaleString('en-IN')}+`}
                   </div>
                   <Scale className="text-purple-500/70 shrink-0" size={20} />
                 </div>
@@ -727,6 +796,7 @@ export default function GovtSchemesPage() {
                   const fin = scheme.financial_summary;
                   const isSaved = isSchemeSaved(scheme.id, scheme.official_id);
                   const isCompared = comparedSchemeIds.includes(scheme.official_id);
+                  const appCheck = checkSchemeApplicability(scheme, getActivePlanProfile());
 
                   return (
                     <div
@@ -751,10 +821,23 @@ export default function GovtSchemesPage() {
                           ))}
                         </div>
 
-                        {/* Verified Status Tag */}
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-xs font-black text-emerald-700 dark:text-emerald-300">
-                          <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400" />
-                          <span>Official Verified</span>
+                        {/* Verified Status Tag & Applicability Warning Tag */}
+                        <div className="flex items-center gap-2">
+                          {!appCheck.isApplicable && (
+                            <div 
+                              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 text-xs font-black text-amber-700 dark:text-amber-300 cursor-pointer"
+                              title={appCheck.warnings.join(' \n')}
+                              onClick={() => handleAddToFinancialPlan(scheme.official_id, scheme)}
+                            >
+                              <AlertTriangle size={14} className="text-amber-600 dark:text-amber-400 shrink-0" />
+                              <span>Plan Mismatch</span>
+                            </div>
+                          )}
+
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-xs font-black text-emerald-700 dark:text-emerald-300">
+                            <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400" />
+                            <span>Official Verified</span>
+                          </div>
                         </div>
                       </div>
 
@@ -859,7 +942,7 @@ export default function GovtSchemesPage() {
                           </button>
 
                           <button
-                            onClick={() => handleAddToFinancialPlan(scheme.official_id)}
+                            onClick={() => handleAddToFinancialPlan(scheme.official_id, scheme)}
                             className="h-11 px-5 rounded-xl text-sm font-black bg-primary hover:bg-primary/90 text-white shadow-md flex items-center gap-2 transition"
                           >
                             <Calculator size={16} />
@@ -904,197 +987,228 @@ export default function GovtSchemesPage() {
           </div>
 
           {/* Right Column: INSTANT SCHEME MATCHER */}
-          <div className="lg:col-span-4 sticky top-24">
+          <div ref={matcherCardRef} className="lg:col-span-4 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-1 scrollbar-thin">
             <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 sm:p-7 border border-gray-200 dark:border-zinc-800 shadow-lg">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-wider">
                   <Sparkles size={16} />
                   <span>Instant Scheme Matcher</span>
                 </div>
+                {matcherFormCollapsed && (
+                  <button
+                    type="button"
+                    onClick={() => setMatcherFormCollapsed(false)}
+                    className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>Edit Filter Criteria</span>
+                  </button>
+                )}
               </div>
 
               <h3 className="text-xl font-black text-gray-950 dark:text-white">
                 Find Your Best Scheme
               </h3>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 mt-1 mb-5 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 mt-1 mb-4 leading-relaxed">
                 Enter your business profile to evaluate statutory eligibility, calculate subsidy entitlement, and check credit guarantees.
               </p>
 
-              <form onSubmit={handleRunMatcher} className="space-y-4">
-                
-                {/* Sector */}
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Business Sector</label>
-                  <select
-                    value={matcherSector}
-                    onChange={(e) => setMatcherSector(e.target.value)}
-                    className="w-full h-11 px-3.5 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+              {/* Collapsed Profile Summary Pill */}
+              {matcherFormCollapsed ? (
+                <div className="p-4 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 mb-4 flex items-center justify-between gap-3 shadow-xs">
+                  <div>
+                    <div className="text-xs font-black text-emerald-900 dark:text-emerald-200">
+                      {matcherSector} • {matcherState}
+                    </div>
+                    <div className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">
+                      Outlay: ₹{(matcherCost / 100000).toFixed(1)} Lakh • {matcherRuralUrban === 'rural' ? '🏡 Rural' : '🏢 Urban'} • {matcherStage}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setMatcherFormCollapsed(false)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-zinc-800 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 dark:hover:bg-zinc-700 transition shrink-0"
                   >
-                    <option value="Agriculture & Food">🌾 Agriculture &amp; Food Processing</option>
-                    <option value="Dairy & Livestock">🐄 Dairy &amp; Animal Husbandry</option>
-                    <option value="Manufacturing">🏭 Manufacturing &amp; Engineering</option>
-                    <option value="Rural Retail">🏪 Rural Retail &amp; Trading</option>
-                    <option value="Rural Services">🚚 Rural Services &amp; Logistics</option>
-                    <option value="Fisheries">🐟 Fisheries &amp; Aquaculture</option>
-                    <option value="Renewable Energy">☀️ Renewable &amp; Solar Energy</option>
-                  </select>
+                    Edit
+                  </button>
                 </div>
-
-                {/* State & District */}
-                <div className="grid grid-cols-2 gap-2.5">
+              ) : (
+                <form onSubmit={handleRunMatcher} className="space-y-4">
+                  
+                  {/* Sector */}
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">State</label>
+                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Business Sector</label>
                     <select
-                      value={matcherState}
-                      onChange={(e) => setMatcherState(e.target.value)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      value={matcherSector}
+                      onChange={(e) => setMatcherSector(e.target.value)}
+                      className="w-full h-11 px-3.5 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                     >
-                      {combinedStateList.map((st) => (
-                        <option key={st} value={st}>{st}</option>
-                      ))}
+                      <option value="Agriculture & Food">🌾 Agriculture &amp; Food Processing</option>
+                      <option value="Dairy & Livestock">🐄 Dairy &amp; Animal Husbandry</option>
+                      <option value="Manufacturing">🏭 Manufacturing &amp; Engineering</option>
+                      <option value="Rural Retail">🏪 Rural Retail &amp; Trading</option>
+                      <option value="Rural Services">🚚 Rural Services &amp; Logistics</option>
+                      <option value="Fisheries">🐟 Fisheries &amp; Aquaculture</option>
+                      <option value="Renewable Energy">☀️ Renewable &amp; Solar Energy</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">District (Optional)</label>
+
+                  {/* State & District */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">State</label>
+                      <select
+                        value={matcherState}
+                        onChange={(e) => setMatcherState(e.target.value)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        {combinedStateList.map((st) => (
+                          <option key={st} value={st}>{st}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">District (Optional)</label>
+                      <input
+                        type="text"
+                        value={matcherDistrict}
+                        onChange={(e) => setMatcherDistrict(e.target.value)}
+                        placeholder="e.g. Ahmedabad"
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-medium text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Area & Stage */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Area Type</label>
+                      <select
+                        value={matcherRuralUrban}
+                        onChange={(e) => setMatcherRuralUrban(e.target.value as any)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        <option value="rural">🏡 Rural Area</option>
+                        <option value="urban">🏢 Urban Area</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Business Stage</label>
+                      <select
+                        value={matcherStage}
+                        onChange={(e) => setMatcherStage(e.target.value as any)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        <option value="new">🌱 New Venture</option>
+                        <option value="existing">⚙️ Existing Unit</option>
+                        <option value="expansion">📈 Expansion</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Project Cost */}
+                  <div className="p-3.5 rounded-xl bg-gray-50 dark:bg-zinc-800/70 border border-gray-200/80 dark:border-zinc-700/80">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider">Project Outlay</label>
+                      <span className="text-lg font-black text-primary">₹{(matcherCost / 100000).toFixed(1)} Lakh</span>
+                    </div>
                     <input
-                      type="text"
-                      value={matcherDistrict}
-                      onChange={(e) => setMatcherDistrict(e.target.value)}
-                      placeholder="e.g. Ahmedabad"
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-medium text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary"
+                      type="range"
+                      min={50000}
+                      max={5000000}
+                      step={50000}
+                      value={matcherCost}
+                      onChange={(e) => setMatcherCost(Number(e.target.value))}
+                      className="w-full accent-primary h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg cursor-pointer"
                     />
+                    <div className="flex justify-between text-[11px] font-semibold text-gray-400 mt-1">
+                      <span>₹50K</span>
+                      <span>₹25 Lakh</span>
+                      <span>₹50 Lakh</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Area & Stage */}
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Area Type</label>
-                    <select
-                      value={matcherRuralUrban}
-                      onChange={(e) => setMatcherRuralUrban(e.target.value as any)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-                    >
-                      <option value="rural">🏡 Rural Area</option>
-                      <option value="urban">🏢 Urban Area</option>
-                    </select>
+                  {/* Promoter Profile */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Social Category</label>
+                      <select
+                        value={matcherCategory}
+                        onChange={(e) => setMatcherCategory(e.target.value)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        <option value="general">General</option>
+                        <option value="special">SC / ST / OBC / Minorities</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Gender</label>
+                      <select
+                        value={matcherGender}
+                        onChange={(e) => setMatcherGender(e.target.value as any)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        <option value="male">👨 Male</option>
+                        <option value="female">👩 Female (Women Entrepreneur)</option>
+                      </select>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Business Stage</label>
-                    <select
-                      value={matcherStage}
-                      onChange={(e) => setMatcherStage(e.target.value as any)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-                    >
-                      <option value="new">🌱 New Venture</option>
-                      <option value="existing">⚙️ Existing Unit</option>
-                      <option value="expansion">📈 Expansion</option>
-                    </select>
-                  </div>
-                </div>
 
-                {/* Project Cost */}
-                <div className="p-3.5 rounded-xl bg-gray-50 dark:bg-zinc-800/70 border border-gray-200/80 dark:border-zinc-700/80">
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider">Project Outlay</label>
-                    <span className="text-lg font-black text-primary">₹{(matcherCost / 100000).toFixed(1)} Lakh</span>
+                  {/* Age & Special */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Promoter Age</label>
+                      <input
+                        type="number"
+                        min={18}
+                        max={75}
+                        value={matcherAge}
+                        onChange={(e) => setMatcherAge(Number(e.target.value))}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Special Category</label>
+                      <select
+                        value={matcherSpecial}
+                        onChange={(e) => setMatcherSpecial(e.target.value)}
+                        className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      >
+                        <option value="none">None</option>
+                        <option value="divyang">Divyang / PwD</option>
+                        <option value="ex_servicemen">Ex-Servicemen</option>
+                        <option value="ner">NER / Hill State</option>
+                      </select>
+                    </div>
                   </div>
-                  <input
-                    type="range"
-                    min={50000}
-                    max={5000000}
-                    step={50000}
-                    value={matcherCost}
-                    onChange={(e) => setMatcherCost(Number(e.target.value))}
-                    className="w-full accent-primary h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[11px] font-semibold text-gray-400 mt-1">
-                    <span>₹50K</span>
-                    <span>₹25 Lakh</span>
-                    <span>₹50 Lakh</span>
-                  </div>
-                </div>
 
-                {/* Promoter Profile */}
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Social Category</label>
-                    <select
-                      value={matcherCategory}
-                      onChange={(e) => setMatcherCategory(e.target.value)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-                    >
-                      <option value="general">General</option>
-                      <option value="special">SC / ST / OBC / Minorities</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Gender</label>
-                    <select
-                      value={matcherGender}
-                      onChange={(e) => setMatcherGender(e.target.value as any)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-                    >
-                      <option value="male">👨 Male</option>
-                      <option value="female">👩 Female (Women Entrepreneur)</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Age & Special */}
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Promoter Age</label>
-                    <input
-                      type="number"
-                      min={18}
-                      max={75}
-                      value={matcherAge}
-                      onChange={(e) => setMatcherAge(Number(e.target.value))}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">Special Category</label>
-                    <select
-                      value={matcherSpecial}
-                      onChange={(e) => setMatcherSpecial(e.target.value)}
-                      className="w-full h-11 px-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-                    >
-                      <option value="none">None</option>
-                      <option value="divyang">Divyang / PwD</option>
-                      <option value="ex_servicemen">Ex-Servicemen</option>
-                      <option value="ner">NER / Hill State</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={matchingInProgress}
-                  className="w-full h-12 mt-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-md flex items-center justify-center gap-2 transition"
-                >
-                  {matchingInProgress ? (
-                    <RefreshCw className="animate-spin" size={18} />
-                  ) : (
-                    <Sparkles size={18} />
-                  )}
-                  <span>{matchingInProgress ? 'Evaluating Rules & Limits...' : 'Match Best Government Schemes'}</span>
-                </button>
-              </form>
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={matchingInProgress}
+                    className="w-full h-12 mt-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-md flex items-center justify-center gap-2 transition"
+                  >
+                    {matchingInProgress ? (
+                      <RefreshCw className="animate-spin" size={18} />
+                    ) : (
+                      <Sparkles size={18} />
+                    )}
+                    <span>{matchingInProgress ? 'Evaluating Rules & Limits...' : 'Match Best Government Schemes'}</span>
+                  </button>
+                </form>
+              )}
 
               {/* Matcher Results Preview */}
               {matcherHasSearched && (
-                <div className="mt-6 pt-5 border-t border-gray-100 dark:border-zinc-800">
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-zinc-800">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
-                      Top Matched Schemes ({matcherResults.length})
+                    <span className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white flex items-center gap-1.5">
+                      <Sparkles size={14} className="text-primary" />
+                      <span>TOP MATCHED SCHEMES ({matcherResults.length})</span>
                     </span>
                   </div>
 
-                  <div className="space-y-3.5 max-h-96 overflow-y-auto pr-1">
-                    {matcherResults.slice(0, 3).map((match) => (
+                  <div className="space-y-3.5 pr-1">
+                    {matcherResults.map((match) => (
                       <div
                         key={match.id}
                         className="p-4 bg-gray-50/90 dark:bg-zinc-800/70 rounded-xl border border-gray-200/90 dark:border-zinc-700 shadow-xs"
@@ -1142,7 +1256,7 @@ export default function GovtSchemesPage() {
                             View Details
                           </button>
                           <button
-                            onClick={() => handleAddToFinancialPlan(match.official_id)}
+                            onClick={() => handleAddToFinancialPlan(match.official_id, match)}
                             className="font-black text-primary flex items-center gap-1 hover:underline"
                           >
                             <span>Add to DPR</span>
@@ -1760,6 +1874,87 @@ export default function GovtSchemesPage() {
                   <span>Match Best Schemes</span>
                 </button>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* -------------------------------------------------------------
+          APPLICABILITY WARNING MODAL
+      ------------------------------------------------------------- */}
+      {warningModalOpen && warningScheme && warningResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-zinc-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-amber-300 dark:border-amber-900/50 shadow-2xl space-y-6">
+            
+            {/* Header */}
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+                <AlertTriangle size={26} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-black text-gray-950 dark:text-white leading-snug">
+                  Scheme Applicability Warning
+                </h3>
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-zinc-400 mt-1">
+                  Statutory or financial parameter mismatches detected between this scheme and your active financial plan profile.
+                </p>
+              </div>
+              <button
+                onClick={() => setWarningModalOpen(false)}
+                className="p-1 text-gray-400 hover:text-gray-700 dark:hover:text-white rounded-lg"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Target Scheme Summary */}
+            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700">
+              <div className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Selected Scheme</div>
+              <div className="text-base font-black text-gray-950 dark:text-white mt-0.5">
+                {warningScheme.name || warningScheme.short_name}
+              </div>
+              <div className="text-xs font-semibold text-primary mt-1">
+                {warningScheme.ministry} • {warningScheme.level === 'CENTRAL' ? 'Central Scheme' : `State Scheme (${warningScheme.state})`}
+              </div>
+            </div>
+
+            {/* Specific Mismatch Items */}
+            <div className="space-y-2.5">
+              <div className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                <AlertCircle size={14} />
+                <span>Criteria Mismatch Details ({warningResult.warnings.length}):</span>
+              </div>
+              
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {warningResult.warnings.map((warn, idx) => (
+                  <div key={idx} className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200 font-semibold leading-relaxed">
+                    <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <span>{warn}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed font-medium">
+              You can still add this scheme to your financial plan. However, you may need to adjust your project outlay, state, or target sector within the Financial Calculator.
+            </p>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setWarningModalOpen(false)}
+                className="w-full sm:w-auto px-5 h-11 rounded-xl border border-gray-300 dark:border-zinc-700 text-xs font-bold text-gray-800 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+              >
+                Cancel &amp; Select Matched Scheme
+              </button>
+              <button
+                type="button"
+                onClick={() => confirmAddToFinancialPlan(warningScheme.official_id || warningScheme.id, true)}
+                className="w-full sm:w-auto px-5 h-11 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black shadow-md flex items-center justify-center gap-2 transition"
+              >
+                <Calculator size={15} />
+                <span>Add Anyway &amp; Adapt Plan</span>
+              </button>
             </div>
           </div>
         </div>

@@ -209,10 +209,13 @@ export const GeoFilterPanel: React.FC<GeoFilterPanelProps> = ({
               type="button"
               onClick={handleDetectLocation}
               disabled={isLocating}
-              className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors cursor-pointer"
+              title={isLocating ? t('geo_detecting', 'Locating...') : t('geo_auto_detect', 'Auto-Detect Live Location')}
+              aria-label="Detect live GPS location"
+              className={`p-1.5 rounded-lg text-primary bg-primary/10 hover:bg-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center ${
+                isLocating ? 'ring-2 ring-primary/40 animate-pulse' : ''
+              }`}
             >
-              <Navigation size={12} className={isLocating ? 'animate-spin' : ''} />
-              <span>{isLocating ? t('geo_detecting', 'Locating...') : t('geo_auto_detect', 'Detect My Location')}</span>
+              <Navigation size={14} className={isLocating ? 'animate-spin text-primary' : ''} />
             </button>
           </div>
           {detectStatus && (

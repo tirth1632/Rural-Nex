@@ -14,7 +14,8 @@ import {
     Settings as SettingsIcon,
     Sun,
     Moon,
-    Landmark
+    Landmark,
+    Database
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,7 @@ import { useSettings } from '../features/settings/SettingsContext';
 
 import LanguageSelector from './LanguageSelector';
 import { RuralNexLogoMark } from './RuralNexLogo';
+import { DataStatusModal } from './DataStatusModal';
 
 export default function DashboardLayout() {
     const { t } = useTranslation();
@@ -32,6 +34,7 @@ export default function DashboardLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [dataStatusOpen, setDataStatusOpen] = useState(false);
 
     const toolsDropdownRef = useRef<HTMLDivElement>(null);
     const userDropdownRef = useRef<HTMLDivElement>(null);
@@ -143,6 +146,17 @@ export default function DashboardLayout() {
 
                     {/* Right Side Actions */}
                     <div className="hidden md:flex items-center gap-2 lg:gap-3">
+                        {/* Data Engine Status Debug Button */}
+                        <button
+                            type="button"
+                            onClick={() => setDataStatusOpen(true)}
+                            title="Dataset Quality & Status Engine"
+                            className="px-3 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-semibold text-xs flex items-center gap-1.5 hover:bg-emerald-500/20 transition cursor-pointer"
+                        >
+                            <Database size={15} />
+                            <span>Data Status</span>
+                        </button>
+
                         {/* Language Selector Dropdown Directly in Header */}
                         <LanguageSelector />
 
@@ -347,6 +361,9 @@ export default function DashboardLayout() {
             <main className="flex-1 min-h-0 overflow-y-auto bg-white dark:bg-black">
                 <Outlet />
             </main>
+
+            {/* Live Dataset Quality & Status Modal */}
+            <DataStatusModal isOpen={dataStatusOpen} onClose={() => setDataStatusOpen(false)} />
         </div>
     );
 }

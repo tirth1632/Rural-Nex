@@ -1,0 +1,2364 @@
+{
+  "businesses": {
+    "key": "businesses",
+    "file": "6. BUSINESSES.csv",
+    "description": "Skill training & micro-enterprise beneficiaries by State/UT",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 35,
+        "cols": 5,
+        "columns": {
+          "Sl. No.": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 35,
+            "sample": [
+              "1",
+              "2"
+            ]
+          },
+          "State/UT": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 35,
+            "sample": [
+              "Andaman and Nicobar Islands",
+              "Andhra Pradesh"
+            ]
+          },
+          "Number of Candidates Skill Trained": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 35,
+            "sample": [
+              "143",
+              "82546"
+            ]
+          },
+          "Number of Skilled Candidates Placed": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 34,
+            "sample": [
+              "0",
+              "74182"
+            ]
+          },
+          "Number of Beneficiaries assisted for setting up Individual/Group Micro Enterprises": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 35,
+            "sample": [
+              "6",
+              "100622"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "crop_season": {
+    "key": "crop_season",
+    "file": "Crop_Season_Wise_Price_Arrival_10-09-2026_09-10-38_AM.csv",
+    "description": "Crop season MSP, prices & arrival metric tonnes",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 11,
+        "cols": 7,
+        "columns": {
+          "Unnamed: 0": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 4,
+            "sample": [
+              "Commodity Group",
+              "Cereals"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 10,
+            "sample": [
+              "Commodity",
+              "Barley(Jau)"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 10,
+            "sample": [
+              "MSP (Rs./Quintal) 2026-27",
+              "2150.00"
+            ]
+          },
+          "Season Price & Arrival Report (2026-27)": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "Kharif Marketing Season Marketing Season 01 Oct - 30 Sep ",
+              "Kharif Marketing Season Price (Rs./Quintal)"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 2,
+            "sample": [
+              "Kharif Marketing Season Arrival (Metric Tonnes)",
+              "-"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 11,
+            "sample": [
+              "Rabi Marketing Season Marketing Season 01 Apr - 31 Mar ",
+              "Rabi Marketing Season Price (Rs./Quintal)"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 10,
+            "sample": [
+              "Rabi Marketing Season Arrival (Metric Tonnes)",
+              "210509.42"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "economics": {
+    "key": "economics",
+    "file": "ECONOMICS.csv",
+    "description": "State-wise CPI price index trends (2011-2026)",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 267,
+        "cols": 39,
+        "columns": {
+          "Sector": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "Rural",
+              "Urban"
+            ]
+          },
+          "Year": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 8,
+            "sample": [
+              "2011",
+              "2011"
+            ]
+          },
+          "Name": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "January",
+              "January"
+            ]
+          },
+          "Jammu and Kashmir": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 189,
+            "sample": [
+              "106.0",
+              "104.0"
+            ]
+          },
+          "Himachal Pradesh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 183,
+            "sample": [
+              "106.0",
+              "104.0"
+            ]
+          },
+          "Punjab": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 165,
+            "sample": [
+              "105.0",
+              "104.0"
+            ]
+          },
+          "Chandigarh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 183,
+            "sample": [
+              "105.0",
+              "104.0"
+            ]
+          },
+          "Uttaranchal": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 179,
+            "sample": [
+              "105.0",
+              "103.0"
+            ]
+          },
+          "Haryana": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 172,
+            "sample": [
+              "107.0",
+              "104.0"
+            ]
+          },
+          "Delhi": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 169,
+            "sample": [
+              "105.0",
+              "104.0"
+            ]
+          },
+          "Rajasthan": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 190,
+            "sample": [
+              "106.0",
+              "104.0"
+            ]
+          },
+          "Uttar Pradesh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 190,
+            "sample": [
+              "106.0",
+              "104.0"
+            ]
+          },
+          "Bihar": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 187,
+            "sample": [
+              "105.0",
+              "104.0"
+            ]
+          },
+          "Sikkim": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 197,
+            "sample": [
+              "105.0",
+              "103.0"
+            ]
+          },
+          "Arunachal Pradesh": {
+            "dtype": "float64",
+            "null_count": 133,
+            "unique_count": 78,
+            "sample": [
+              "108.0",
+              "108.0"
+            ]
+          },
+          "Nagaland": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 198,
+            "sample": [
+              "103.0",
+              "103.0"
+            ]
+          },
+          "Manipur": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 188,
+            "sample": [
+              "102.0",
+              "104.0"
+            ]
+          },
+          "Mizoram": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 183,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Tripura": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 191,
+            "sample": [
+              "108.0",
+              "105.0"
+            ]
+          },
+          "Meghalaya": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 192,
+            "sample": [
+              "109.0",
+              "104.0"
+            ]
+          },
+          "Assam": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 182,
+            "sample": [
+              "105.0",
+              "104.0"
+            ]
+          },
+          "West Bengal": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 198,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Jharkhand": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 198,
+            "sample": [
+              "109.0",
+              "105.0"
+            ]
+          },
+          "Orissa": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 193,
+            "sample": [
+              "109.0",
+              "105.0"
+            ]
+          },
+          "Chattisgarh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 184,
+            "sample": [
+              "108.0",
+              "105.0"
+            ]
+          },
+          "Madhya Pradesh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 175,
+            "sample": [
+              "106.0",
+              "104.0"
+            ]
+          },
+          "Gujarat": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 184,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Daman and Diu": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 208,
+            "sample": [
+              "104.0",
+              "103.0"
+            ]
+          },
+          "Dadra and Nagar Haveli": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 178,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Maharashtra": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 185,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Andhra Pradesh": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 188,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Karnataka": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 189,
+            "sample": [
+              "108.0",
+              "104.0"
+            ]
+          },
+          "Goa": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 189,
+            "sample": [
+              "106.0",
+              "103.0"
+            ]
+          },
+          "Lakshwadeep": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 171,
+            "sample": [
+              "105.0",
+              "103.0"
+            ]
+          },
+          "Kerala": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 178,
+            "sample": [
+              "109.0",
+              "107.0"
+            ]
+          },
+          "Tamil Nadu": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 183,
+            "sample": [
+              "109.0",
+              "105.0"
+            ]
+          },
+          "Pondicherry": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 193,
+            "sample": [
+              "110.0",
+              "106.0"
+            ]
+          },
+          "Andaman and Nicobar": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 182,
+            "sample": [
+              "105.0",
+              "105.0"
+            ]
+          },
+          "Telangana": {
+            "dtype": "float64",
+            "null_count": 141,
+            "unique_count": 93,
+            "sample": [
+              "117.4",
+              "119.0"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "gis": {
+    "key": "gis",
+    "file": "GIS.xlsx",
+    "description": "Geospatial coordinates & village codes",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 5000,
+        "cols": 10,
+        "columns": {
+          "village_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "81311001",
+              "244791002"
+            ]
+          },
+          "state": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Rajasthan",
+              "Gujarat"
+            ]
+          },
+          "district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "Kota",
+              "Rajkot"
+            ]
+          },
+          "taluka_sub_district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 215,
+            "sample": [
+              "Kota",
+              "Jasdan"
+            ]
+          },
+          "village": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 432,
+            "sample": [
+              "Devpur pukhuria",
+              "Devpur garh"
+            ]
+          },
+          "area_locality": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2648,
+            "sample": [
+              "Devpur pukhuria Temple Square",
+              "Devpur garh Panchayat Area"
+            ]
+          },
+          "district_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "131",
+              "479"
+            ]
+          },
+          "state_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "8",
+              "24"
+            ]
+          },
+          "latitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "21.670487",
+              "19.393892"
+            ]
+          },
+          "longitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 4999,
+            "sample": [
+              "74.996298",
+              "73.050216"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "hces": {
+    "key": "hces",
+    "file": "HCES_2023_24_Imputation_Rate.xlsx",
+    "description": "Imputed unit rates for free food & durable items",
+    "canonical": true,
+    "sheets": {
+      "FDQ_Impu_rate_stsec": {
+        "rows": 681,
+        "cols": 7,
+        "columns": {
+          " Sector and State wise imputed rate list of Food items received free of cost": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "sector",
+              "1"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 37,
+            "sample": [
+              "st",
+              "01"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Questionnaire Item",
+              "071"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Free Item Description",
+              "pulses-free"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Item considered for rate computation",
+              "(140,141,143,144,145,148)"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 299,
+            "sample": [
+              "Rate_per_unit (Mode based)",
+              "120"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 171,
+            "sample": [
+              "Rate_per_unit (25th Percentile based)",
+              "100"
+            ]
+          }
+        }
+      },
+      "FDQ_Impu_rate_sec": {
+        "rows": 29,
+        "cols": 6,
+        "columns": {
+          " Sector wise imputed rate list of Food items received free of cost": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "sector",
+              "1"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Questionnaire Item",
+              "070"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Free Item Description",
+              "coarse grains- free"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15,
+            "sample": [
+              "Item considered for rate computation",
+              "002"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 29,
+            "sample": [
+              "Rate_per_unit (Mode based)",
+              "29.91"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 19,
+            "sample": [
+              "Rate_per_unit (25th Percentile based)",
+              "28.6"
+            ]
+          }
+        }
+      },
+      "DGQ_Impu_rate_stsec": {
+        "rows": 445,
+        "cols": 9,
+        "columns": {
+          " Sector and State wise imputed rate list of Durable items received free of cost": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "sector",
+              "1"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 37,
+            "sample": [
+              "st",
+              "01"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 8,
+            "sample": [
+              "Dummy Item Code Used in Sec 4.3/Q4.3.2,DGQ",
+              "996"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 8,
+            "sample": [
+              "Section",
+              "Sec 4.3/Q 4.3.6"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 8,
+            "sample": [
+              "Free Item Description # ",
+              "Clothing(school uniform etc)"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 7,
+            "sample": [
+              "Item considered for rate computation",
+              "(356,357)"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 392,
+            "sample": [
+              "Rate_per_unit (Mode based)",
+              "938.48"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 247,
+            "sample": [
+              "Rate_per_unit (25th Percentile based)",
+              "850"
+            ]
+          },
+          "Unnamed: 8": {
+            "dtype": "object",
+            "null_count": 444,
+            "unique_count": 1,
+            "sample": [
+              "# Refer Annexure"
+            ]
+          }
+        }
+      },
+      "DGQ_Impu_rate_sec": {
+        "rows": 13,
+        "cols": 8,
+        "columns": {
+          "Sector wise imputed rate list of Durable items received free of cost": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "sector",
+              "1"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 7,
+            "sample": [
+              "Dummy Item Code Used in Sec 4.3/Q4.3.2,DGQ",
+              "991"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 7,
+            "sample": [
+              "Section",
+              "Sec 4.3/Q 4.3.1"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 7,
+            "sample": [
+              "Free Item Description # ",
+              "Laptop/PC"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 7,
+            "sample": [
+              "Item considered for rate computation",
+              "622"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 13,
+            "sample": [
+              "Rate_per_unit (Mode based)",
+              "36337.68719706767"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 13,
+            "sample": [
+              "Rate_per_unit (25th Percentile based)",
+              "26500"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 12,
+            "unique_count": 1,
+            "sample": [
+              "# Refer Annexure"
+            ]
+          }
+        }
+      },
+      "Annexure": {
+        "rows": 12,
+        "cols": 8,
+        "columns": {
+          "Section 4.3: General information on purchase/payment": {
+            "dtype": "object",
+            "null_count": 10,
+            "unique_count": 2,
+            "sample": [
+              "Question no.",
+              "Q4.3.2"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 10,
+            "unique_count": 2,
+            "sample": [
+              "Question description and code structure",
+              "Whether  one  or  more  member  of  the  household  received  following  items  free  of  cost  through social-welfare programme of the Government or any other  charitable organization during last 365 days?"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 2,
+            "unique_count": 10,
+            "sample": [
+              "S. No.(Dummy Item Code)",
+              "-1"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "float64",
+            "null_count": 12,
+            "unique_count": 0,
+            "sample": []
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 2,
+            "unique_count": 10,
+            "sample": [
+              "item category",
+              "-2"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "float64",
+            "null_count": 12,
+            "unique_count": 0,
+            "sample": []
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 2,
+            "unique_count": 4,
+            "sample": [
+              "please select the check box if received free of cost during last 365 days",
+              "-3"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 10,
+            "unique_count": 2,
+            "sample": [
+              "total no. of item received free of cost (no.)",
+              "-4"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "infrastructure": {
+    "key": "infrastructure",
+    "file": "INFRASTRUCTURE.csv",
+    "description": "Primary agricultural credit societies & financial capital",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 30,
+        "cols": 10,
+        "columns": {
+          "Year": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 5,
+            "sample": [
+              "2000-01",
+              "2001-02"
+            ]
+          },
+          "All-India/ State/ Union Territory": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 26,
+            "sample": [
+              "All-India",
+              "All-India"
+            ]
+          },
+          "Number of societies": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 22,
+            "sample": [
+              "1987",
+              "1997"
+            ]
+          },
+          "Membership (000 No.)": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 21,
+            "sample": [
+              "19002",
+              "19862"
+            ]
+          },
+          "Share Capital": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 22,
+            "sample": [
+              "18737",
+              "20801"
+            ]
+          },
+          "Reserves": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 22,
+            "sample": [
+              "72550",
+              "79141"
+            ]
+          },
+          "Deposits": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 22,
+            "sample": [
+              "684831",
+              "739583"
+            ]
+          },
+          "Total borrowings": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 18,
+            "sample": [
+              "16760",
+              "18959"
+            ]
+          },
+          "Total Working Capital": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 22,
+            "sample": [
+              "947298",
+              "998520"
+            ]
+          },
+          "Loans issued during the year": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 21,
+            "sample": [
+              "472299",
+              "634762"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "livestock_canonical": {
+    "key": "livestock_canonical",
+    "file": "LIVESTOCK PERFECT ONE.xlsx",
+    "description": "NSS 77th Round AIDIS household livestock & asset holdings",
+    "canonical": true,
+    "sheets": {
+      "NSS77 AIDIS Data": {
+        "rows": 4884,
+        "cols": 7,
+        "columns": {
+          "indicator": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "Number of households reporting fixed capital expenditure and expenditure on purchase of land and fixed capital formation by occupational category and household asset holding class",
+              "Number of households reporting fixed capital expenditure and expenditure on purchase of land and fixed capital formation by occupational category and household asset holding class"
+            ]
+          },
+          "sub_indicator": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2,
+            "sample": [
+              "Purchase of land amount (Rs. lakhs)",
+              "Purchase of land amount (Rs. lakhs)"
+            ]
+          },
+          "state": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 37,
+            "sample": [
+              "All-India",
+              "All-India"
+            ]
+          },
+          "sector": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2,
+            "sample": [
+              "Rural",
+              "Rural"
+            ]
+          },
+          "occupational_category": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 5,
+            "sample": [
+              "Cultivator",
+              "All"
+            ]
+          },
+          "asset_holding_class": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 11,
+            "sample": [
+              "4",
+              "All"
+            ]
+          },
+          "value": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 2108,
+            "sample": [
+              "8159",
+              "1728807"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "livestock_trade": {
+    "key": "livestock_trade",
+    "file": "LIVESTOCK.csv",
+    "description": "Macro trade quantity & value by live animal category",
+    "canonical": false,
+    "sheets": {
+      "default": {
+        "rows": 54,
+        "cols": 4,
+        "columns": {
+          "Category": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 6,
+            "sample": [
+              "Live Animals (in numbers)",
+              "Live Animals (in numbers)"
+            ]
+          },
+          "Commodity": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 54,
+            "sample": [
+              "Live Animals (in numbers)",
+              "0101 Live Horses, Asses, Mules & Hinnies"
+            ]
+          },
+          "2013-2014 - Quantity": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 54,
+            "sample": [
+              "156032",
+              "127"
+            ]
+          },
+          "2013-2014 - Value (in Rs.)": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 54,
+            "sample": [
+              "615549856",
+              "236021868"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "location": {
+    "key": "location",
+    "file": "Location.xlsx",
+    "description": "Village administrative location master",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 5000,
+        "cols": 10,
+        "columns": {
+          "village_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "81311001",
+              "244791002"
+            ]
+          },
+          "state": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Rajasthan",
+              "Gujarat"
+            ]
+          },
+          "district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "Kota",
+              "Rajkot"
+            ]
+          },
+          "taluka_sub_district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 215,
+            "sample": [
+              "Kota",
+              "Jasdan"
+            ]
+          },
+          "village": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 432,
+            "sample": [
+              "Devpur pukhuria",
+              "Devpur garh"
+            ]
+          },
+          "area_locality": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2648,
+            "sample": [
+              "Devpur pukhuria Temple Square",
+              "Devpur garh Panchayat Area"
+            ]
+          },
+          "district_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "131",
+              "479"
+            ]
+          },
+          "state_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "8",
+              "24"
+            ]
+          },
+          "latitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "21.670487",
+              "19.393892"
+            ]
+          },
+          "longitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 4999,
+            "sample": [
+              "74.996298",
+              "73.050216"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mpr": {
+    "key": "mpr",
+    "file": "MPR1Revised.xlsx",
+    "description": "PMGSY rural road connectivity, clearance length & cost",
+    "canonical": true,
+    "sheets": {
+      "MPR1Revised": {
+        "rows": 608,
+        "cols": 32,
+        "columns": {
+          "Unnamed: 0": {
+            "dtype": "float64",
+            "null_count": 608,
+            "unique_count": 0,
+            "sample": []
+          },
+          "Pradhan Mantri Gram Sadak Yojana": {
+            "dtype": "object",
+            "null_count": 575,
+            "unique_count": 33,
+            "sample": [
+              "Sr.No.",
+              "1"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 606,
+            "unique_count": 2,
+            "sample": [
+              "Monthly Report Format for Physical & Financial Progress under PMGSY",
+              "State: All States     District: All Districts     Block: All Blocks     Year: 2026     Month: September     Collaboration: All Collaborations     Agency:  All Agencies      Scheme: All Scheme                                                                                                                                                                                                                                                                                                                  Note : All Costs and Expenditures in Lakhs and Length in Kms.  "
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 9,
+            "unique_count": 62,
+            "sample": [
+              "Sanction Year",
+              "Andaman And Nicobar"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 39,
+            "unique_count": 290,
+            "sample": [
+              "Clearance",
+              "New Connectivity"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 386,
+            "sample": [
+              "Length",
+              "14.377"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 372,
+            "sample": [
+              "Cost",
+              "1059"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 144,
+            "sample": [
+              "1000+",
+              "0"
+            ]
+          },
+          "Unnamed: 8": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 197,
+            "sample": [
+              "999-500",
+              "1"
+            ]
+          },
+          "Unnamed: 9": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 179,
+            "sample": [
+              "499-250 (Eligible)",
+              "0"
+            ]
+          },
+          "Unnamed: 10": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 58,
+            "sample": [
+              "249-100 (Eligible)",
+              "0"
+            ]
+          },
+          "Unnamed: 11": {
+            "dtype": "object",
+            "null_count": 40,
+            "unique_count": 244,
+            "sample": [
+              "Upgradation",
+              "Nos."
+            ]
+          },
+          "Unnamed: 12": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 380,
+            "sample": [
+              "Length",
+              "0"
+            ]
+          },
+          "Unnamed: 13": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 401,
+            "sample": [
+              "Cost",
+              "0"
+            ]
+          },
+          "Unnamed: 14": {
+            "dtype": "object",
+            "null_count": 40,
+            "unique_count": 124,
+            "sample": [
+              "Total",
+              "LSB Nos."
+            ]
+          },
+          "Unnamed: 15": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 377,
+            "sample": [
+              "Road Nos.",
+              "7"
+            ]
+          },
+          "Unnamed: 16": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 545,
+            "sample": [
+              "Road Length",
+              "14.377"
+            ]
+          },
+          "Unnamed: 17": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 555,
+            "sample": [
+              "Total Cost",
+              "1059"
+            ]
+          },
+          "Unnamed: 18": {
+            "dtype": "object",
+            "null_count": 39,
+            "unique_count": 265,
+            "sample": [
+              "Cumulative Progress",
+              "New Connectivity"
+            ]
+          },
+          "Unnamed: 19": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 367,
+            "sample": [
+              "Length",
+              "13.892"
+            ]
+          },
+          "Unnamed: 20": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 369,
+            "sample": [
+              "Expenditure",
+              "871.57"
+            ]
+          },
+          "Unnamed: 21": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 143,
+            "sample": [
+              "1000+",
+              "0"
+            ]
+          },
+          "Unnamed: 22": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 198,
+            "sample": [
+              "999-500",
+              "1"
+            ]
+          },
+          "Unnamed: 23": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 175,
+            "sample": [
+              "499-250 (Eligible)",
+              "0"
+            ]
+          },
+          "Unnamed: 24": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 57,
+            "sample": [
+              "249-100 (Eligible)",
+              "0"
+            ]
+          },
+          "Unnamed: 25": {
+            "dtype": "object",
+            "null_count": 40,
+            "unique_count": 228,
+            "sample": [
+              "Upgradation",
+              "Nos."
+            ]
+          },
+          "Unnamed: 26": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 372,
+            "sample": [
+              "Length",
+              "0"
+            ]
+          },
+          "Unnamed: 27": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 374,
+            "sample": [
+              "Expenditure",
+              "0"
+            ]
+          },
+          "Unnamed: 28": {
+            "dtype": "object",
+            "null_count": 40,
+            "unique_count": 120,
+            "sample": [
+              "Total",
+              "LSB Nos."
+            ]
+          },
+          "Unnamed: 29": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 359,
+            "sample": [
+              "Road Nos.",
+              "7"
+            ]
+          },
+          "Unnamed: 30": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 521,
+            "sample": [
+              "Road Length",
+              "13.892"
+            ]
+          },
+          "Unnamed: 31": {
+            "dtype": "object",
+            "null_count": 41,
+            "unique_count": 538,
+            "sample": [
+              "Expenditure",
+              "871.57"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "market_daily": {
+    "key": "market_daily",
+    "file": "Market_Wise_Price_Arrival_10-09-2026_09-11-25_AM.csv",
+    "description": "Daily mandi prices & arrivals report",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 26,
+        "cols": 9,
+        "columns": {
+          "Unnamed: 0": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 6,
+            "sample": [
+              "Commodity Group",
+              "Cereals"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 25,
+            "sample": [
+              "Commodity",
+              "Bajra(Pearl Millet/Cumbu)"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 23,
+            "sample": [
+              "MSP (Rs./Quintal) 2026-27",
+              "2900.00"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 26,
+            "sample": [
+              "Price (Rs./Quintal)  ",
+              "Price on 08 Sep, 2026"
+            ]
+          },
+          "Marketwise Price & Arrival Report (08-09-2026)": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 25,
+            "sample": [
+              "Price on 07 Sep, 2026",
+              "2341.55"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 23,
+            "sample": [
+              "Price on 06 Sep, 2026",
+              "2143.39"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 26,
+            "sample": [
+              "Arrival (Metric Tonnes)  ",
+              "Arrival on 08 Sep, 2026"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 25,
+            "sample": [
+              "Arrival on 07 Sep, 2026",
+              "982.54"
+            ]
+          },
+          "Unnamed: 8": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 23,
+            "sample": [
+              "Arrival on 06 Sep, 2026",
+              "443.60"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "market_weekly": {
+    "key": "market_weekly",
+    "file": "Marketwise_Wholesale_Arrivals_Weekly_Analysis_(All_Districts)_Report_09-09-2026_10-08-07_AM.xlsx",
+    "description": "APMC weekly wholesale mandi arrivals & YoY changes",
+    "canonical": true,
+    "sheets": {
+      "Data_Report": {
+        "rows": 9,
+        "cols": 8,
+        "columns": {
+          "Market-wise Wholesale Arrivals Weekly Analysis (All Districts) for Chow Chow in Telangana - Week 3 of March, 2025": {
+            "dtype": "object",
+            "null_count": 1,
+            "unique_count": 8,
+            "sample": [
+              "Market",
+              "Bowenpally APMC"
+            ]
+          },
+          "Unnamed: 1": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 4,
+            "sample": [
+              "Arrivals 16-23 Mar 2025 (Metric Tonnes)",
+              "5.4"
+            ]
+          },
+          "Unnamed: 2": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 4,
+            "sample": [
+              "Arrivals 9-15 Mar 2025 (Metric Tonnes)",
+              "6"
+            ]
+          },
+          "Unnamed: 3": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 4,
+            "sample": [
+              "Arrivals 16-23 Feb 2025 (Metric Tonnes)",
+              "14.6"
+            ]
+          },
+          "Unnamed: 4": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 3,
+            "sample": [
+              "Arrivals 16-23 Mar 2024 (Metric Tonnes)",
+              "2.8"
+            ]
+          },
+          "Unnamed: 5": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 4,
+            "sample": [
+              "Change (Over Previous Week)",
+              "-0.1"
+            ]
+          },
+          "Unnamed: 6": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 4,
+            "sample": [
+              "Change (Over Previous Month)",
+              "-0.63"
+            ]
+          },
+          "Unnamed: 7": {
+            "dtype": "object",
+            "null_count": 5,
+            "unique_count": 3,
+            "sample": [
+              "Change (Over Previous Year)",
+              "0.929"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "population": {
+    "key": "population",
+    "file": "Population.xlsx",
+    "description": "Village population & location master",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 5000,
+        "cols": 10,
+        "columns": {
+          "village_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "81311001",
+              "244791002"
+            ]
+          },
+          "state": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Rajasthan",
+              "Gujarat"
+            ]
+          },
+          "district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "Kota",
+              "Rajkot"
+            ]
+          },
+          "taluka_sub_district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 215,
+            "sample": [
+              "Kota",
+              "Jasdan"
+            ]
+          },
+          "village": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 432,
+            "sample": [
+              "Devpur pukhuria",
+              "Devpur garh"
+            ]
+          },
+          "area_locality": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2648,
+            "sample": [
+              "Devpur pukhuria Temple Square",
+              "Devpur garh Panchayat Area"
+            ]
+          },
+          "district_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "131",
+              "479"
+            ]
+          },
+          "state_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "8",
+              "24"
+            ]
+          },
+          "latitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "21.670487",
+              "19.393892"
+            ]
+          },
+          "longitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 4999,
+            "sample": [
+              "74.996298",
+              "73.050216"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "routing": {
+    "key": "routing",
+    "file": "Routing.xlsx",
+    "description": "Road distance, travel time & accessibility rating",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 5000,
+        "cols": 9,
+        "columns": {
+          "village_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "81311001",
+              "244791002"
+            ]
+          },
+          "village_name": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 432,
+            "sample": [
+              "Devpur pukhuria",
+              "Devpur garh"
+            ]
+          },
+          "straight_line_distance_km": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 3034,
+            "sample": [
+              "25.27",
+              "13.94"
+            ]
+          },
+          "road_distance_km": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 3428,
+            "sample": [
+              "29.16",
+              "16.05"
+            ]
+          },
+          "travel_time_minutes": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 163,
+            "sample": [
+              "71",
+              "37"
+            ]
+          },
+          "nearest_highway_distance_km": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 837,
+            "sample": [
+              "4.83",
+              "6.04"
+            ]
+          },
+          "nearest_mandi_distance_km": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 1355,
+            "sample": [
+              "6.4",
+              "11.21"
+            ]
+          },
+          "nearest_railway_station_km": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 2040,
+            "sample": [
+              "2.37",
+              "19.74"
+            ]
+          },
+          "accessibility_rating": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "High",
+              "High"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "rural_wages": {
+    "key": "rural_wages",
+    "file": "Rural Wages.csv",
+    "description": "Monthly agricultural wages for Men & Women by occupation",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 8064,
+        "cols": 8,
+        "columns": {
+          "S.No": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 8064,
+            "sample": [
+              "1",
+              "2"
+            ]
+          },
+          "Year": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2,
+            "sample": [
+              "2025-2026",
+              "2025-2026"
+            ]
+          },
+          "Month": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Jan",
+              "Jan"
+            ]
+          },
+          "State": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 35,
+            "sample": [
+              "ANDHRA PRADESH",
+              "ANDHRA PRADESH"
+            ]
+          },
+          "Occupation": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "Agriculture",
+              "Agriculture"
+            ]
+          },
+          "Item": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Ploughing/Tilling workers",
+              "Sowing(including Planting/Transplanting/ Weeding) workers)\r\n"
+            ]
+          },
+          "Men": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2263,
+            "sample": [
+              "691.65",
+              "613.3099999999999"
+            ]
+          },
+          "Women": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1246,
+            "sample": [
+              "@",
+              "443.87"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "village": {
+    "key": "village",
+    "file": "Village.xlsx",
+    "description": "Village administrative master",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 5000,
+        "cols": 10,
+        "columns": {
+          "village_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "81311001",
+              "244791002"
+            ]
+          },
+          "state": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "Rajasthan",
+              "Gujarat"
+            ]
+          },
+          "district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "Kota",
+              "Rajkot"
+            ]
+          },
+          "taluka_sub_district": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 215,
+            "sample": [
+              "Kota",
+              "Jasdan"
+            ]
+          },
+          "village": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 432,
+            "sample": [
+              "Devpur pukhuria",
+              "Devpur garh"
+            ]
+          },
+          "area_locality": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2648,
+            "sample": [
+              "Devpur pukhuria Temple Square",
+              "Devpur garh Panchayat Area"
+            ]
+          },
+          "district_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 51,
+            "sample": [
+              "131",
+              "479"
+            ]
+          },
+          "state_code": {
+            "dtype": "int64",
+            "null_count": 0,
+            "unique_count": 12,
+            "sample": [
+              "8",
+              "24"
+            ]
+          },
+          "latitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 5000,
+            "sample": [
+              "21.670487",
+              "19.393892"
+            ]
+          },
+          "longitude": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 4999,
+            "sample": [
+              "74.996298",
+              "73.050216"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "asuse": {
+    "key": "asuse",
+    "file": "asuse_1.xlsx",
+    "description": "Unincorporated sector enterprise counts by activity",
+    "canonical": true,
+    "sheets": {
+      "Sheet1": {
+        "rows": 2250,
+        "cols": 9,
+        "columns": {
+          "indicator": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "Estimated Number of Establishments Pursuing Mixed Activities for Each Activity Category",
+              "Estimated Number of Establishments Pursuing Mixed Activities for Each Activity Category"
+            ]
+          },
+          "frequency": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "Annually",
+              "Annually"
+            ]
+          },
+          "year": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 4,
+            "sample": [
+              "2025",
+              "2025"
+            ]
+          },
+          "state/UT": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "All India",
+              "All India"
+            ]
+          },
+          "sector": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "Rural",
+              "Rural"
+            ]
+          },
+          "activity_category": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 50,
+            "sample": [
+              "Cotton Ginning, Cleaning and Bailing",
+              "Cotton Ginning, Cleaning and Bailing"
+            ]
+          },
+          "establishment_type": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 3,
+            "sample": [
+              "Hired Worker Establishments(HWE)",
+              "Hired Worker Establishments(HWE)"
+            ]
+          },
+          "establishments": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 2,
+            "sample": [
+              "Estimated No. of Establishments",
+              "Percentage of Establishments"
+            ]
+          },
+          "value": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 2067,
+            "sample": [
+              "46.0",
+              "0.0"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "groundwater": {
+    "key": "groundwater",
+    "file": "groundwater_jan2026.csv",
+    "description": "Groundwater depth to water level (DTWL) readings & lat/lng",
+    "canonical": true,
+    "sheets": {
+      "default": {
+        "rows": 16952,
+        "cols": 8,
+        "columns": {
+          "STATE_UT": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 33,
+            "sample": [
+              "Andhra Pradesh",
+              "Andhra Pradesh"
+            ]
+          },
+          "DISTRICT": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 800,
+            "sample": [
+              "Alluri Sitharama Raju",
+              "Alluri Sitharama Raju"
+            ]
+          },
+          "BLOCK": {
+            "dtype": "object",
+            "null_count": 1601,
+            "unique_count": 4747,
+            "sample": [
+              "Addateegala",
+              "Addateegala"
+            ]
+          },
+          "VILLAGE": {
+            "dtype": "object",
+            "null_count": 2069,
+            "unique_count": 13336,
+            "sample": [
+              "Addateegala",
+              "Mallavaram Mammilu"
+            ]
+          },
+          "LATITUDE": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 15458,
+            "sample": [
+              "17.46330",
+              "17.50320"
+            ]
+          },
+          "LONGITUDE": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 15388,
+            "sample": [
+              "82.0271",
+              "82.0124"
+            ]
+          },
+          "DATE": {
+            "dtype": "object",
+            "null_count": 0,
+            "unique_count": 1,
+            "sample": [
+              "10-01-2026",
+              "10-01-2026"
+            ]
+          },
+          "DTWL": {
+            "dtype": "float64",
+            "null_count": 0,
+            "unique_count": 2905,
+            "sample": [
+              "7.58",
+              "4.21"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

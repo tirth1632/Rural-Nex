@@ -99,8 +99,8 @@ class GroundwaterRecord(AuditModel):
     district = models.CharField(max_length=100, db_index=True)
     block = models.CharField(max_length=100, blank=True, null=True)
     village = models.CharField(max_length=150, blank=True, null=True)
-    latitude = models.FloatField(db_index=True)
-    longitude = models.FloatField(db_index=True)
+    latitude = models.FloatField(null=True, blank=True, db_index=True)
+    longitude = models.FloatField(null=True, blank=True, db_index=True)
     date_recorded = models.CharField(max_length=50, blank=True, null=True)
     dtwl_meters = models.FloatField(help_text="Depth to Water Level in meters")
 

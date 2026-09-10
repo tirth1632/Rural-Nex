@@ -44,8 +44,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'agriculture',
     name: 'Agriculture & Crop Farming',
     icon: Sprout,
-    badgeBg: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    badgeText: 'text-emerald-700',
+    badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50',
+    badgeText: 'text-emerald-700 dark:text-emerald-400',
     description: 'Wheat, rice, cotton, vegetables, fruits, organic farming & seed production.',
     subBusinesses: [
       { name: 'Wheat Farming' },
@@ -67,8 +67,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'dairy',
     name: 'Dairy & Livestock',
     icon: Milk,
-    badgeBg: 'bg-amber-50 text-amber-600 border-amber-100',
-    badgeText: 'text-amber-700',
+    badgeBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/50',
+    badgeText: 'text-amber-700 dark:text-amber-400',
     description: 'Dairy farm, milk collection, processing, goat/sheep rearing & animal feed.',
     subBusinesses: [
       { name: 'Dairy Farm' },
@@ -87,8 +87,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'poultry_fisheries',
     name: 'Poultry & Fisheries',
     icon: Egg,
-    badgeBg: 'bg-teal-50 text-teal-600 border-teal-100',
-    badgeText: 'text-teal-700',
+    badgeBg: 'bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 border-teal-100 dark:border-teal-800/50',
+    badgeText: 'text-teal-700 dark:text-teal-400',
     description: 'Broiler & layer poultry, egg production, fish farming, hatchery & aquaculture.',
     subBusinesses: [
       { name: 'Broiler Poultry' },
@@ -106,8 +106,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'food_processing',
     name: 'Food Processing & Agro',
     icon: Utensils,
-    badgeBg: 'bg-orange-50 text-orange-600 border-orange-100',
-    badgeText: 'text-orange-700',
+    badgeBg: 'bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-800/50',
+    badgeText: 'text-orange-700 dark:text-orange-400',
     description: 'Flour/rice/oil mills, spice processing, pickles, papad, bakery & snacks.',
     subBusinesses: [
       { name: 'Flour Mill' },
@@ -129,8 +129,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'retail',
     name: 'Retail & Consumer',
     icon: Store,
-    badgeBg: 'bg-blue-50 text-blue-600 border-blue-100',
-    badgeText: 'text-blue-700',
+    badgeBg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50',
+    badgeText: 'text-blue-700 dark:text-blue-400',
     description: 'Kirana store, supermarket, hardware, agro inputs, clothing & medical shop.',
     subBusinesses: [
       { name: 'Kirana Store' },
@@ -151,8 +151,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'services',
     name: 'Services & Repair',
     icon: Wrench,
-    badgeBg: 'bg-slate-100 text-slate-700 border-slate-200',
-    badgeText: 'text-slate-700',
+    badgeBg: 'bg-slate-100 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800/50',
+    badgeText: 'text-slate-700 dark:text-slate-300',
     description: 'Mobile/appliance/auto repair, tractor service, tailoring, salon & Xerox.',
     subBusinesses: [
       { name: 'Mobile Repair' },
@@ -174,8 +174,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'manufacturing',
     name: 'Manufacturing & Industry',
     icon: Factory,
-    badgeBg: 'bg-indigo-50 text-indigo-600 border-indigo-100',
-    badgeText: 'text-indigo-700',
+    badgeBg: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-800/50',
+    badgeText: 'text-indigo-700 dark:text-indigo-400',
     description: 'Furniture, bricks, cement products, textiles, packaging & metal fabrication.',
     subBusinesses: [
       { name: 'Furniture Manufacturing' },
@@ -195,8 +195,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'handicrafts',
     name: 'Handicrafts & Rural Products',
     icon: Palette,
-    badgeBg: 'bg-rose-50 text-rose-600 border-rose-100',
-    badgeText: 'text-rose-700',
+    badgeBg: 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-800/50',
+    badgeText: 'text-rose-700 dark:text-rose-400',
     description: 'Pottery, handloom, bamboo craft, woodcraft, jewelry & leather goods.',
     subBusinesses: [
       { name: 'Pottery' },
@@ -215,8 +215,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'transport',
     name: 'Transport & Logistics',
     icon: Truck,
-    badgeBg: 'bg-sky-50 text-sky-600 border-sky-100',
-    badgeText: 'text-sky-700',
+    badgeBg: 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border-sky-100 dark:border-sky-800/50',
+    badgeText: 'text-sky-700 dark:text-sky-400',
     description: 'Agri-freight, rural delivery, tractor transport, cold chain & warehousing.',
     subBusinesses: [
       { name: 'Goods Transportation' },
@@ -235,8 +235,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'renewable_energy',
     name: 'Renewable Energy',
     icon: Sun,
-    badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-    badgeText: 'text-emerald-800',
+    badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50',
+    badgeText: 'text-emerald-800 dark:text-emerald-400',
     description: 'Solar pumps, solar panel installation, biogas plants & biomass energy.',
     subBusinesses: [
       { name: 'Solar Pump Installation' },
@@ -253,8 +253,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'tourism',
     name: 'Tourism & Hospitality',
     icon: Compass,
-    badgeBg: 'bg-violet-50 text-violet-600 border-violet-100',
-    badgeText: 'text-violet-700',
+    badgeBg: 'bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 border-violet-100 dark:border-violet-800/50',
+    badgeText: 'text-violet-700 dark:text-violet-400',
     description: 'Homestays, farm stays, eco-tourism, agri-tourism & rural experience centers.',
     subBusinesses: [
       { name: 'Homestay' },
@@ -273,8 +273,8 @@ export const CATEGORIES_DATA: CategoryItem[] = [
     key: 'digital_services',
     name: 'Digital & Professional Services',
     icon: Laptop,
-    badgeBg: 'bg-cyan-50 text-cyan-600 border-cyan-100',
-    badgeText: 'text-cyan-700',
+    badgeBg: 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border-cyan-100 dark:border-cyan-800/50',
+    badgeText: 'text-cyan-700 dark:text-cyan-400',
     description: 'Cyber cafe, digital service center, CSC/e-governance, accounting & training.',
     subBusinesses: [
       { name: 'Cyber Cafe' },
@@ -368,28 +368,28 @@ export default function Step4Category({ data, onNext, onBack }: any) {
     <div className="space-y-7 max-w-6xl mx-auto">
       {/* Header & Quick Search */}
       <div className="text-center space-y-2.5">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
           What kind of business?
         </h2>
-        <p className="text-gray-500 text-sm font-medium max-w-lg mx-auto">
+        <p className="text-gray-500 dark:text-zinc-400 text-sm font-medium max-w-lg mx-auto">
           Select your primary enterprise sector and specific business model for instant feasibility mapping.
         </p>
         
         {/* Search Bar */}
         <div className="max-w-md mx-auto pt-1.5">
           <div className="relative flex items-center">
-            <Search size={17} className="absolute left-3.5 text-gray-400 pointer-events-none" />
+            <Search size={17} className="absolute left-3.5 text-gray-400 dark:text-zinc-500 pointer-events-none" />
             <input 
               type="text"
               placeholder="Search e.g. Kirana, Solar, Medical, Poultry, Flour Mill..."
-              className="w-full pl-10 pr-9 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-900 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all placeholder:text-gray-400"
+              className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-[#0c0d10] border border-gray-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-gray-900 dark:text-white shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all placeholder:text-gray-400 dark:placeholder:text-zinc-500"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
             />
             {searchFilter && (
               <button 
                 onClick={() => setSearchFilter('')}
-                className="absolute right-3 text-gray-400 hover:text-gray-600 p-0.5 rounded-full hover:bg-gray-100 transition"
+                className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
               >
                 <X size={14} />
               </button>
@@ -409,14 +409,18 @@ export default function Step4Category({ data, onNext, onBack }: any) {
               onClick={() => handleSelectCategory(cat)}
               className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between relative ${
                 isSelected 
-                  ? 'border-emerald-600 bg-emerald-50/50 shadow-md ring-2 ring-emerald-500/20' 
-                  : 'border-gray-200/90 bg-white hover:border-emerald-300 hover:shadow-sm hover:-translate-y-0.5'
+                  ? 'border-emerald-600 dark:border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/40 shadow-md ring-2 ring-emerald-500/20 dark:ring-emerald-500/30' 
+                  : 'border-gray-200/90 dark:border-zinc-800 bg-white dark:bg-[#0c0d10] hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm hover:-translate-y-0.5'
               }`}
             >
               <div>
                 {/* Header Icon + Selected Badge */}
                 <div className="flex justify-between items-center mb-3">
-                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-transform group-hover:scale-105 ${cat.badgeBg}`}>
+                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-transform group-hover:scale-105 ${
+                    isSelected 
+                      ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' 
+                      : cat.badgeBg
+                  }`}>
                     <IconComp size={20} />
                   </div>
                   {isSelected ? (
@@ -424,30 +428,30 @@ export default function Step4Category({ data, onNext, onBack }: any) {
                       <CheckCircle2 size={13} strokeWidth={2.5} />
                     </div>
                   ) : (
-                    <div className="w-5 h-5 rounded-full border border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="w-5 h-5 rounded-full border border-gray-200 dark:border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity" />
                   )}
                 </div>
 
                 {/* Title & Description */}
-                <h3 className="font-bold text-gray-900 text-sm mb-1 tracking-tight group-hover:text-emerald-950 transition-colors">
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1 tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                   {cat.name}
                 </h3>
-                <p className="text-[11.5px] text-gray-500 font-normal leading-relaxed line-clamp-2">
+                <p className="text-[11.5px] text-gray-500 dark:text-zinc-400 font-normal leading-relaxed line-clamp-2">
                   {cat.description}
                 </p>
               </div>
 
               {/* Sub-Businesses Count Footer */}
-              <div className="mt-3.5 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] font-semibold">
-                <span className={isSelected ? 'text-emerald-700 font-bold' : 'text-gray-500'}>
+              <div className="mt-3.5 pt-2.5 border-t border-gray-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-semibold">
+                <span className={isSelected ? 'text-emerald-700 dark:text-emerald-400 font-bold' : 'text-gray-500 dark:text-zinc-400'}>
                   {cat.subBusinesses.length} Business Types
                 </span>
                 <ChevronRight 
                   size={14} 
                   className={`transition-transform duration-200 ${
                     isSelected 
-                      ? 'text-emerald-600 translate-x-0.5' 
-                      : 'text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-0.5'
+                      ? 'text-emerald-600 dark:text-emerald-400 translate-x-0.5' 
+                      : 'text-gray-300 dark:text-zinc-600 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5'
                   }`} 
                 />
               </div>
@@ -463,44 +467,48 @@ export default function Step4Category({ data, onNext, onBack }: any) {
           }}
           className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between relative ${
             isCustomMode 
-              ? 'border-emerald-600 bg-emerald-50/60 shadow-md ring-2 ring-emerald-500/20' 
-              : 'border-dashed border-gray-300 bg-gray-50/40 hover:border-emerald-400 hover:bg-emerald-50/20'
+              ? 'border-emerald-600 dark:border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/40 shadow-md ring-2 ring-emerald-500/20 dark:ring-emerald-500/30' 
+              : 'border-dashed border-gray-300 dark:border-zinc-800 bg-gray-50/40 dark:bg-[#0c0d10] hover:border-emerald-400 dark:hover:border-emerald-700 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/20'
           }`}
         >
           <div>
             <div className="flex justify-between items-center mb-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
+              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-transform group-hover:scale-105 ${
+                isCustomMode
+                  ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+                  : 'bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-800/50'
+              }`}>
                 <Sparkles size={20} />
               </div>
               {isCustomMode && (
-                <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
                   <CheckCircle2 size={13} strokeWidth={2.5} />
                 </div>
               )}
             </div>
 
-            <h3 className="font-bold text-gray-900 text-sm mb-1 tracking-tight">
+            <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1 tracking-tight">
               Other / Custom Business
             </h3>
-            <p className="text-[11.5px] text-gray-500 font-normal leading-relaxed">
+            <p className="text-[11.5px] text-gray-500 dark:text-zinc-400 font-normal leading-relaxed">
               Define a specific niche enterprise or unlisted venture.
             </p>
           </div>
 
           {isCustomMode ? (
-            <div className="mt-3 pt-2 border-t border-emerald-200/80">
+            <div className="mt-3 pt-2 border-t border-emerald-200/80 dark:border-emerald-800/60">
               <input 
                 type="text"
                 autoFocus
                 placeholder="Enter custom business name..."
-                className="w-full px-3 py-1.5 border border-emerald-300 rounded-lg bg-white text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full px-3 py-1.5 border border-emerald-300 dark:border-emerald-700 rounded-lg bg-white dark:bg-zinc-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
           ) : (
-            <div className="mt-3.5 pt-2.5 border-t border-gray-200/60 flex items-center justify-between text-[11px] font-semibold text-gray-400 group-hover:text-emerald-600">
+            <div className="mt-3.5 pt-2.5 border-t border-gray-200/60 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-semibold text-gray-400 dark:text-zinc-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
               <span>Custom Specification</span>
               <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
             </div>
@@ -510,22 +518,22 @@ export default function Step4Category({ data, onNext, onBack }: any) {
 
       {/* Sub-Businesses Selector Panel */}
       {!isCustomMode && selectedCategory && (
-        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-3.5 transition-all">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div className="bg-white dark:bg-[#0c0d10] border border-gray-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs space-y-3.5 transition-all">
+          <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
             <div className="flex items-center gap-2.5">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${selectedCategory.badgeBg}`}>
                 <selectedCategory.icon size={17} />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-gray-900 tracking-tight">
+                <h3 className="text-sm font-extrabold text-gray-900 dark:text-white tracking-tight">
                   {selectedCategory.name}
                 </h3>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-xs text-gray-500 dark:text-zinc-400 font-medium">
                   Select your exact sub-business type below:
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200/80">
+            <span className="text-[11px] font-bold text-gray-600 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-900 px-2.5 py-1 rounded-full border border-gray-200/80 dark:border-zinc-800">
               {selectedCategory.subBusinesses.length} Sub-Types Available
             </span>
           </div>
@@ -541,8 +549,8 @@ export default function Step4Category({ data, onNext, onBack }: any) {
                   onClick={() => setSelectedSubBusiness(sub.name)}
                   className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
                     isSubSelected
-                      ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs scale-[1.02] ring-2 ring-emerald-600/20'
-                      : 'bg-gray-50/80 text-gray-700 border-gray-200/90 hover:border-gray-300 hover:bg-white hover:text-gray-900'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs scale-[1.02] ring-2 ring-emerald-600/20'
+                      : 'bg-gray-50/80 dark:bg-zinc-900/60 text-gray-700 dark:text-zinc-300 border-gray-200/90 dark:border-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <span>{sub.name}</span>
@@ -550,7 +558,7 @@ export default function Step4Category({ data, onNext, onBack }: any) {
                     <span className={`text-[10px] px-1.5 py-0.2 rounded font-extrabold ${
                       isSubSelected 
                         ? 'bg-amber-400 text-amber-950' 
-                        : 'bg-amber-100 text-amber-800 border border-amber-200'
+                        : 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'
                     }`}>
                       Regulated
                     </span>
@@ -563,21 +571,21 @@ export default function Step4Category({ data, onNext, onBack }: any) {
 
           {/* Regulated Business Statutory Notice */}
           {selectedSubObj?.regulated && (
-            <div className="mt-3 p-4 bg-amber-50/90 border border-amber-200/90 rounded-xl flex items-start gap-3 text-amber-950 text-xs shadow-2xs">
-              <div className="p-1.5 rounded-lg bg-amber-100 text-amber-700 shrink-0">
+            <div className="mt-3 p-4 bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800/60 rounded-xl flex items-start gap-3 text-amber-950 dark:text-amber-200 text-xs shadow-2xs">
+              <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 shrink-0">
                 <ShieldAlert size={18} />
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold uppercase tracking-wide text-[10px] bg-amber-200/70 text-amber-900 px-2 py-0.5 rounded">
+                  <span className="font-extrabold uppercase tracking-wide text-[10px] bg-amber-200/70 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 px-2 py-0.5 rounded">
                     Statutory Compliance Advisory
                   </span>
-                  <span className="text-[11px] font-bold text-amber-900">{selectedSubObj.name}</span>
+                  <span className="text-[11px] font-bold text-amber-900 dark:text-amber-200">{selectedSubObj.name}</span>
                 </div>
-                <p className="text-xs font-medium text-amber-900 leading-relaxed pt-1">
+                <p className="text-xs font-medium text-amber-900 dark:text-amber-300 leading-relaxed pt-1">
                   {selectedSubObj.note || 'This business requires mandatory statutory licensing and regulatory compliance approvals.'}
                 </p>
-                <p className="text-[11px] text-amber-800 font-semibold pt-0.5">
+                <p className="text-[11px] text-amber-800 dark:text-amber-400 font-semibold pt-0.5">
                   RuralNex feasibility model will automatically include regulatory timelines, fee schedules, and required documentation in your final report.
                 </p>
               </div>
@@ -587,10 +595,10 @@ export default function Step4Category({ data, onNext, onBack }: any) {
       )}
 
       {/* Navigation Footer */}
-      <div className="flex justify-between items-center pt-3 border-t border-gray-200/80">
+      <div className="flex justify-between items-center pt-3 border-t border-gray-200/80 dark:border-zinc-800">
         <button 
           onClick={onBack} 
-          className="px-5 py-2.5 text-gray-600 font-semibold text-sm hover:bg-gray-100 rounded-xl transition cursor-pointer"
+          className="px-5 py-2.5 text-gray-600 dark:text-zinc-400 font-semibold text-sm hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl transition cursor-pointer"
         >
           Back
         </button>

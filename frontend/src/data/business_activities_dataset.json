@@ -1,0 +1,2908 @@
+[
+  {
+    "id": 1,
+    "code": "dairy_farming",
+    "name": "Dairy Farming & Milk Chilling",
+    "category": "Agriculture & Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Litre of Milk",
+    "description": "Commercial dairy farm setup with high-yield milch animals, automated milking, and chilling infrastructure.",
+    "source_dataset": "GoI Agri-Allied Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 1
+  },
+  {
+    "id": 2,
+    "code": "poultry_farming",
+    "name": "Poultry Farming (Broiler & Layer)",
+    "category": "Agriculture & Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Egg",
+    "unit_of_measurement": "Birds / Batch",
+    "description": "Environmentally controlled poultry shed with automatic feeding and drinking systems for high-protein meat/egg production.",
+    "source_dataset": "GoI Agri-Allied Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 2
+  },
+  {
+    "id": 3,
+    "code": "food_processing",
+    "name": "Food Processing & Agro Mills",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Quintals of Flour/Oil",
+    "description": "Mini flour mill, mustard oil expeller, and spice pulverizing unit packaging value-added rural produce.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 3
+  },
+  {
+    "id": 4,
+    "code": "cold_storage",
+    "name": "Solar Micro Cold Storage & Warehousing",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Sun",
+    "unit_of_measurement": "Tonne-Months Stored",
+    "description": "5–10 MT solar-powered micro cold room for farmgate horticulture produce preservation (tomatoes, potatoes, fruits).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 4
+  },
+  {
+    "id": 5,
+    "code": "rural_retail",
+    "name": "Rural Retail & Kirana Supermarket",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "ShoppingCart",
+    "unit_of_measurement": "Footfalls / Transactions",
+    "description": "Organized self-service general store carrying grocery, FMCG, farm inputs, and daily household essentials.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 5
+  },
+  {
+    "id": 6,
+    "code": "custom_hiring_center",
+    "name": "Agricultural Services & Custom Hiring Center",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Tractor",
+    "unit_of_measurement": "Machine Operating Hours",
+    "description": "Modern farm machinery rental hub (tractors, rotavators, laser levellers, drone spraying) for smallholder farmers.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 6
+  },
+  {
+    "id": 7,
+    "code": "asuse_nic_10",
+    "name": "Cotton Ginning, Cleaning and Bailing",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (16,254 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 10
+  },
+  {
+    "id": 56,
+    "code": "asuse_010",
+    "name": "Cotton Ginning, Cleaning and Bailing",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 16,254 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 10
+  },
+  {
+    "id": 8,
+    "code": "asuse_nic_11",
+    "name": "Manufacture of Food Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Utensils",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (5,324,227 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 11
+  },
+  {
+    "id": 57,
+    "code": "asuse_011",
+    "name": "Manufacture of Food Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Utensils",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 5,324,227 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 11
+  },
+  {
+    "id": 9,
+    "code": "asuse_nic_12",
+    "name": "Manufacture of Beverages",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Utensils",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (304,680 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 12
+  },
+  {
+    "id": 58,
+    "code": "asuse_012",
+    "name": "Manufacture of Beverages",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Utensils",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 304,680 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 12
+  },
+  {
+    "id": 10,
+    "code": "asuse_nic_13",
+    "name": "Manufacture of Tobacco Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (6,958,184 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 13
+  },
+  {
+    "id": 59,
+    "code": "asuse_013",
+    "name": "Manufacture of Tobacco Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 6,958,184 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 13
+  },
+  {
+    "id": 11,
+    "code": "asuse_nic_14",
+    "name": "Manufacture of Textiles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (4,845,774 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 14
+  },
+  {
+    "id": 60,
+    "code": "asuse_014",
+    "name": "Manufacture of Textiles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 4,845,774 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 14
+  },
+  {
+    "id": 12,
+    "code": "asuse_nic_15",
+    "name": "Manufacture of Wearing Apparel",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (19,158,498 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 15
+  },
+  {
+    "id": 61,
+    "code": "asuse_015",
+    "name": "Manufacture of Wearing Apparel",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 19,158,498 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 15
+  },
+  {
+    "id": 13,
+    "code": "asuse_nic_16",
+    "name": "Manufacture of Leather and Related Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (108,899 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 16
+  },
+  {
+    "id": 62,
+    "code": "asuse_016",
+    "name": "Manufacture of Leather and Related Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 108,899 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 16
+  },
+  {
+    "id": 14,
+    "code": "asuse_nic_17",
+    "name": "Manufacture of Wood and Products of Wood and Cork, Except Furniture, Manufacture of Articles of Straw and Plaiting Materials",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (2,371,989 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 17
+  },
+  {
+    "id": 63,
+    "code": "asuse_017",
+    "name": "Manufacture of Wood and Products of Wood and Cork, Except Furniture, Manufacture of Articles of Straw and Plaiting Materials",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 2,371,989 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 17
+  },
+  {
+    "id": 15,
+    "code": "asuse_nic_18",
+    "name": "Manufacture of Paper and Paper Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (136,314 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 18
+  },
+  {
+    "id": 64,
+    "code": "asuse_018",
+    "name": "Manufacture of Paper and Paper Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 136,314 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 18
+  },
+  {
+    "id": 16,
+    "code": "asuse_nic_19",
+    "name": "Printing and Reproduction of Recorded Media",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (62,928 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 19
+  },
+  {
+    "id": 65,
+    "code": "asuse_019",
+    "name": "Printing and Reproduction of Recorded Media",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 62,928 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 19
+  },
+  {
+    "id": 17,
+    "code": "asuse_nic_20",
+    "name": "Manufacture of Coke and Refined Petroleum Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (15,480 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 20
+  },
+  {
+    "id": 66,
+    "code": "asuse_020",
+    "name": "Manufacture of Coke and Refined Petroleum Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 15,480 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 20
+  },
+  {
+    "id": 18,
+    "code": "asuse_nic_21",
+    "name": "Manufacture of Chemicals and Chemical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (66,623 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 21
+  },
+  {
+    "id": 67,
+    "code": "asuse_021",
+    "name": "Manufacture of Chemicals and Chemical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 66,623 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 21
+  },
+  {
+    "id": 19,
+    "code": "asuse_nic_22",
+    "name": "Manufacture of Pharmaceuticals, Medicinal Chemical and Botanical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (13,822 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 22
+  },
+  {
+    "id": 68,
+    "code": "asuse_022",
+    "name": "Manufacture of Pharmaceuticals, Medicinal Chemical and Botanical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 13,822 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 22
+  },
+  {
+    "id": 20,
+    "code": "asuse_nic_23",
+    "name": "Manufacture of Rubber and Plastics Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (134,358 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 23
+  },
+  {
+    "id": 69,
+    "code": "asuse_023",
+    "name": "Manufacture of Rubber and Plastics Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 134,358 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 23
+  },
+  {
+    "id": 21,
+    "code": "asuse_nic_24",
+    "name": "Manufacture of Other Non-metallic Mineral Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (1,348,224 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 24
+  },
+  {
+    "id": 70,
+    "code": "asuse_024",
+    "name": "Manufacture of Other Non-metallic Mineral Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 1,348,224 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 24
+  },
+  {
+    "id": 22,
+    "code": "asuse_nic_25",
+    "name": "Manufacture of Basic Metals",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (104,983 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 25
+  },
+  {
+    "id": 71,
+    "code": "asuse_025",
+    "name": "Manufacture of Basic Metals",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 104,983 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 25
+  },
+  {
+    "id": 23,
+    "code": "asuse_nic_26",
+    "name": "Manufacture of Fabricated Metal Products, Except Machinery and Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (1,396,135 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 26
+  },
+  {
+    "id": 72,
+    "code": "asuse_026",
+    "name": "Manufacture of Fabricated Metal Products, Except Machinery and Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 1,396,135 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 26
+  },
+  {
+    "id": 24,
+    "code": "asuse_nic_27",
+    "name": "Manufacture of Computer, Electronic and Optical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Cpu",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (7,991 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 27
+  },
+  {
+    "id": 73,
+    "code": "asuse_027",
+    "name": "Manufacture of Computer, Electronic and Optical Products",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Cpu",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 7,991 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 27
+  },
+  {
+    "id": 25,
+    "code": "asuse_nic_28",
+    "name": "Manufacture of Electrical Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (47,294 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 28
+  },
+  {
+    "id": 74,
+    "code": "asuse_028",
+    "name": "Manufacture of Electrical Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 47,294 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 28
+  },
+  {
+    "id": 26,
+    "code": "asuse_nic_29",
+    "name": "Manufacture of Machinery and Equipment N.e.c.",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (37,493 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 29
+  },
+  {
+    "id": 75,
+    "code": "asuse_029",
+    "name": "Manufacture of Machinery and Equipment N.e.c.",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 37,493 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 29
+  },
+  {
+    "id": 27,
+    "code": "asuse_nic_30",
+    "name": "Manufacture of Motor Vehicles, Trailers and Semi- Trailers",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Truck",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (13,766 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 30
+  },
+  {
+    "id": 76,
+    "code": "asuse_030",
+    "name": "Manufacture of Motor Vehicles, Trailers and Semi- Trailers",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Truck",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 13,766 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 30
+  },
+  {
+    "id": 28,
+    "code": "asuse_nic_31",
+    "name": "Manufacture of Other Transport Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (2,655 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 31
+  },
+  {
+    "id": 77,
+    "code": "asuse_031",
+    "name": "Manufacture of Other Transport Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 2,655 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 31
+  },
+  {
+    "id": 29,
+    "code": "asuse_nic_32",
+    "name": "Manufacture of Furniture",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (1,786,645 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 32
+  },
+  {
+    "id": 78,
+    "code": "asuse_032",
+    "name": "Manufacture of Furniture",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Package",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 1,786,645 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 32
+  },
+  {
+    "id": 30,
+    "code": "asuse_nic_33",
+    "name": "Other Manufacturing",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (1,784,022 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 33
+  },
+  {
+    "id": 79,
+    "code": "asuse_033",
+    "name": "Other Manufacturing",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 1,784,022 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 33
+  },
+  {
+    "id": 31,
+    "code": "asuse_nic_34",
+    "name": "Repair and Installation of Machinery and Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (447,576 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 34
+  },
+  {
+    "id": 80,
+    "code": "asuse_034",
+    "name": "Repair and Installation of Machinery and Equipment",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 447,576 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 34
+  },
+  {
+    "id": 32,
+    "code": "asuse_nic_35",
+    "name": "Manufacturing Activities",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (46,494,814 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 35
+  },
+  {
+    "id": 81,
+    "code": "asuse_035",
+    "name": "Manufacturing Activities",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Factory",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 46,494,814 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 35
+  },
+  {
+    "id": 33,
+    "code": "asuse_nic_36",
+    "name": "Non-captive Electricity Generation and Transmission",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (1,888 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 36
+  },
+  {
+    "id": 82,
+    "code": "asuse_036",
+    "name": "Non-captive Electricity Generation and Transmission",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 1,888 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 36
+  },
+  {
+    "id": 34,
+    "code": "asuse_nic_37",
+    "name": "Wholesale and Retail Trade of Motor Vehicles and Motor Cycles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Truck",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (197,012 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 37
+  },
+  {
+    "id": 83,
+    "code": "asuse_037",
+    "name": "Wholesale and Retail Trade of Motor Vehicles and Motor Cycles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Truck",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 197,012 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 37
+  },
+  {
+    "id": 35,
+    "code": "asuse_nic_38",
+    "name": "Maintenance and Repair of Motor Vehicles and Motor Cycles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Packages",
+    "description": "Official GoI ASUSE enterprise classification (1,897,047 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 38
+  },
+  {
+    "id": 84,
+    "code": "asuse_038",
+    "name": "Maintenance and Repair of Motor Vehicles and Motor Cycles",
+    "category": "Manufacturing & Processing",
+    "sector": "MANUFACTURING",
+    "icon": "Wrench",
+    "unit_of_measurement": "Units / Batches",
+    "description": "Official GoI ASUSE enterprise classification with 1,897,047 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Groundwater",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 38
+  },
+  {
+    "id": 36,
+    "code": "asuse_nic_39",
+    "name": "Wholesale on a Fee or Contract Basis",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification (432,313 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 39
+  },
+  {
+    "id": 85,
+    "code": "asuse_039",
+    "name": "Wholesale on a Fee or Contract Basis",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification with 432,313 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 39
+  },
+  {
+    "id": 37,
+    "code": "asuse_nic_40",
+    "name": "Other Wholesale Trade",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification (1,692,049 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 40
+  },
+  {
+    "id": 86,
+    "code": "asuse_040",
+    "name": "Other Wholesale Trade",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification with 1,692,049 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 40
+  },
+  {
+    "id": 38,
+    "code": "asuse_nic_41",
+    "name": "Other Retail Trade",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification (42,424,803 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 41
+  },
+  {
+    "id": 87,
+    "code": "asuse_041",
+    "name": "Other Retail Trade",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "Store",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification with 42,424,803 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 41
+  },
+  {
+    "id": 39,
+    "code": "asuse_nic_42",
+    "name": "Trading Activities",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "ShoppingCart",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification (46,643,225 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 42
+  },
+  {
+    "id": 88,
+    "code": "asuse_042",
+    "name": "Trading Activities",
+    "category": "Wholesale & Retail Trade",
+    "sector": "RETAIL",
+    "icon": "ShoppingCart",
+    "unit_of_measurement": "Transactions",
+    "description": "Official GoI ASUSE enterprise classification with 46,643,225 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 42
+  },
+  {
+    "id": 40,
+    "code": "asuse_nic_43",
+    "name": "Accommodation",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Building",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (156,581 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 43
+  },
+  {
+    "id": 89,
+    "code": "asuse_043",
+    "name": "Accommodation",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Building",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 156,581 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 43
+  },
+  {
+    "id": 41,
+    "code": "asuse_nic_44",
+    "name": "Food and Accommodation Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Utensils",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (6,638,432 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 44
+  },
+  {
+    "id": 90,
+    "code": "asuse_044",
+    "name": "Food and Accommodation Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Utensils",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 6,638,432 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 44
+  },
+  {
+    "id": 42,
+    "code": "asuse_nic_45",
+    "name": "Land Transport",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (15,303,594 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 45
+  },
+  {
+    "id": 91,
+    "code": "asuse_045",
+    "name": "Land Transport",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 15,303,594 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 45
+  },
+  {
+    "id": 43,
+    "code": "asuse_nic_46",
+    "name": "Water Transport",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (17,769 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 46
+  },
+  {
+    "id": 92,
+    "code": "asuse_046",
+    "name": "Water Transport",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 17,769 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 46
+  },
+  {
+    "id": 44,
+    "code": "asuse_nic_47",
+    "name": "Warehousing and Storage",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (14,678 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 47
+  },
+  {
+    "id": 93,
+    "code": "asuse_047",
+    "name": "Warehousing and Storage",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 14,678 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 47
+  },
+  {
+    "id": 45,
+    "code": "asuse_nic_48",
+    "name": "Support Activities for Transportation, Postal and Courier Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (97,242 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 48
+  },
+  {
+    "id": 94,
+    "code": "asuse_048",
+    "name": "Support Activities for Transportation, Postal and Courier Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Truck",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 97,242 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 48
+  },
+  {
+    "id": 46,
+    "code": "asuse_nic_49",
+    "name": "Information and Communication",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Cpu",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (1,065,863 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 49
+  },
+  {
+    "id": 95,
+    "code": "asuse_049",
+    "name": "Information and Communication",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Cpu",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 1,065,863 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 49
+  },
+  {
+    "id": 47,
+    "code": "asuse_nic_50",
+    "name": "Financial Service Activities Except Insurance and Pension Funding",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (8,797,443 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 50
+  },
+  {
+    "id": 96,
+    "code": "asuse_050",
+    "name": "Financial Service Activities Except Insurance and Pension Funding",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 8,797,443 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 50
+  },
+  {
+    "id": 48,
+    "code": "asuse_nic_51",
+    "name": "Other Financial Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (279,723 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 51
+  },
+  {
+    "id": 97,
+    "code": "asuse_051",
+    "name": "Other Financial Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 279,723 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 51
+  },
+  {
+    "id": 49,
+    "code": "asuse_nic_52",
+    "name": "Real Estate Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (2,166,208 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 52
+  },
+  {
+    "id": 98,
+    "code": "asuse_052",
+    "name": "Real Estate Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 2,166,208 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 52
+  },
+  {
+    "id": 50,
+    "code": "asuse_nic_53",
+    "name": "Professional, Scientific and Technical Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (694,887 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 53
+  },
+  {
+    "id": 99,
+    "code": "asuse_053",
+    "name": "Professional, Scientific and Technical Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 694,887 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 53
+  },
+  {
+    "id": 51,
+    "code": "asuse_nic_54",
+    "name": "Administrative and Support Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (4,380,540 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 54
+  },
+  {
+    "id": 100,
+    "code": "asuse_054",
+    "name": "Administrative and Support Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 4,380,540 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 54
+  },
+  {
+    "id": 52,
+    "code": "asuse_nic_55",
+    "name": "Education",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "GraduationCap",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (3,013,380 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 55
+  },
+  {
+    "id": 101,
+    "code": "asuse_055",
+    "name": "Education",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "GraduationCap",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 3,013,380 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 55
+  },
+  {
+    "id": 53,
+    "code": "asuse_nic_56",
+    "name": "Human Health and Social Work Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "HeartPulse",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (2,086,322 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 56
+  },
+  {
+    "id": 102,
+    "code": "asuse_056",
+    "name": "Human Health and Social Work Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "HeartPulse",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 2,086,322 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 56
+  },
+  {
+    "id": 54,
+    "code": "asuse_nic_57",
+    "name": "Other Community, Social and Personal Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (13,127,701 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 57
+  },
+  {
+    "id": 103,
+    "code": "asuse_057",
+    "name": "Other Community, Social and Personal Service Activities",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 13,127,701 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 57
+  },
+  {
+    "id": 55,
+    "code": "asuse_nic_58",
+    "name": "Other Services",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification (57,840,364 estimated rural establishments in India).",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 58
+  },
+  {
+    "id": 104,
+    "code": "asuse_058",
+    "name": "Other Services",
+    "category": "Services & Logistics",
+    "sector": "SERVICE",
+    "icon": "Briefcase",
+    "unit_of_measurement": "Service Orders",
+    "description": "Official GoI ASUSE enterprise classification with 57,840,364 estimated rural establishments in India.",
+    "source_dataset": "ASUSE Enterprise Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Routing",
+      "GIS Location"
+    ],
+    "sort_order": 58
+  },
+  {
+    "id": 105,
+    "code": "live_059",
+    "name": "Live Horses, Asses, Mules & Hinnies",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 59
+  },
+  {
+    "id": 106,
+    "code": "live_060",
+    "name": "Live Poultry Fowls of the Species Gallus Domestics Ducks, Geese, Turkeys & Guinea",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Egg",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 60
+  },
+  {
+    "id": 107,
+    "code": "live_061",
+    "name": "Other Live Animals",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 61
+  },
+  {
+    "id": 108,
+    "code": "live_062",
+    "name": "Meat of Swine, Fresh, Chilled or Frozen",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 62
+  },
+  {
+    "id": 109,
+    "code": "live_063",
+    "name": "Meat of Sheep or Goats, Fresh, Chilled or Frozen",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 63
+  },
+  {
+    "id": 110,
+    "code": "live_064",
+    "name": "Meat and Edible Offal of the Poultry, Fresh Chilled or Frozen",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Egg",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 64
+  },
+  {
+    "id": 111,
+    "code": "live_065",
+    "name": "Other Meat and Edible Meat Offal, Fresh, Chilled or Frozen",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Beef",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 65
+  },
+  {
+    "id": 112,
+    "code": "live_066",
+    "name": "Meat/Edible Meat Offal, Salted in Brine, Dried/ Smoked; Edible Flours & Meals of Meat/Meat Offal",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Beef",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 66
+  },
+  {
+    "id": 113,
+    "code": "live_067",
+    "name": "Milk & Cream Not Concentrated Nor Containing Added Sugar or Other Sweetening Matter",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 67
+  },
+  {
+    "id": 114,
+    "code": "live_068",
+    "name": "Milk & Cream Concentrated/Containing Sugar/Sweetening Matter",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 68
+  },
+  {
+    "id": 115,
+    "code": "live_069",
+    "name": "Butter Milk, Curdled Milk & Cream, Yogurt, Khir & Other Fermented Acidified Milk & Cream",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 69
+  },
+  {
+    "id": 116,
+    "code": "live_070",
+    "name": "Whey & Products Consisting of Natural Milk Constituent Not Containing Added Sugar or Sweetening Matter.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 70
+  },
+  {
+    "id": 117,
+    "code": "live_071",
+    "name": "Butter and Other Fats & Oils Derived from Milk; Dairy Spreads",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Milk",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 71
+  },
+  {
+    "id": 118,
+    "code": "live_072",
+    "name": "Cheese and Curd",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Building2",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 72
+  },
+  {
+    "id": 119,
+    "code": "live_073",
+    "name": "Birds Eggs, in Shell, Fresh Preserved or Cooked",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Egg",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 73
+  },
+  {
+    "id": 120,
+    "code": "live_074",
+    "name": "Birds Eggs, Not in Shell & Egg Yolks Fresh Dred, Cooked, Frozen or Otherwise Preserved",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Egg",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 74
+  },
+  {
+    "id": 121,
+    "code": "live_075",
+    "name": "Natural Honey",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Building2",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 75
+  },
+  {
+    "id": 122,
+    "code": "live_076",
+    "name": "Flours Meals & Pellets Of Meat/Meat Offal Of Fish Crustiness Molasses/Other Aquatic Invertebrates Unfit for Human Consumption",
+    "category": "Livestock & Agri-Allied",
+    "sector": "AGRI_ALLIED",
+    "icon": "Beef",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 76
+  },
+  {
+    "id": 123,
+    "code": "live_077",
+    "name": "Bran Sharps & Other Residues W/N in the form of Pellets Derived From the Sifting Milling/Other Working of Cereals/of Leguminous Plants",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Wheat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 77
+  },
+  {
+    "id": 124,
+    "code": "live_078",
+    "name": "Residues of Starch Manufacturing.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Wheat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 78
+  },
+  {
+    "id": 125,
+    "code": "live_079",
+    "name": "Oil-Cake & other Solid Residue in Pellets form Obtained from Soya-Bean Oil Extraction",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Wheat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 79
+  },
+  {
+    "id": 126,
+    "code": "live_080",
+    "name": "Oil-Cake & other Solid Residue in Pellets form Obtained from ground nut Oil Extraction",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Wheat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 80
+  },
+  {
+    "id": 127,
+    "code": "live_081",
+    "name": "Oil-Cake & other Solid Residue in Pellets form Obtained from Extraction of vegetables fats.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Wheat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 81
+  },
+  {
+    "id": 128,
+    "code": "live_082",
+    "name": "Veg Materials &Veg. Waste/Residues for Animal Feeding",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 82
+  },
+  {
+    "id": 129,
+    "code": "live_083",
+    "name": "Preparations of a Kind Used in Animal Feeding",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 83
+  },
+  {
+    "id": 130,
+    "code": "live_084",
+    "name": "Raw Hides & Skins of Bovine/Equine Animals (Fresh/Salted)",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 84
+  },
+  {
+    "id": 131,
+    "code": "live_085",
+    "name": "Raw Skins of Sheep/Lambs (Fresh/Salted)",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 85
+  },
+  {
+    "id": 132,
+    "code": "live_086",
+    "name": "Other Raw hide & Skins (Fresh/Salted)",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 86
+  },
+  {
+    "id": 133,
+    "code": "live_087",
+    "name": "Tanned/Crust Hide & Skin of Bovine(Including Buffalo) or Equine Animal Without Hair Won split But Not Further Prepared",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 87
+  },
+  {
+    "id": 134,
+    "code": "live_088",
+    "name": "Tanned/Crust Skin of Sheep Or Lamb Without Wool Whether Or Not Split But Not Further Prepared.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 88
+  },
+  {
+    "id": 135,
+    "code": "live_089",
+    "name": "Tanned/Crust Hide & Skins of Other Animals Without Wool/Hair Won Split But Not Further prepared.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 89
+  },
+  {
+    "id": 136,
+    "code": "live_090",
+    "name": "Dressed Leather of Bovine Without Hair W.O.N. Split",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 90
+  },
+  {
+    "id": 137,
+    "code": "live_091",
+    "name": "Leather Further Prepared After Tanning/Crust Leather of Sheep/Lamb Without Wool W.O.N. Split",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 91
+  },
+  {
+    "id": 138,
+    "code": "live_092",
+    "name": "Leather Further Prepared After Tanning/Crust Leather of other Animals Without Wool/ Hair W.O.N. Split.",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 92
+  },
+  {
+    "id": 139,
+    "code": "live_093",
+    "name": "Chamois Leather/Patent Leather/Laminated Leather Metalized Leather",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 93
+  },
+  {
+    "id": 140,
+    "code": "live_094",
+    "name": "Composition Leather With Base of Leather/Leather Fiber in Slabs/Sheet/Strip; Paring/Waste of Leather",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "ShoppingBag",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 94
+  },
+  {
+    "id": 141,
+    "code": "live_095",
+    "name": "Wool Not Carded or Combed",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 95
+  },
+  {
+    "id": 142,
+    "code": "live_096",
+    "name": "Fine/Coarse Animal Hair Not Carded/Combed",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 96
+  },
+  {
+    "id": 143,
+    "code": "live_097",
+    "name": "Waste of Wool/of Fine/Coarse Animal Hair Including Yarn Waste Excluding Garneted Stock",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 97
+  },
+  {
+    "id": 144,
+    "code": "live_098",
+    "name": "Wool & Fine/Coarse Animal Hair Carded or Combed (Including Combed Wool In Fragments)",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 98
+  },
+  {
+    "id": 145,
+    "code": "live_099",
+    "name": "Yarn of Carded Wool not Put Up for Retail Sale",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 99
+  },
+  {
+    "id": 146,
+    "code": "live_100",
+    "name": "Yarn of Combed Wool not Put Up for Retail Sale",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Scissors",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 100
+  },
+  {
+    "id": 147,
+    "code": "live_101",
+    "name": "Yarn of Fine Animal Hair(Carded/Combed) Not Put Up For Retail Sale",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 101
+  },
+  {
+    "id": 148,
+    "code": "live_102",
+    "name": "Yarn of Wool or of Fine Animal Hair, Put Up For Retail Sale",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 102
+  },
+  {
+    "id": 149,
+    "code": "live_103",
+    "name": "Yarn of Coarse Animal Hair/of Horse Hair(Including Gimped Horsehair Yarn)W/N Put up For Retail Sale",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 103
+  },
+  {
+    "id": 150,
+    "code": "live_104",
+    "name": "Woven Fabrics of Carded Wool Or of Carded Fine Animal Hair",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 104
+  },
+  {
+    "id": 151,
+    "code": "live_105",
+    "name": "Woven Fabrics of Combed Wool/Fine Animal Hair",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 105
+  },
+  {
+    "id": 152,
+    "code": "live_106",
+    "name": "Woven Fabrics of Coarse Animal Hair/of Horse Hair",
+    "category": "Livestock & Agri-Allied",
+    "sector": "MANUFACTURING",
+    "icon": "Cat",
+    "unit_of_measurement": "Kg / Litres / Head Count",
+    "description": "Official GoI Livestock & Allied Commodity Trade classification.",
+    "source_dataset": "GoI Livestock & Allied Trade Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Livestock",
+      "Marketwise Wholesale Arrivals"
+    ],
+    "sort_order": 106
+  },
+  {
+    "id": 153,
+    "code": "infra_107",
+    "name": "Primary Agricultural Credit Society (PACS) & Cooperative Services",
+    "category": "Infrastructure & Cooperatives",
+    "sector": "SERVICE",
+    "icon": "Landmark",
+    "unit_of_measurement": "Member Loans / Accounts",
+    "description": "Primary Agricultural Credit Society providing micro-credit, seed/fertilizer distribution, and agricultural input services.",
+    "source_dataset": "PACS Infrastructure Dataset",
+    "relevant_datasets": [
+      "Population",
+      "Rural Wages",
+      "Infrastructure",
+      "Infrastructure"
+    ],
+    "sort_order": 107
+  }
+]

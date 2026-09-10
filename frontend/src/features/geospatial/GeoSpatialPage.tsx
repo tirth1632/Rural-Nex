@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   GeoFilterPanel 
 } from './GeoFilterPanel';
@@ -31,6 +31,7 @@ import { Sliders, Map as MapIcon, Scale, BarChart3, ArrowLeft } from 'lucide-rea
 
 export const GeoSpatialPage: React.FC = () => {
   const navigate = useNavigate();
+  const [urlSearchParams] = useSearchParams();
   const insightsRef = useRef<HTMLDivElement>(null);
 
   // Default Search Parameters
@@ -40,7 +41,7 @@ export const GeoSpatialPage: React.FC = () => {
     areaId: 'GJ_AMD_SANAND',
     radiusKm: 25,
     businessCategory: 'Dairy Farming',
-    subType: 'Dairy Processing',
+    subType: 'All Sub-Types (Select All)',
     investmentRange: '₹5–10 lakh',
     constrainToInvestment: true,
     includeNeighboringStates: false,
@@ -67,14 +68,32 @@ export const GeoSpatialPage: React.FC = () => {
   // Mobile View Tab state ('map' | 'filters' | 'insights')
   const [mobileTab, setMobileTab] = useState<'map' | 'filters' | 'insights'>('map');
 
-  // Initial load of saved locations
+  // Initial load of saved locations and URL parameter handling
   useEffect(() => {
     setSavedLocations(locationService.getSavedLocations());
-  }, []);
 
-  // Initial candidate search on page mount only (no automatic re-searching on filter changes)
-  useEffect(() => {
-    executeSearch(searchParams, false);
+    const qStateId = urlSearchParams.get('stateId');
+    const qDistrictId = urlSearchParams.get('districtId');
+    const qLat = urlSearchParams.get('lat');
+    const qLng = urlSearchParams.get('lng');
+    const qLocName = urlSearchParams.get('locName');
+    const qCategory = urlSearchParams.get('category');
+
+    if (qStateId || qLat) {
+      const mergedParams: GeoSearchParams = {
+        ...searchParams,
+        stateId: qStateId || searchParams.stateId,
+        districtId: qDistrictId || searchParams.districtId,
+        businessCategory: qCategory || searchParams.businessCategory,
+        customLat: qLat ? parseFloat(qLat) : undefined,
+        customLng: qLng ? parseFloat(qLng) : undefined,
+        customLocationName: qLocName ? decodeURIComponent(qLocName) : undefined,
+      };
+      setSearchParams(mergedParams);
+      executeSearch(mergedParams, true);
+    } else {
+      executeSearch(searchParams, false);
+    }
   }, []);
 
   const executeSearch = async (params: GeoSearchParams, isFullAnalysis: boolean = true) => {
@@ -116,11 +135,7 @@ export const GeoSpatialPage: React.FC = () => {
     try {
       const results = await geoService.searchLocations(params);
       setCandidates(results);
-      if (results.length > 0) {
-        setSelectedLocation(results[0]);
-      } else {
-        setSelectedLocation(null);
-      }
+      setSelectedLocation(null);
       setHasUnsearchedChanges(false);
       setAnalysisProgress(100);
     } catch (err) {
@@ -144,7 +159,7 @@ export const GeoSpatialPage: React.FC = () => {
       areaId: 'GJ_AMD_SANAND',
       radiusKm: 25,
       businessCategory: 'Dairy Farming',
-      subType: 'Dairy Processing',
+      subType: 'All Sub-Types (Select All)',
       investmentRange: '₹5–10 lakh',
       constrainToInvestment: true,
       includeNeighboringStates: false,
@@ -252,54 +267,7 @@ export const GeoSpatialPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Desktop Top Sub-Bar: Target Summary & Mode Switcher */}
-      <div className="hidden md:flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0c] shrink-0">
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-gray-500 dark:text-zinc-400">Target Territory:</span>
-          <span className="font-extrabold text-gray-900 dark:text-white bg-gray-100 dark:bg-zinc-800/80 px-2.5 py-1 rounded-lg border border-gray-200/60 dark:border-zinc-700/60">
-            {searchParams.customLocationName 
-              ? `📍 ${searchParams.customLocationName} (${selectedStateObj?.name})` 
-              : `${selectedAreaObj?.name || 'Area'}, ${selectedDistrictObj?.name || 'District'} (${selectedStateObj?.name})`}
-          </span>
-          {selectedLocation && (
-            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5 ml-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Active Candidate: <strong className="font-black">{selectedLocation.name}</strong> (★ {selectedLocation.scoreResult.overallScore})
-            </span>
-          )}
-        </div>
 
-        {/* View Mode Toggle Switcher */}
-        <div className="flex items-center gap-1 bg-gray-100 dark:bg-zinc-900 p-1 rounded-xl border border-gray-200 dark:border-zinc-800">
-          <button
-            type="button"
-            onClick={() => setViewMode('map')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              viewMode === 'map'
-                ? 'bg-primary text-white shadow-xs'
-                : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <MapIcon size={14} /> Map View
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('insights')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              viewMode === 'insights'
-                ? 'bg-primary text-white shadow-xs'
-                : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <BarChart3 size={14} /> Feasibility Insights
-            {selectedLocation && (
-              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold border border-emerald-300/40">
-                ★ {selectedLocation.scoreResult.overallScore}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
 
       {/* VIEW 1: Full-Height Map & Filters (100% of available height, never below screen) */}
       {viewMode === 'map' && (
@@ -344,7 +312,10 @@ export const GeoSpatialPage: React.FC = () => {
                 setViewMode('insights');
                 setMobileTab('insights');
               }}
-              onOpen3DView={() => setIs3DModalOpen(true)}
+              onOpen3DView={(loc) => {
+                if (loc) setSelectedLocation(loc);
+                setIs3DModalOpen(true);
+              }}
               isSearching={isSearching}
               analysisProgress={analysisProgress}
               analysisStage={analysisStage}
@@ -353,8 +324,10 @@ export const GeoSpatialPage: React.FC = () => {
               areaName={searchParams.customLocationName || selectedAreaObj?.name || 'Daskroi Taluka'}
               businessCategory={searchParams.businessCategory}
               subType={searchParams.subType}
+              stateId={searchParams.stateId}
               hasUnsearchedChanges={hasUnsearchedChanges}
               onSearch={() => executeSearch(searchParams, true)}
+              onParamsChange={handleParamsChange}
             />
           </div>
         </div>

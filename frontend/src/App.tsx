@@ -20,12 +20,14 @@ import SettingsPage from './features/settings/SettingsPage';
 import GeoSpatialPage from './features/geospatial/GeoSpatialPage';
 import GovtSchemesPage from './features/schemes/GovtSchemesPage';
 import { SettingsProvider } from './features/settings/SettingsContext';
+import { GlobalFilterProvider } from './context/GlobalFilterContext';
 
 function App() {
 
   return (
     <SettingsProvider>
-      <div className="font-sans">
+      <GlobalFilterProvider>
+        <div className="font-sans">
         <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -64,7 +66,8 @@ function App() {
       {/* Global assistant widget if needed */}
       {/* {user && <ChatAssistant />} */}
     </div>
-  </SettingsProvider>
+  </GlobalFilterProvider>
+</SettingsProvider>
   )
 }
 

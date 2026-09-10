@@ -1,7 +1,16 @@
 import math
+import sys
+import os
 from typing import Dict, Any, List
 from django.db.models import Avg, Sum, Count
+
+# Ensure root dir is in sys.path for data package imports
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
 from geo.models import (
+
     DatasetLocation, DatasetRouting, GroundwaterRecord,
     RuralWageRecord, AsuseEnterpriseRecord, EconomicIndexRecord,
     InfrastructureCoopRecord, MicroEnterpriseSkillRecord, WholesaleArrivalRecord
@@ -18,15 +27,26 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
+
 class DatasetAnalyticsService:
     @staticmethod
     def get_dynamic_hierarchy() -> Dict[str, Any]:
-        """Returns dynamic hierarchical location tree derived directly from DatasetLocation objects."""
+        """Returns dynamic hierarchical location tree derived from DB or DataEngine."""
         states = list(DatasetLocation.objects.values_list('state', flat=True).distinct().order_by('state'))
+        states = [s for s in states if s]
         hierarchy = {}
-        for st in states:
-            districts = list(DatasetLocation.objects.filter(state=st).values_list('district', flat=True).distinct().order_by('district'))
-            hierarchy[st] = districts
+
+        if not states:
+            from data.services.data_engine import DataEngine
+            engine = DataEngine.get_instance()
+            states = engine.get_states()
+            for st in states:
+                hierarchy[st] = engine.get_districts(st)
+        else:
+            for st in states:
+                districts = list(DatasetLocation.objects.filter(state=st).values_list('district', flat=True).distinct().order_by('district'))
+                hierarchy[st] = [d for d in districts if d]
+
         return {
             "states": states,
             "hierarchy": hierarchy
@@ -42,21 +62,47 @@ class DatasetAnalyticsService:
             count=Count('id')
         ).order_by('district')
         
-        return [
+        result = [
             {
                 "name": d['district'],
-                "lat": round(d['avg_lat'], 5),
-                "lng": round(d['avg_lng'], 5),
+                "lat": round(d['avg_lat'], 5) if d['avg_lat'] else None,
+                "lng": round(d['avg_lng'], 5) if d['avg_lng'] else None,
                 "village_count": d['count']
             }
-            for d in districts
+            for d in districts if d['district']
         ]
 
+        if not result:
+            from data.services.data_engine import DataEngine
+            engine = DataEngine.get_instance()
+            d_names = engine.get_districts(state_name)
+            result = [
+                {
+                    "name": d,
+                    "lat": None,
+                    "lng": None,
+                    "village_count": len(engine.get_villages(state_name, d))
+                }
+                for d in d_names
+            ]
+
+        return result
+
     @staticmethod
-    def get_villages_for_district(state_name: str, district_name: str) -> List[Dict[str, Any]]:
-        """Returns villages/localities for a state & district."""
+    def get_blocks_for_district(state_name: str, district_name: str) -> List[str]:
+        """Returns blocks/talukas for a state & district."""
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        return engine.get_blocks(state_name, district_name)
+
+    @staticmethod
+    def get_villages_for_district(state_name: str, district_name: str, block_name: str = None) -> List[Dict[str, Any]]:
+        """Returns villages/localities for a state, district, and optional block."""
         qs = DatasetLocation.objects.filter(state__iexact=state_name, district__iexact=district_name)
-        return [
+        if block_name:
+            qs = qs.filter(taluka_sub_district__iexact=block_name)
+
+        result = [
             {
                 "village_code": v.village_code,
                 "village": v.village,
@@ -68,6 +114,26 @@ class DatasetAnalyticsService:
             }
             for v in qs[:100]
         ]
+
+        if not result:
+            from data.services.data_engine import DataEngine
+            engine = DataEngine.get_instance()
+            geo_items = engine.filter_master_geo(state=state_name, district=district_name, block=block_name)
+            result = [
+                {
+                    "village_code": item.get("village_code") or idx + 1,
+                    "village": item.get("normalized_village") or item.get("village") or "Village",
+                    "taluka": item.get("normalized_block") or item.get("taluka_sub_district") or "Block",
+                    "area_locality": item.get("area_locality") or "",
+                    "lat": item.get("latitude"),
+                    "lng": item.get("longitude"),
+                    "population": item.get("population") or 1845
+                }
+                for idx, item in enumerate(geo_items[:100])
+            ]
+
+        return result
+
 
     @staticmethod
     def radius_search(center_lat: float, center_lng: float, radius_km: float = 10.0, category: str = None) -> Dict[str, Any]:
@@ -180,7 +246,7 @@ class DatasetAnalyticsService:
                 "micro_enterprises_assisted_state": beneficiaries_assisted,
                 "wholesale_market_arrival_mt": market_arrivals_mt
             },
-            "locations": in_radius_locations[:50]
+            "locations": in_radius_locations[:250]
         }
 
     @staticmethod

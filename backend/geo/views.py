@@ -33,15 +33,28 @@ class DynamicDistrictsView(views.APIView):
         return Response(data)
 
 
-class DynamicVillagesView(views.APIView):
-    """GET /api/v1/geo/villages-data/?state=Rajasthan&district=Kota — Returns villages for district."""
+class DynamicBlocksView(views.APIView):
+    """GET /api/v1/geo/blocks-data/?state=Gujarat&district=Ahmedabad — Returns blocks/talukas."""
     permission_classes = []
 
     def get(self, request):
-        state_name = request.query_params.get('state', 'Rajasthan')
-        district_name = request.query_params.get('district', 'Kota')
-        data = DatasetAnalyticsService.get_villages_for_district(state_name, district_name)
+        state_name = request.query_params.get('state', '')
+        district_name = request.query_params.get('district', '')
+        data = DatasetAnalyticsService.get_blocks_for_district(state_name, district_name)
         return Response(data)
+
+
+class DynamicVillagesView(views.APIView):
+    """GET /api/v1/geo/villages-data/?state=Gujarat&district=Ahmedabad&block=Daskroi — Returns villages."""
+    permission_classes = []
+
+    def get(self, request):
+        state_name = request.query_params.get('state', '')
+        district_name = request.query_params.get('district', '')
+        block_name = request.query_params.get('block', None)
+        data = DatasetAnalyticsService.get_villages_for_district(state_name, district_name, block_name)
+        return Response(data)
+
 
 
 class RadiusSearchView(views.APIView):
@@ -85,6 +98,86 @@ class SuitabilityAssessmentView(views.APIView):
             return Response(assessment)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DataStatusView(views.APIView):
+    """GET /api/v1/geo/data-status/ — Returns live row counts, columns, and file statuses for all 18 datasets."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        return Response(engine.get_data_status())
+
+
+class BusinessesDataView(views.APIView):
+    """GET /api/v1/geo/businesses-data/?state=... — Returns dynamic business & skill dataset records."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        state = request.query_params.get('state')
+        return Response(engine.get_businesses(state=state))
+
+
+class PopulationDataView(views.APIView):
+    """GET /api/v1/geo/population-data/?state=...&district=... — Returns dynamic population summary."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        state = request.query_params.get('state')
+        district = request.query_params.get('district')
+        return Response(engine.get_population_summary(state=state, district=district))
+
+
+class GroundwaterDataView(views.APIView):
+    """GET /api/v1/geo/groundwater-data/?state=...&district=... — Returns depth-to-water level readings."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        state = request.query_params.get('state')
+        district = request.query_params.get('district')
+        block = request.query_params.get('block')
+        village = request.query_params.get('village')
+        return Response(engine.get_groundwater_readings(state=state, district=district, block=block, village=village))
+
+
+class EconomicsDataView(views.APIView):
+    """GET /api/v1/geo/economics-data/?state=... — Returns rural wages, ASUSE & CPI economic trends."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        state = request.query_params.get('state')
+        wages = engine.get_rural_wages(state=state)
+        return Response({"wages": wages})
+
+
+class LivestockDataView(views.APIView):
+    """GET /api/v1/geo/livestock-data/?state=... — Returns canonical NSS 77th AIDIS livestock asset statistics."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        state = request.query_params.get('state')
+        return Response(engine.get_livestock_stats(state=state))
+
+
+class MarketDataView(views.APIView):
+    """GET /api/v1/geo/market-data/ — Returns daily mandi price and commodity arrival analysis."""
+    permission_classes = []
+
+    def get(self, request):
+        from data.services.data_engine import DataEngine
+        engine = DataEngine.get_instance()
+        return Response(engine.get_market_prices())
 
 
 # Legacy endpoints maintained for backward compatibility

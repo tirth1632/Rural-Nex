@@ -41,6 +41,7 @@ class BusinessActivitiesListView(generics.ListAPIView):
     queryset = BusinessActivity.objects.filter(is_active=True).select_related('driver_template')
     serializer_class = BusinessActivitySerializer
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
 
 
 class GovernmentSchemesListView(generics.ListAPIView):
@@ -51,6 +52,7 @@ class GovernmentSchemesListView(generics.ListAPIView):
     queryset = SchemeMaster.objects.filter(is_active=True).prefetch_related('rules')
     serializer_class = SchemeMasterSerializer
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
 
 
 # -------------------------------------------------------------
