@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { PasswordInput } from './components/PasswordInput';
+import { RuralNexLogoMark } from '../../components/RuralNexLogo';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -126,7 +127,9 @@ const ForgotPassword = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 relative">
         <div className="flex flex-col items-center mb-6">
-          <img src="/logo.png" alt="RuralNex Logo" className="h-14 w-auto object-contain mb-2 drop-shadow-sm" />
+          <div className="mb-2">
+            <RuralNexLogoMark size={48} />
+          </div>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">RuralNex</h1>
         </div>
         

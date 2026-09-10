@@ -50,7 +50,7 @@ const SettingsContent: React.FC = () => {
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 pb-24">
+    <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto p-4 sm:p-6 md:p-10 space-y-8 pb-24">
       {/* Page Header */}
       <div className="border-b border-gray-200/80 dark:border-zinc-800 pb-5">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Settings</h1>

@@ -80,7 +80,7 @@ export default function ChatLayout() {
     };
 
     return (
-        <div className="w-full h-full max-h-full min-h-0 max-w-[1400px] mx-auto bg-white dark:bg-black flex overflow-hidden border-x border-gray-200 dark:border-zinc-800">
+        <div className="w-full h-full max-h-full min-h-0 max-w-[1600px] 2xl:max-w-[1800px] mx-auto bg-white dark:bg-black flex overflow-hidden border-x border-gray-200 dark:border-zinc-800">
             {/* Left Column: Deterministic Context Panel */}
             <div className="hidden lg:flex w-96 shrink-0 bg-gray-50 dark:bg-zinc-950 border-r border-gray-200 dark:border-zinc-800 relative z-10 h-full max-h-full flex-col min-h-0 overflow-hidden">
                 {isLoadingReport ? (

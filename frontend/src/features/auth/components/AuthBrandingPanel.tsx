@@ -6,6 +6,7 @@ import {
   Landmark, 
   Globe2 
 } from 'lucide-react';
+import { RuralNexLogoMark } from '../../../components/RuralNexLogo';
 
 export const AuthBrandingPanel: React.FC = () => {
   return (
@@ -27,7 +28,7 @@ export const AuthBrandingPanel: React.FC = () => {
         <div className="space-y-4 xl:space-y-5">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="RuralNex Logo" className="h-10 xl:h-12 w-auto object-contain filter drop-shadow-md" />
+            <RuralNexLogoMark size={44} />
             <div>
               <h1 className="text-xl xl:text-2xl font-black text-gray-900 tracking-tight leading-none">RuralNex</h1>
               <p className="text-[10px] font-extrabold text-emerald-800 tracking-widest mt-0.5 uppercase">Empowering Rural Dreams</p>

@@ -24,8 +24,10 @@ import {
     Building2,
     RefreshCw,
     BarChart3,
-    Loader2
+    Edit3,
+    Check
 } from 'lucide-react';
+import RuralLogoLoader from '../../components/RuralLogoLoader';
 import { useAuth } from '../../context/AuthContext';
 import { 
     getUserProposals, 
@@ -39,7 +41,9 @@ import { downloadReport, triggerReportGeneration } from '../../api/reports';
 export default function Dashboard() {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [editNameVal, setEditNameVal] = useState('');
 
     // Track which proposal is actively viewed on the dashboard (defaults to latest or stored)
     const [selectedProposalId, setSelectedProposalId] = useState<number | null>(() => {
@@ -98,12 +102,13 @@ export default function Dashboard() {
 
     if (isLoadingProposals && !activeProposal) {
         return (
-            <div className="p-8 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[450px] space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                    <Loader2 size={30} className="animate-spin" />
-                </div>
-                <p className="text-sm font-bold text-gray-700 dark:text-zinc-300">Loading Rural Feasibility Dashboard...</p>
-                <p className="text-xs text-gray-400">Aggregating local market demand & scheme eligibility</p>
+            <div className="p-8 w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto flex flex-col items-center justify-center min-h-[450px]">
+                <RuralLogoLoader 
+                    size="lg" 
+                    text="RuralNex Intelligence" 
+                    subtext="Aggregating local market demand & scheme eligibility..." 
+                    showCard 
+                />
             </div>
         );
     }
@@ -112,6 +117,28 @@ export default function Dashboard() {
     const userName = user?.first_name 
         ? `${user.first_name} ${user?.last_name || ''}`.trim() 
         : (user?.username ? `@${user.username}` : 'Entrepreneur');
+
+    const handleStartEditName = () => {
+        setEditNameVal(userName !== 'Demo User' && userName !== 'Entrepreneur' ? userName : '');
+        setIsEditingName(true);
+    };
+
+    const handleSaveName = () => {
+        const trimmed = editNameVal.trim();
+        if (!trimmed) {
+            setIsEditingName(false);
+            return;
+        }
+        const parts = trimmed.split(' ');
+        const first_name = parts[0];
+        const last_name = parts.slice(1).join(' ');
+        updateUser({ 
+            first_name, 
+            last_name, 
+            username: parts.join('_').toLowerCase() 
+        });
+        setIsEditingName(false);
+    };
 
     // Helper to sanitize placeholder strings or ID strings
     const cleanDisplayName = (val?: string | number | null): string | null => {
@@ -227,12 +254,12 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-fade-in text-gray-900 dark:text-zinc-100">
+        <div className="p-3 sm:p-5 lg:p-8 w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto space-y-6 sm:space-y-8 animate-fade-in text-gray-900 dark:text-zinc-100">
 
             {/* 1. WELCOME / USER SUMMARY BANNER */}
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-emerald-800 via-teal-900 to-emerald-950 text-white shadow-xl p-6 sm:p-8 lg:p-10 border border-emerald-700/30">
+            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-emerald-800 via-teal-900 to-emerald-950 text-white shadow-xl p-5 sm:p-7 lg:p-9 border border-emerald-700/30">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="relative z-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
                     <div className="space-y-3 max-w-2xl">
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/70 dark:bg-black/60 backdrop-blur-md text-xs font-black uppercase tracking-wider text-emerald-200 border border-emerald-400/40 shadow-xs">
                             <Sparkles size={14} className="text-emerald-300" />
@@ -246,18 +273,19 @@ export default function Dashboard() {
                         </p>
                     </div>
 
-                    {/* Proposal Selector (if user has multiple assessments) */}
-                    {proposals.length > 1 && (
-                        <div className="bg-white dark:bg-zinc-900 shadow-xl shadow-black/20 rounded-2xl p-4 border border-gray-200 dark:border-zinc-800 text-xs w-full sm:w-96 shrink-0 space-y-2.5">
-                            <div className="flex items-center justify-between gap-3">
-                                <span className="text-gray-900 dark:text-zinc-100 font-extrabold text-xs flex items-center gap-1.5">
-                                    <Store size={14} className="text-emerald-600" />
-                                    <span>{t('dashboard_switch_assessment', 'Switch Assessment:')}</span>
-                                </span>
-                                <span className="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black border border-emerald-200 dark:border-emerald-800">
-                                    {proposals.length} {t('dashboard_saved', 'Saved')}
-                                </span>
-                            </div>
+                    {/* Proposal Selector & Action Hub */}
+                    <div className="bg-white dark:bg-zinc-900 shadow-xl shadow-black/20 rounded-2xl p-4 border border-gray-200 dark:border-zinc-800 text-xs w-full sm:w-96 shrink-0 space-y-3">
+                        <div className="flex items-center justify-between gap-3">
+                            <span className="text-gray-900 dark:text-zinc-100 font-extrabold text-xs flex items-center gap-1.5">
+                                <Store size={14} className="text-emerald-600" />
+                                <span>{proposals.length > 1 ? t('dashboard_switch_assessment', 'Switch Assessment:') : t('dashboard_active_assessment', 'Active Assessment:')}</span>
+                            </span>
+                            <span className="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black border border-emerald-200 dark:border-emerald-800">
+                                {proposals.length} {t('dashboard_saved', 'Saved')}
+                            </span>
+                        </div>
+
+                        {proposals.length > 1 && (
                             <select 
                                 value={activeId || ''} 
                                 onChange={(e) => handleSwitchProposal(Number(e.target.value))}
@@ -276,36 +304,98 @@ export default function Dashboard() {
 
                                     return (
                                         <option key={p.id} value={p.id} className="bg-white dark:bg-zinc-900 text-gray-900 dark:text-white font-semibold py-1">
-                                            #{p.id} • {catName} ({locName}{cost ? ` • ${cost}` : ''}{score ? ` • ${score}` : ''})
+                                            {catName} ({locName}{cost ? ` • ${cost}` : ''}{score ? ` • ${score}` : ''})
                                         </option>
                                     );
                                 })}
                             </select>
-                            {/* Instant Active Indicator */}
-                            <div className="flex items-center justify-between text-[10.5px] text-gray-500 dark:text-zinc-400 font-medium px-0.5 pt-0.5">
-                                <span className="truncate max-w-[210px] text-emerald-700 dark:text-emerald-400 font-bold">
-                                    Active: #{activeId} • {selectedBusiness}
-                                </span>
-                                <span className="font-mono font-bold bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-gray-700 dark:text-zinc-300">
-                                    {overallScore}/100 Score
-                                </span>
-                            </div>
+                        )}
+
+                        {/* Instant Active Indicator */}
+                        <div className="flex items-center justify-between text-[10.5px] text-gray-500 dark:text-zinc-400 font-medium px-0.5 pt-0.5">
+                            <span className="truncate max-w-[210px] text-emerald-700 dark:text-emerald-400 font-bold">
+                                Active: {selectedBusiness}
+                            </span>
+                            <span className="font-mono font-bold bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-gray-700 dark:text-zinc-300">
+                                {overallScore}/100 Score
+                            </span>
                         </div>
-                    )}
+
+                        {/* Primary "+ New Assessment" Action Button */}
+                        <button
+                            type="button"
+                            onClick={() => navigate('/wizard')}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:via-teal-700 hover:to-emerald-800 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-950/20 hover:shadow-lg transition-all cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-400/30"
+                        >
+                            <PlusCircle size={16} className="text-white shrink-0" />
+                            <span>{t('dashboard_btn_new_assessment', '+ New Assessment')}</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* User Summary Stat Badges - Modern Professional Typography & Styling */}
-                <div className="mt-8 pt-6 border-t border-white/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="mt-8 pt-6 border-t border-white/20 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
                     {/* User Name */}
-                    <div className="flex items-center gap-3.5 bg-white dark:bg-zinc-900 shadow-md shadow-black/10 p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 hover:shadow-lg transition-all">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0 font-bold text-base border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
-                            {userName.charAt(0).toUpperCase()}
-                        </div>
+                    <div className="flex items-center gap-3.5 bg-white dark:bg-zinc-900 shadow-md shadow-black/10 p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 hover:shadow-lg transition-all group relative">
+                        {user?.profile?.avatar_url ? (
+                            <img
+                                src={user.profile.avatar_url}
+                                alt={userName}
+                                className="w-10 h-10 rounded-xl object-cover border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs shrink-0"
+                                referrerPolicy="no-referrer"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0 font-bold text-base border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
+                                {userName.charAt(0).toUpperCase()}
+                            </div>
+                        )}
                         <div className="min-w-0 flex-1">
-                            <p className="text-[10px] font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">{t('dashboard_user_name', 'User Name')}</p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white tracking-tight truncate" title={userName}>
-                                {userName}
-                            </p>
+                            <div className="flex items-center justify-between">
+                                <p className="text-[10px] font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">{t('dashboard_user_name', 'User Name')}</p>
+                                {!isEditingName && (
+                                    <button 
+                                        onClick={handleStartEditName}
+                                        title="Edit displayed name"
+                                        className="text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 opacity-60 group-hover:opacity-100 transition-opacity p-0.5 cursor-pointer"
+                                    >
+                                        <Edit3 size={13} />
+                                    </button>
+                                )}
+                            </div>
+                            {isEditingName ? (
+                                <div className="flex items-center gap-1.5 mt-1">
+                                    <input
+                                        type="text"
+                                        value={editNameVal}
+                                        onChange={(e) => setEditNameVal(e.target.value)}
+                                        placeholder="Enter your name"
+                                        autoFocus
+                                        onKeyDown={(e) => { 
+                                            if (e.key === 'Enter') handleSaveName(); 
+                                            if (e.key === 'Escape') setIsEditingName(false); 
+                                        }}
+                                        className="text-xs font-bold text-gray-900 dark:text-white bg-gray-50 dark:bg-zinc-800 border border-emerald-500 rounded-lg px-2 py-1 w-full outline-none"
+                                    />
+                                    <button 
+                                        onClick={handleSaveName} 
+                                        className="p-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-xs cursor-pointer"
+                                        title="Save name"
+                                    >
+                                        <Check size={13} />
+                                    </button>
+                                    <button 
+                                        onClick={() => setIsEditingName(false)} 
+                                        className="p-1 bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 text-gray-700 dark:text-zinc-200 rounded-lg cursor-pointer"
+                                        title="Cancel"
+                                    >
+                                        <X size={13} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white tracking-tight truncate" title={userName}>
+                                    {userName}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -352,7 +442,7 @@ export default function Dashboard() {
 
 
             {/* 2 & 3 & 4. CORE SNAPSHOTS GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
 
                 {/* 2. BUSINESS OVERVIEW CARD */}
                 <div className="bg-white dark:bg-[#0c0d10] p-6 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between space-y-6">
@@ -370,7 +460,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
                             <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300">
-                                #{activeProposal?.id || '101'}
+                                {activeProposal?.id || '101'}
                             </span>
                         </div>
 
@@ -875,7 +965,7 @@ export default function Dashboard() {
                                                                 </span>
                                                             )}
                                                         </p>
-                                                        <p className="text-[11px] text-gray-500 dark:text-zinc-400 font-medium">Proposal #{item.id}</p>
+                                                        <p className="text-[11px] text-gray-500 dark:text-zinc-400 font-medium">Proposal {item.id}</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -955,7 +1045,7 @@ export default function Dashboard() {
                                         Feasibility Analysis Dossier
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-zinc-400">
-                                        Proposal #{activeProposal?.id || '101'} • {selectedBusiness}
+                                        Proposal {activeProposal?.id || '101'} • {selectedBusiness}
                                     </p>
                                 </div>
                             </div>

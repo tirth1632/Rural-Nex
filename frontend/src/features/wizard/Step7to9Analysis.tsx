@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { analyzeProposal, recommendProposal } from '../../api/wizard';
-import { Loader2, Calculator, Brain } from 'lucide-react';
+import RuralLogoLoader from '../../components/RuralLogoLoader';
 
 export default function Step7to9Analysis({ proposalId, onNext }: { proposalId: number, onNext: () => void }) {
     const [status, setStatus] = useState<string>("Calculating financial eligibility...");
@@ -38,21 +38,14 @@ export default function Step7to9Analysis({ proposalId, onNext }: { proposalId: n
     const isError = analyzeMutation.isError || recommendMutation.isError;
 
     return (
-        <div className="flex flex-col items-center justify-center py-20 space-y-8">
+        <div className="flex flex-col items-center justify-center py-16 space-y-6">
             <div className="relative">
                 {isError ? (
-                    <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center">
+                    <div className="w-24 h-24 bg-red-100 dark:bg-red-950/40 border border-red-300 dark:border-red-800 rounded-full flex items-center justify-center shadow-lg">
                         <span className="text-red-500 text-3xl font-bold">!</span>
                     </div>
                 ) : (
-                    <>
-                        <div className="absolute inset-0 border-4 border-primary/20 rounded-full animate-ping"></div>
-                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl relative z-10">
-                            {analyzeMutation.isPending && <Calculator className="text-primary w-10 h-10 animate-pulse" />}
-                            {recommendMutation.isPending && <Brain className="text-purple-500 w-10 h-10 animate-pulse" />}
-                            {recommendMutation.isSuccess && <Loader2 className="text-green-500 w-10 h-10 animate-spin" />}
-                        </div>
-                    </>
+                    <RuralLogoLoader size="lg" />
                 )}
             </div>
 

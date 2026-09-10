@@ -104,7 +104,19 @@ class StateListView(generics.ListAPIView):
 class DistrictListView(generics.ListAPIView):
     serializer_class = DistrictSerializer
     permission_classes = []
-    def get_queryset(self): return District.objects.order_by('name')
+    def get_queryset(self):
+        qs = District.objects.select_related('state').order_by('name')
+        state_param = self.request.query_params.get('state')
+        state_id = self.request.query_params.get('state_id')
+        if state_param:
+            # Accept numeric ID or state name string
+            if state_param.isdigit():
+                qs = qs.filter(state_id=int(state_param))
+            else:
+                qs = qs.filter(state__name__iexact=state_param)
+        elif state_id:
+            qs = qs.filter(state_id=state_id)
+        return qs
 
 class BlockListView(generics.ListAPIView):
     serializer_class = BlockSerializer

@@ -1,4 +1,5 @@
 import { GOOGLE_MAPS_API_KEY } from '../config/maps';
+import { geoService } from './geoService';
 
 export interface DetectedLocationResult {
   lat: number;
@@ -11,210 +12,248 @@ export interface DetectedLocationResult {
   state: string;
   country: string;
   pinCode: string;
+  matchedStateId: string;
+  matchedDistrictId: string;
+  matchedAreaId: string;
+  matchedStateName: string;
+  matchedDistrictName: string;
+  matchedAreaName: string;
+}
+
+export type LocationPermissionState = 'granted' | 'prompt' | 'denied' | 'unsupported';
+
+/**
+ * Checks current browser permission state for geolocation.
+ */
+export async function getLocationPermissionStatus(): Promise<LocationPermissionState> {
+  if (typeof window === 'undefined' || !('geolocation' in navigator)) {
+    return 'unsupported';
+  }
+  if (!navigator.permissions || !navigator.permissions.query) {
+    return 'prompt';
+  }
+  try {
+    const status = await navigator.permissions.query({ name: 'geolocation' });
+    return status.state as LocationPermissionState;
+  } catch {
+    return 'prompt';
+  }
 }
 
 /**
- * Google Maps Geolocation API fallback for cell/wifi/IP high accuracy positioning.
+ * Reverse geocodes exact coordinates into authentic address components.
  */
-export async function fetchGoogleHighAccuracyPosition(): Promise<{ lat: number; lng: number; accuracy: number } | null> {
-  if (!GOOGLE_MAPS_API_KEY) return null;
+async function reverseGeocodeLiveCoords(lat: number, lng: number): Promise<{
+  locality: string;
+  subDistrict: string;
+  district: string;
+  state: string;
+  formattedAddress: string;
+  pinCode: string;
+}> {
+  // 1. Primary: BigDataCloud Client Reverse Geocoding API (Fast, Free, CORS-friendly, reliable in India)
   try {
-    const res = await fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${GOOGLE_MAPS_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ considerIp: true }),
-    });
+    const res = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+    );
     if (res.ok) {
       const data = await res.json();
-      if (data.location) {
+      const state = data.principalSubdivision || '';
+      const locality = data.locality || data.city || '';
+      let district = '';
+      let subDistrict = '';
+
+      if (data.localityInfo && Array.isArray(data.localityInfo.administrative)) {
+        for (const item of data.localityInfo.administrative) {
+          if (item.adminLevel === 6 || item.description?.toLowerCase().includes('district')) {
+            district = item.name.replace(/district/gi, '').trim();
+          }
+          if (
+            item.adminLevel === 7 || 
+            item.description?.toLowerCase().includes('subdistrict') || 
+            item.description?.toLowerCase().includes('taluk')
+          ) {
+            subDistrict = item.name.replace(/(taluka|taluk|tehsil)/gi, '').trim();
+          }
+        }
+      }
+
+      if (!district) district = locality || state;
+      if (!subDistrict) subDistrict = locality || district;
+
+      const formatted = [locality, subDistrict !== locality ? subDistrict : '', district, state]
+        .filter(Boolean)
+        .join(', ');
+
+      if (state || district || locality) {
         return {
-          lat: data.location.lat,
-          lng: data.location.lng,
-          accuracy: data.accuracy || 15,
+          locality: locality || subDistrict || 'Current Location',
+          subDistrict: subDistrict || locality,
+          district: district || locality,
+          state: state || 'Gujarat',
+          formattedAddress: formatted || `${locality}, ${district}, ${state}`,
+          pinCode: data.postcode || '',
         };
       }
     }
-  } catch (e) {
-    console.warn('Google Geolocation API request failed:', e);
+  } catch (err) {
+    console.warn('BigDataCloud reverse geocode fallback:', err);
   }
-  return null;
+
+  // 2. Secondary: OpenStreetMap Nominatim Reverse Geocoding
+  try {
+    const nomUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+    const nomRes = await fetch(nomUrl, { headers: { 'Accept-Language': 'en' } });
+    if (nomRes.ok) {
+      const nomData = await nomRes.json();
+      const addr = nomData.address || {};
+      const locality = addr.village || addr.suburb || addr.neighbourhood || addr.town || addr.city_district || 'Local Area';
+      const subDistrict = addr.county || addr.subdistrict || locality;
+      const district = addr.state_district || addr.district || addr.city || 'District';
+      const state = addr.state || 'State';
+
+      return {
+        locality,
+        subDistrict,
+        district,
+        state,
+        formattedAddress: nomData.display_name || `${locality}, ${district}, ${state}`,
+        pinCode: addr.postcode || '',
+      };
+    }
+  } catch (err) {
+    console.warn('Nominatim reverse geocode fallback:', err);
+  }
+
+  // 3. Fallback: Google Maps Geocoding if API key is provided
+  if (GOOGLE_MAPS_API_KEY) {
+    try {
+      const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
+      const gRes = await fetch(googleUrl);
+      if (gRes.ok) {
+        const gData = await gRes.json();
+        if (gData.results && gData.results.length > 0) {
+          const comp: Record<string, string> = {};
+          gData.results[0].address_components.forEach((c: any) => {
+            c.types.forEach((t: string) => {
+              comp[t] = c.long_name;
+            });
+          });
+          const locality = comp.sublocality_level_1 || comp.locality || 'Local Area';
+          const district = comp.administrative_area_level_2 || comp.locality || 'District';
+          const state = comp.administrative_area_level_1 || 'State';
+          return {
+            locality,
+            subDistrict: comp.administrative_area_level_3 || locality,
+            district,
+            state,
+            formattedAddress: gData.results[0].formatted_address || `${locality}, ${district}, ${state}`,
+            pinCode: comp.postal_code || '',
+          };
+        }
+      }
+    } catch (err) {
+      console.warn('Google Maps reverse geocoding fallback:', err);
+    }
+  }
+
+  return {
+    locality: 'GPS Pinpoint',
+    subDistrict: '',
+    district: '',
+    state: '',
+    formattedAddress: `GPS Location (${lat.toFixed(5)}, ${lng.toFixed(5)})`,
+    pinCode: '',
+  };
 }
 
 /**
- * Detects the user's current 100% high-accuracy position via browser Geolocation API
- * and reverse-geocodes it into human-readable address components using Google Maps API.
+ * Detects the user's authentic high-accuracy live position via browser Geolocation API.
+ * Uses exact GPS coords and mathematical nearest projection into the geo hierarchy.
  */
 export async function detectUserLocation(): Promise<DetectedLocationResult> {
   return new Promise((resolve, reject) => {
     if (!('geolocation' in navigator)) {
-      reject(new Error('Geolocation is not supported by your browser.'));
+      reject(new Error('GEOLOCATION_UNSUPPORTED'));
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
-        let accuracy = position.coords.accuracy || 10;
-
-        // If browser accuracy is coarse (> 1500m), attempt Google Geolocation API precision refinement
-        if (accuracy > 1500) {
-          const gPos = await fetchGoogleHighAccuracyPosition();
-          if (gPos && gPos.accuracy < accuracy) {
-            lat = gPos.lat;
-            lng = gPos.lng;
-            accuracy = gPos.accuracy;
-          }
-        }
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = Math.round(position.coords.accuracy || 10);
 
         try {
-          // 1. Primary: Google Maps Reverse Geocoding API
-          if (GOOGLE_MAPS_API_KEY) {
-            const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
-            const res = await fetch(googleUrl);
-            if (res.ok) {
-              const data = await res.json();
-              if (data.status === 'OK' && data.results && data.results.length > 0) {
-                const firstResult = data.results[0];
-                const components: Record<string, string> = {};
+          // 1. Authentic reverse geocode for real place name
+          const geo = await reverseGeocodeLiveCoords(lat, lng);
 
-                firstResult.address_components.forEach((c: any) => {
-                  c.types.forEach((type: string) => {
-                    components[type] = c.long_name;
-                  });
-                });
+          // 2. Mathematical nearest administrative hierarchy matching in geoService
+          const nearest = geoService.findNearestHierarchy(lat, lng);
 
-                const village =
-                  components.sublocality_level_1 ||
-                  components.locality ||
-                  components.neighborhood ||
-                  components.sublocality ||
-                  'Local Area';
-                const block =
-                  components.administrative_area_level_3 ||
-                  components.sublocality_level_2 ||
-                  village;
-                const district =
-                  components.administrative_area_level_2 ||
-                  components.locality ||
-                  'District';
-                const state = components.administrative_area_level_1 || 'State';
-                const country = components.country || 'India';
-                const pinCode = components.postal_code || '';
+          const finalStateName = geo.state || nearest.state.name;
+          const finalDistrictName = geo.district || nearest.district.name;
+          const finalAreaName = geo.locality || (nearest.area ? nearest.area.name : nearest.district.name);
 
-                resolve({
-                  lat,
-                  lng,
-                  accuracy,
-                  formattedAddress: firstResult.formatted_address || `${village}, ${district}, ${state}`,
-                  village,
-                  block,
-                  district,
-                  state,
-                  country,
-                  pinCode,
-                });
-                return;
-              }
-            }
-          }
-
-          // 2. Secondary Fallback: OpenStreetMap Nominatim Reverse Geocoding
-          const nomUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
-          const nomRes = await fetch(nomUrl, {
-            headers: { 'Accept-Language': 'en' },
-          });
-
-          if (nomRes.ok) {
-            const nomData = await nomRes.json();
-            const addr = nomData.address || {};
-            const village =
-              addr.village ||
-              addr.suburb ||
-              addr.town ||
-              addr.city_district ||
-              addr.neighbourhood ||
-              'Local Area';
-            const block = addr.county || addr.subdistrict || village;
-            const district = addr.state_district || addr.district || addr.city || 'District';
-            const state = addr.state || 'State';
-            const pinCode = addr.postcode || '';
-
-            resolve({
-              lat,
-              lng,
-              accuracy,
-              formattedAddress: nomData.display_name || `${village}, ${district}, ${state}`,
-              village,
-              block,
-              district,
-              state,
-              country: addr.country || 'India',
-              pinCode,
-            });
-            return;
-          }
-
-          // 3. Raw Coordinates Fallback
           resolve({
             lat,
             lng,
             accuracy,
-            formattedAddress: `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`,
-            village: 'Detected Location',
-            block: 'Detected Block',
-            district: 'Detected District',
-            state: 'Gujarat',
+            formattedAddress: geo.formattedAddress,
+            village: finalAreaName,
+            block: geo.subDistrict || (nearest.area ? nearest.area.name : finalDistrictName),
+            district: finalDistrictName,
+            state: finalStateName,
             country: 'India',
-            pinCode: '',
+            pinCode: geo.pinCode,
+            matchedStateId: nearest.state.id,
+            matchedDistrictId: nearest.district.id,
+            matchedAreaId: nearest.area ? nearest.area.id : '',
+            matchedStateName: nearest.state.name,
+            matchedDistrictName: nearest.district.name,
+            matchedAreaName: nearest.area ? nearest.area.name : nearest.district.name,
           });
         } catch (err) {
-          console.warn('Reverse geocoding error:', err);
+          // Fallback with pure mathematical nearest hierarchy if reverse geocode fails
+          const nearest = geoService.findNearestHierarchy(lat, lng);
           resolve({
             lat,
             lng,
             accuracy,
-            formattedAddress: `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`,
-            village: 'Detected Location',
-            block: 'Detected Block',
-            district: 'Detected District',
-            state: 'Gujarat',
+            formattedAddress: `Live GPS: ${nearest.area ? nearest.area.name : nearest.district.name}, ${nearest.district.name}, ${nearest.state.name} (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+            village: nearest.area ? nearest.area.name : nearest.district.name,
+            block: nearest.area ? nearest.area.name : nearest.district.name,
+            district: nearest.district.name,
+            state: nearest.state.name,
             country: 'India',
             pinCode: '',
+            matchedStateId: nearest.state.id,
+            matchedDistrictId: nearest.district.id,
+            matchedAreaId: nearest.area ? nearest.area.id : '',
+            matchedStateName: nearest.state.name,
+            matchedDistrictName: nearest.district.name,
+            matchedAreaName: nearest.area ? nearest.area.name : nearest.district.name,
           });
         }
       },
-      async (error) => {
-        // Fallback to Google Geolocation API if browser GPS fails or permission denied
-        const gPos = await fetchGoogleHighAccuracyPosition();
-        if (gPos) {
-          resolve({
-            lat: gPos.lat,
-            lng: gPos.lng,
-            accuracy: gPos.accuracy,
-            formattedAddress: `High Precision Google Geolocation (${gPos.lat.toFixed(4)}, ${gPos.lng.toFixed(4)})`,
-            village: 'Detected Location',
-            block: 'Detected Block',
-            district: 'Detected District',
-            state: 'Gujarat',
-            country: 'India',
-            pinCode: '',
-          });
-          return;
-        }
-
-        let msg = 'Failed to get current location.';
-        if (error.code === error.PERMISSION_DENIED) {
-          msg = 'Location permission was denied. Please allow location access in browser settings.';
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          msg = 'Location information is unavailable.';
-        } else if (error.code === error.TIMEOUT) {
-          msg = 'Location request timed out.';
-        }
-        reject(new Error(msg));
+      (error) => {
+        const err = new Error(
+          error.code === error.PERMISSION_DENIED
+            ? 'PERMISSION_DENIED'
+            : error.code === error.POSITION_UNAVAILABLE
+            ? 'POSITION_UNAVAILABLE'
+            : error.code === error.TIMEOUT
+            ? 'TIMEOUT'
+            : 'UNKNOWN_ERROR'
+        );
+        (err as any).code = error.code;
+        reject(err);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      }
     );
   });
 }
-

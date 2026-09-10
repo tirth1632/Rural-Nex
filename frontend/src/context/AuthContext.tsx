@@ -29,13 +29,15 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, refresh: string) => Promise<User | null>;
+  login: (token: string, refresh: string, customUser?: Partial<User>) => Promise<User | null>;
   logout: () => void;
   updateUser: (updatedUser: Partial<User>) => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const USER_PROFILE_STORAGE_KEY = 'ruralnex_google_user';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -56,14 +58,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const getSavedProfile = (): User | null => {
+    try {
+      const raw = localStorage.getItem(USER_PROFILE_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (token) {
+      const savedUser = getSavedProfile();
+
       if (token.startsWith('demo_')) {
-        setUser(DEMO_USER);
+        if (savedUser) {
+          setUser(savedUser);
+          if (savedUser.profile?.preferred_language) {
+            i18n.changeLanguage(savedUser.profile.preferred_language);
+          }
+        } else {
+          setUser(DEMO_USER);
+        }
         setIsLoading(false);
         return;
       }
-      // Fetch user profile
+
+      // Fetch user profile from backend
       fetch('/api/v1/auth/me/', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -74,13 +95,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Failed to fetch user');
       })
       .then((userData: User) => {
-        setUser(userData);
-        if (userData.profile?.preferred_language) {
-            i18n.changeLanguage(userData.profile.preferred_language);
+        const merged = savedUser 
+          ? { ...savedUser, ...userData, profile: { ...savedUser.profile, ...userData.profile } } 
+          : userData;
+        setUser(merged);
+        localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(merged));
+        if (merged.profile?.preferred_language) {
+            i18n.changeLanguage(merged.profile.preferred_language);
         }
       })
       .catch(() => {
-        logout();
+        if (savedUser) {
+          setUser(savedUser);
+        } else {
+          logout();
+        }
       })
       .finally(() => setIsLoading(false));
     } else {
@@ -88,15 +117,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token]);
 
-  const login = async (accessToken: string, refreshToken: string): Promise<User | null> => {
+  const login = async (accessToken: string, refreshToken: string, customUser?: Partial<User>): Promise<User | null> => {
     localStorage.setItem('access_token', accessToken);
     localStorage.setItem('refresh_token', refreshToken);
     setToken(accessToken);
 
-    if (accessToken.startsWith('demo_')) {
-      setUser(DEMO_USER);
+    if (customUser) {
+      const mergedUser: User = {
+        id: customUser.id || 1,
+        username: customUser.username || 'user',
+        email: customUser.email || '',
+        first_name: customUser.first_name || '',
+        last_name: customUser.last_name || '',
+        role: customUser.role || 'BENEFICIARY',
+        profile: {
+          avatar_url: customUser.profile?.avatar_url || '',
+          preferred_language: customUser.profile?.preferred_language || 'en',
+          face_verified: true,
+          ...customUser.profile,
+        }
+      };
+      setUser(mergedUser);
+      localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(mergedUser));
       setIsLoading(false);
-      return DEMO_USER;
+      return mergedUser;
+    }
+
+    if (accessToken.startsWith('demo_')) {
+      const savedUser = getSavedProfile();
+      const activeUser = savedUser || DEMO_USER;
+      setUser(activeUser);
+      setIsLoading(false);
+      return activeUser;
     }
 
     setIsLoading(true);
@@ -110,6 +162,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (res.ok) {
         const userData: User = await res.json();
         setUser(userData);
+        localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(userData));
         if (userData.profile?.preferred_language) {
           i18n.changeLanguage(userData.profile.preferred_language);
         }
@@ -126,6 +179,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem(USER_PROFILE_STORAGE_KEY);
     setToken(null);
     setUser(null);
   };
@@ -133,7 +187,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUser = (updatedUser: Partial<User>) => {
     setUser(prev => {
       if (!prev) return prev;
-      return {
+      const updated: User = {
         ...prev,
         ...updatedUser,
         profile: {
@@ -141,6 +195,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           ...updatedUser.profile,
         },
       };
+      localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
     });
   };
 

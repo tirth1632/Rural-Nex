@@ -179,7 +179,7 @@ export default function WhatIfSimulator() {
     const isViable = sim.is_financially_feasible && (result.feasibility?.overall_score || 0) >= 50;
 
     return (
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8 animate-fadeIn">
+        <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8 space-y-8 animate-fadeIn">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-[#0a0a0c] p-6 rounded-2xl border border-gray-200 dark:border-neutral-800 shadow-sm transition-colors">
                 <div>

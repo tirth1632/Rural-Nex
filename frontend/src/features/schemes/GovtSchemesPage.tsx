@@ -409,7 +409,7 @@ export default function GovtSchemesPage() {
           1. HERO SECTION (Dynamic Statistics)
       ------------------------------------------------------------- */}
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-transparent pt-10 pb-12 px-4 sm:px-6 lg:px-8 border-b border-gray-200/80 dark:border-zinc-800/80">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide uppercase bg-primary/10 text-primary border border-primary/25 mb-4 shadow-xs">
@@ -481,7 +481,7 @@ export default function GovtSchemesPage() {
       {/* -------------------------------------------------------------
           2. SEARCH & JURISDICTION BAR (Unified & Accessible)
       ------------------------------------------------------------- */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <section className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 sm:p-6 shadow-xl border border-gray-200 dark:border-zinc-800">
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
             
@@ -629,7 +629,7 @@ export default function GovtSchemesPage() {
       {/* -------------------------------------------------------------
           3. DYNAMIC CATEGORY PILLS (Horizontal Scroll with Icons)
       ------------------------------------------------------------- */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <section className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
           <button
             onClick={() => setSelectedCategory('all')}
@@ -667,7 +667,7 @@ export default function GovtSchemesPage() {
       {/* -------------------------------------------------------------
           4. MAIN CONTENT: 2-COLUMN LAYOUT (Schemes Grid + Instant Matcher)
       ------------------------------------------------------------- */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <section className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Scheme Cards Grid */}

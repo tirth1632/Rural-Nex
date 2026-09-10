@@ -514,7 +514,7 @@ export const FinancialPlanPage: React.FC = () => {
       {/* 2. PAGE HEADER & STICKY CONTROL BAR                           */}
       {/* ------------------------------------------------------------- */}
       <header className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-xs print:hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+        <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
             {/* Title & Engine Meta */}
             <div>
@@ -614,7 +614,7 @@ export const FinancialPlanPage: React.FC = () => {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         {/* Loading / Status Indicator */}
         {isCalculating && (
           <div className="mb-6 flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs sm:text-sm font-semibold text-emerald-900 animate-pulse print:hidden shadow-xs">

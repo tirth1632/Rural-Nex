@@ -52,7 +52,7 @@ export default function BusinessCompare() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8 space-y-8">
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('compare_title', 'Compare Businesses')}</h1>
                 <p className="mt-2 text-gray-600 dark:text-neutral-400">

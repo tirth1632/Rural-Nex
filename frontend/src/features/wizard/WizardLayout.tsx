@@ -53,6 +53,28 @@ export default function WizardLayout() {
         }
     }, [fetchedData, existingId]);
 
+    // Check for pre-filled data from GeoSpatial Map ("Run Full Assessment")
+    useEffect(() => {
+        try {
+            const prefillRaw = sessionStorage.getItem('ruralnex_assessment_prefill');
+            if (prefillRaw && !existingId) {
+                const prefill = JSON.parse(prefillRaw);
+                setDraftData((prev: any) => ({
+                    ...prev,
+                    state_name: prefill.state,
+                    district_name: prefill.district,
+                    village_name: prefill.area,
+                    category_name: prefill.businessCategory,
+                    specific_business: prefill.businessCategory,
+                    formatted_address: `${prefill.area}, ${prefill.district}, ${prefill.state}`,
+                }));
+                sessionStorage.removeItem('ruralnex_assessment_prefill');
+            }
+        } catch (e) {
+            console.warn('Could not read assessment prefill', e);
+        }
+    }, [existingId]);
+
     const handleNext = async (stepData: any) => {
         const nextStep = step + 1;
         const payload = { ...stepData, current_step: nextStep };
@@ -110,7 +132,7 @@ export default function WizardLayout() {
             </div>
 
             <div className="flex-1 overflow-y-auto">
-                <div className="max-w-4xl mx-auto py-8 px-4">
+                <div className="w-full max-w-5xl 2xl:max-w-6xl mx-auto py-6 sm:py-8 px-4 sm:px-6">
                     {renderStep()}
                 </div>
             </div>

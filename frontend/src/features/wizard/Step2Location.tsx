@@ -158,14 +158,25 @@ export default function Step2Location({ data, onNext, onBack }: any) {
     const handleContinue = () => {
         if (!selectedLocation) return;
         const [lng, lat] = selectedLocation.geometry.coordinates;
+        const props = selectedLocation.properties || {};
+        const parts = (props.name || '').split(',').map((s: string) => s.trim());
+        const villageName = props.village_id || props.village || parts[0] || 'Selected Village';
+        const blockName = props.block_id || props.block || parts[1] || 'Taluka';
+        const districtName = props.district_id || props.district || parts[2] || 'District';
+        const stateName = props.state_id || props.state || parts[3] || 'State';
+
         onNext({ 
             lat, 
             lng,
-            state: selectedLocation.properties?.state_id || data.state || '',
-            district: selectedLocation.properties?.district_id || data.district || '',
-            block: selectedLocation.properties?.block_id || data.block || '',
-            village: selectedLocation.properties?.village_id || data.village || '',
-            formatted_address: selectedLocation.properties?.name || ''
+            village_name: villageName,
+            block_name: blockName,
+            district_name: districtName,
+            state_name: stateName,
+            state: props.state_id || data.state || '',
+            district: props.district_id || data.district || '',
+            block: props.block_id || data.block || '',
+            village: props.village_id || data.village || '',
+            formatted_address: props.name || `${villageName}, ${districtName}`
         });
     };
 

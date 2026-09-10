@@ -22,6 +22,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../features/settings/SettingsContext';
 
 import LanguageSelector from './LanguageSelector';
+import { RuralNexLogoMark } from './RuralNexLogo';
 
 export default function DashboardLayout() {
     const { t } = useTranslation();
@@ -72,14 +73,14 @@ export default function DashboardLayout() {
     ];
 
     return (
-        <div className="min-h-screen bg-white dark:bg-[#0a0a0c] text-gray-900 dark:text-white flex flex-col transition-colors duration-150 font-sans">
+        <div className="h-screen h-[100dvh] max-h-screen max-h-[100dvh] bg-white dark:bg-[#0a0a0c] text-gray-900 dark:text-white flex flex-col overflow-hidden transition-colors duration-150 font-sans">
             {/* Top Horizontal Navigation Bar */}
-            <header className="bg-white dark:bg-[#0a0a0c] border-b border-gray-200 dark:border-zinc-800 sticky top-0 z-50 shadow-xs">
+            <header className="bg-white dark:bg-[#0a0a0c] border-b border-gray-200 dark:border-zinc-800 shrink-0 h-16 z-50 shadow-xs">
                 <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                     
                     {/* Left: Brand Logo */}
                     <Link to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-                        <img src="/logo.png" alt="RuralNex Logo" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+                        <RuralNexLogoMark size={36} className="transition-transform group-hover:scale-105" />
                         <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Rural<span className="text-primary">Nex</span></span>
                     </Link>
 
@@ -343,7 +344,7 @@ export default function DashboardLayout() {
             </header>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto bg-white dark:bg-black">
+            <main className="flex-1 min-h-0 overflow-y-auto bg-white dark:bg-black">
                 <Outlet />
             </main>
         </div>

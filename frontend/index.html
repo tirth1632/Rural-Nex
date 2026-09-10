@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
     <title>RuralNex - Empowering Rural Dreams</title>
     <!-- Modern Professional Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,7 +32,45 @@
     </script>
   </head>
   <body class="font-sans antialiased">
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-preloader" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0d11;color:#ffffff;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;z-index:99999;">
+        <style>
+          @keyframes preloader-pulse {
+            0%, 100% { transform: scale(0.96); filter: drop-shadow(0 0 14px rgba(16,185,129,0.4)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 28px rgba(20,184,166,0.7)); }
+          }
+          @keyframes preloader-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        </style>
+        <div style="position:relative;width:112px;height:112px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+          <!-- Spinning orbital neon ring -->
+          <div style="position:absolute;inset:0;border-radius:50%;border:2.5px solid transparent;border-top-color:#10b981;border-right-color:#14b8a6;animation:preloader-spin 1.8s linear infinite;"></div>
+          <!-- Center emblem disc with inline SVG logo mark -->
+          <div style="width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,0.05);border:1.5px solid rgba(16,185,129,0.35);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+            <svg width="52" height="52" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:preloader-pulse 2.2s ease-in-out infinite;">
+              <path d="M20 2L35.59 11V29L20 38L4.41 29V11L20 2Z" fill="url(#pl-outer)" opacity="0.95"/>
+              <path d="M20 7L31.26 13.5V26.5L20 33L8.74 26.5V13.5L20 7Z" fill="url(#pl-inner)"/>
+              <path d="M20 27V15" stroke="white" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M20 22C20 22 15.5 20 15 16C18 16 20.5 19 20 22Z" fill="white" opacity="0.92"/>
+              <path d="M20 19C20 19 24.5 17 25 13C22 13 19.5 16 20 19Z" fill="white" opacity="0.92"/>
+              <path d="M17.5 17.5L20 14.5L22.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="pl-outer" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#059669"/><stop offset="1" stop-color="#0D9488"/>
+                </linearGradient>
+                <linearGradient id="pl-inner" x1="8" y1="7" x2="32" y2="33" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#047857"/><stop offset="1" stop-color="#0F766E"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div style="font-size:18px;font-weight:900;letter-spacing:-0.02em;background:linear-gradient(to right,#34d399,#2dd4bf);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">RuralNex</div>
+        <div style="font-size:12px;color:#9ca3af;margin-top:4px;">Empowering Rural Dreams...</div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -50,7 +50,7 @@ export default function MarketDashboard() {
     const density = densityData?.density;
 
     return (
-        <div className="max-w-6xl mx-auto p-4 mt-8 space-y-8">
+        <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto p-4 sm:p-6 lg:p-8 mt-4 sm:mt-6 space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Hyper-Local Market Intelligence</h1>
