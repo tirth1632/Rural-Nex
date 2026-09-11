@@ -10,7 +10,9 @@ import {
   Users,
   Building2,
   Mountain,
-  CheckCircle2
+  CheckCircle2,
+  Layers,
+  ArrowUpRight
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -141,63 +143,63 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
     if (st.includes('gujarat')) {
       return {
         stateSchemeName: 'Shri Vajpayee Bankable Yojana',
-        stateSchemeDesc: 'Up to 35% Gujarat State Capital Subsidy',
-        color: 'text-amber-700 bg-amber-50 border-amber-200'
+        stateSchemeDesc: 'Up to 35% Gujarat Capital Subsidy',
+        badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
       };
     }
     if (st.includes('maharashtra')) {
       return {
         stateSchemeName: 'CMEGP Maharashtra',
         stateSchemeDesc: '15% - 35% State Capital Subsidy',
-        color: 'text-orange-700 bg-orange-50 border-orange-200'
+        badgeColor: 'text-orange-400 bg-orange-500/10 border-orange-500/30'
       };
     }
     if (st.includes('tamil nadu')) {
       return {
         stateSchemeName: 'NEEDS Tamil Nadu',
-        stateSchemeDesc: '25% Capital Subsidy + 3% Interest Subvention',
-        color: 'text-purple-700 bg-purple-50 border-purple-200'
+        stateSchemeDesc: '25% Capital Subsidy + 3% Subvention',
+        badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30'
       };
     }
     if (st.includes('uttar pradesh')) {
       return {
         stateSchemeName: 'Mukhyamantri Yuva Swarojgar (UP)',
-        stateSchemeDesc: '25% State Margin Money Subsidy',
-        color: 'text-blue-700 bg-blue-50 border-blue-200'
+        stateSchemeDesc: '25% State Margin Subsidy',
+        badgeColor: 'text-blue-400 bg-blue-500/10 border-blue-500/30'
       };
     }
     if (st.includes('karnataka')) {
       return {
         stateSchemeName: 'CMEGP Karnataka',
-        stateSchemeDesc: '25% - 35% State Enterprise Subsidy',
-        color: 'text-indigo-700 bg-indigo-50 border-indigo-200'
+        stateSchemeDesc: '25% - 35% State Subsidized Credit',
+        badgeColor: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/30'
       };
     }
     if (st.includes('rajasthan')) {
       return {
         stateSchemeName: 'Dr. B.R. Ambedkar Swarojgar Yojana',
         stateSchemeDesc: 'Capital & Interest Subvention',
-        color: 'text-rose-700 bg-rose-50 border-rose-200'
+        badgeColor: 'text-rose-400 bg-rose-500/10 border-rose-500/30'
       };
     }
     if (st.includes('bihar')) {
       return {
         stateSchemeName: 'Mukhyamantri Udyami Yojana',
         stateSchemeDesc: '50% Subsidy up to ₹5 Lakhs',
-        color: 'text-emerald-700 bg-emerald-50 border-emerald-200'
+        badgeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
       };
     }
     if (areaType === 'SPECIAL') {
       return {
-        stateSchemeName: 'NER & Hilly Area Development Subvention',
+        stateSchemeName: 'NER & Hilly Area Development Fund',
         stateSchemeDesc: 'Special Regional Transport & Capital Grant',
-        color: 'text-teal-700 bg-teal-50 border-teal-200'
+        badgeColor: 'text-teal-400 bg-teal-500/10 border-teal-500/30'
       };
     }
     return {
       stateSchemeName: 'State MSME Subsidized Credit Scheme',
       stateSchemeDesc: 'Location & Area-linked State Incentive',
-      color: 'text-teal-700 bg-teal-50 border-teal-200'
+      badgeColor: 'text-teal-400 bg-teal-500/10 border-teal-500/30'
     };
   }, [stateName, fullLocString, areaType]);
 
@@ -227,53 +229,53 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
   };
 
   return (
-    <div className="space-y-7 max-w-3xl mx-auto">
+    <div className="space-y-8 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/90 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-0.5">
-          <Sparkles size={14} className="text-emerald-600" />
-          <span>Dynamic Area-Dependent Credit Model</span>
+      <div className="text-center space-y-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider shadow-lg shadow-emerald-500/5 backdrop-blur-md">
+          <Sparkles size={14} className="text-emerald-500 animate-pulse" />
+          <span>Capital Equity & Scheme Leverage</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
           {t('wizard_step3_title', 'Available Margin Capital')}
         </h2>
-        <p className="text-gray-500 text-sm font-medium max-w-md mx-auto">
+        <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium max-w-md mx-auto">
           {t('wizard_step3_desc', 'Enter your personal equity investment to calculate eligible bank credit and govt subsidies.')}
         </p>
 
         {/* Location Display & Active Area Classification Pill */}
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gray-100 text-gray-800 border border-gray-200 font-medium">
-            <MapPin size={13} className="text-emerald-600 shrink-0" />
-            <strong className="text-gray-900 font-bold">{locationDisplayName}</strong>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-zinc-800/80 text-gray-800 dark:text-zinc-200 border border-gray-200 dark:border-zinc-700/80 font-semibold shadow-xs">
+            <MapPin size={14} className="text-emerald-500 shrink-0" />
+            <span className="font-bold">{locationDisplayName}</span>
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-100/80 text-emerald-900 border border-emerald-200 font-bold shadow-2xs">
-            <CheckCircle2 size={13} className="text-emerald-700" />
-            <span>{financialRules.areaLabel} ({financialRules.subsidyPct}% Capital Subsidy)</span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/30 font-bold shadow-xs">
+            <CheckCircle2 size={14} className="text-amber-500 shrink-0" />
+            <span>📍 Location Classification: <strong>{financialRules.areaLabel}</strong> ({financialRules.subsidyPct}% Subsidy)</span>
           </span>
         </div>
       </div>
 
-      {/* Main Interactive Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xs border border-gray-200/90 space-y-6">
+      {/* Main Glassmorphic Interactive Card */}
+      <div className="bg-white dark:bg-zinc-900/90 p-6 sm:p-8 rounded-3xl shadow-xl dark:shadow-2xl dark:shadow-emerald-950/20 border border-gray-200/90 dark:border-zinc-800 backdrop-blur-xl transition-all space-y-7">
         
         {/* Area & Social Category Selectors */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50/80 rounded-xl border border-gray-200/80">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 dark:bg-zinc-950/70 rounded-2xl border border-gray-200/80 dark:border-zinc-800/90 shadow-inner">
           
           {/* Area Classification Selector */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-extrabold text-gray-600 uppercase tracking-wider flex items-center gap-1">
-              <Building2 size={13} className="text-emerald-600" />
-              <span>Location Classification</span>
+          <div className="space-y-2">
+            <label className="block text-[11px] font-extrabold text-gray-600 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Building2 size={13} className="text-emerald-500" />
+              <span>Location Area Type</span>
             </label>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-gray-200/60 dark:bg-zinc-900 rounded-xl">
               <button
                 type="button"
                 onClick={() => setAreaType('RURAL')}
-                className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
+                className={`px-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                   areaType === 'RURAL'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 scale-[1.02]'
+                    : 'text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
               >
                 Rural Area
@@ -281,10 +283,10 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
               <button
                 type="button"
                 onClick={() => setAreaType('URBAN')}
-                className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
+                className={`px-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                   areaType === 'URBAN'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 scale-[1.02]'
+                    : 'text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
               >
                 Urban Area
@@ -292,32 +294,32 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
               <button
                 type="button"
                 onClick={() => setAreaType('SPECIAL')}
-                className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border text-center flex items-center justify-center gap-1 ${
+                className={`px-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center flex items-center justify-center gap-1 ${
                   areaType === 'SPECIAL'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 scale-[1.02]'
+                    : 'text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
               >
-                <Mountain size={11} />
+                <Mountain size={12} />
                 <span>Special/Hilly</span>
               </button>
             </div>
           </div>
 
           {/* Social / Beneficiary Category Selector */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-extrabold text-gray-600 uppercase tracking-wider flex items-center gap-1">
-              <Users size={13} className="text-emerald-600" />
+          <div className="space-y-2">
+            <label className="block text-[11px] font-extrabold text-gray-600 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Users size={13} className="text-emerald-500" />
               <span>Beneficiary Category</span>
             </label>
-            <div className="grid grid-cols-2 gap-1">
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-200/60 dark:bg-zinc-900 rounded-xl">
               <button
                 type="button"
                 onClick={() => setBeneficiaryCategory('GENERAL')}
-                className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
+                className={`px-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                   beneficiaryCategory === 'GENERAL'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 scale-[1.02]'
+                    : 'text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
               >
                 General (10% Equity)
@@ -325,10 +327,10 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
               <button
                 type="button"
                 onClick={() => setBeneficiaryCategory('SPECIAL_CAT')}
-                className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
+                className={`px-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                   beneficiaryCategory === 'SPECIAL_CAT'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 scale-[1.02]'
+                    : 'text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
                 title="SC/ST/OBC/Women/Minorities/Divyang (5% Equity & Higher Subsidy)"
               >
@@ -339,20 +341,20 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
         </div>
 
         {/* Currency Input Container */}
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           <div className="flex justify-between items-center">
-            <label className="block text-xs font-extrabold text-gray-700 uppercase tracking-wider">
-              {t('wizard_step3_label', 'Your Margin Equity (₹)')}
+            <label className="block text-xs font-black text-gray-700 dark:text-zinc-300 uppercase tracking-wider">
+              {t('wizard_step3_label', 'YOUR MARGIN (₹)')}
             </label>
             {numericValue > 0 && (
-              <span className="text-xs font-extrabold text-emerald-800 bg-emerald-100/70 px-3 py-1 rounded-lg border border-emerald-200/80 shadow-2xs">
+              <span className="text-xs font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100/90 dark:bg-emerald-950/80 px-3 py-1 rounded-xl border border-emerald-300/80 dark:border-emerald-800/80 shadow-xs font-mono">
                 {formatIndianWords(numericValue)}
               </span>
             )}
           </div>
 
           <div className="relative flex items-center">
-            <div className="absolute left-4 text-emerald-600 font-black text-2xl pointer-events-none select-none">
+            <div className="absolute left-4 text-emerald-600 dark:text-emerald-400 font-black text-2xl sm:text-3xl pointer-events-none select-none">
               ₹
             </div>
             <input
@@ -360,14 +362,14 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
               inputMode="numeric"
               value={numericValue === 0 && margin === '' ? '' : numericValue ? numericValue.toLocaleString('en-IN') : margin}
               onChange={(e) => handleInputChange(e.target.value)}
-              className="w-full pl-11 pr-4 py-3.5 text-2xl sm:text-3xl font-extrabold text-gray-900 bg-gray-50/50 border-2 border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-mono"
+              className="w-full pl-12 pr-4 py-4 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white bg-gray-50/80 dark:bg-zinc-950/80 border-2 border-gray-200 dark:border-zinc-800 rounded-2xl focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 dark:focus:border-emerald-500 transition-all font-mono tracking-tight shadow-inner"
               placeholder="e.g. 5,00,000"
             />
           </div>
 
           {/* Quick Preset Buttons */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mr-1">Presets:</span>
+            <span className="text-[11px] font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-wider mr-1">PRESETS:</span>
             {PRESET_AMOUNTS.map((preset) => {
               const isActive = numericValue === preset.value;
               return (
@@ -375,10 +377,10 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
                   key={preset.value}
                   type="button"
                   onClick={() => setMargin(preset.value.toString())}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer border ${
+                  className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer border ${
                     isActive
-                      ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs scale-[1.02] ring-2 ring-emerald-600/20'
-                      : 'bg-gray-50 text-gray-700 border-gray-200/90 hover:border-emerald-300 hover:bg-white hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-500 shadow-md shadow-emerald-500/25 scale-[1.03] ring-2 ring-emerald-500/20'
+                      : 'bg-gray-100/80 dark:bg-zinc-800/80 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700/70 hover:border-emerald-400 dark:hover:border-emerald-500 hover:bg-white dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   {preset.label}
@@ -388,8 +390,8 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
           </div>
 
           {/* Range Slider */}
-          <div className="pt-2 space-y-1.5">
-            <div className="flex justify-between text-[11px] font-bold text-gray-400">
+          <div className="pt-2 space-y-2">
+            <div className="flex justify-between text-[11px] font-bold text-gray-400 dark:text-zinc-500">
               <span>Min ₹10,000</span>
               <span>Max ₹50 Lakhs+</span>
             </div>
@@ -400,109 +402,111 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
               step={10000}
               value={Math.min(5000000, numericValue)}
               onChange={(e) => setMargin(e.target.value)}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+              className="w-full h-2 bg-gray-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Financial Leverage Breakdown Panel (Dynamic Area-Dependent) */}
         {numericValue > 0 && (
-          <div className="p-5 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white dark:from-emerald-950/40 dark:via-teal-950/20 dark:to-zinc-900/90 rounded-xl border border-emerald-200/80 dark:border-emerald-900/50 space-y-4 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-100 dark:border-emerald-900/40 pb-3">
-              <div className="flex items-center gap-2 text-emerald-950 dark:text-emerald-200 font-extrabold text-sm">
-                <TrendingUp size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <div className="p-6 bg-gradient-to-br from-gray-50 via-emerald-50/40 to-white dark:from-zinc-950 dark:via-zinc-900 dark:to-emerald-950/20 rounded-2xl border border-emerald-500/20 dark:border-emerald-500/30 space-y-5 shadow-inner backdrop-blur-md">
+            
+            {/* Project Capital Capacity Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200/80 dark:border-zinc-800/80 pb-4">
+              <div className="flex items-center gap-2.5 text-gray-900 dark:text-white font-extrabold text-sm sm:text-base">
+                <TrendingUp size={20} className="text-emerald-500 shrink-0" />
                 <span>Estimated Project Capital Capacity ({financialRules.multiplier}x Potential)</span>
               </div>
-              <span className="text-base sm:text-lg font-black text-emerald-700 dark:text-emerald-300 bg-white dark:bg-zinc-900 px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800 shadow-2xs self-start sm:self-auto">
+              <span className="text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 bg-white dark:bg-zinc-950 px-4 py-1.5 rounded-xl border border-emerald-500/30 shadow-md font-mono self-start sm:self-auto">
                 {formatIndianWords(estimatedProjectCapacity)}
               </span>
             </div>
 
             {/* Proportional Progress Bar (Dynamic % per location & category) */}
-            <div className="space-y-2">
-              <div className="h-3.5 w-full bg-gray-200/80 rounded-full overflow-hidden flex shadow-inner">
+            <div className="space-y-2.5">
+              <div className="h-4 w-full bg-gray-200 dark:bg-zinc-800/90 rounded-full overflow-hidden flex shadow-inner p-0.5 border border-gray-300/40 dark:border-zinc-700/40">
                 <div 
                   style={{ width: `${financialRules.equityPct}%` }} 
-                  className="bg-emerald-600 h-full transition-all duration-300" 
+                  className="bg-emerald-500 dark:bg-emerald-400 h-full rounded-l-full transition-all duration-500 shadow-sm" 
                   title={`Your Equity Margin (${financialRules.equityPct}%)`}
                 />
                 <div 
                   style={{ width: `${financialRules.subsidyPct}%` }} 
-                  className="bg-amber-500 h-full transition-all duration-300" 
+                  className="bg-amber-500 dark:bg-amber-400 h-full transition-all duration-500 shadow-sm" 
                   title={`Govt Subsidy (${financialRules.subsidyPct}%)`}
                 />
                 <div 
                   style={{ width: `${financialRules.loanPct}%` }} 
-                  className="bg-sky-600 h-full transition-all duration-300" 
+                  className="bg-sky-500 dark:bg-sky-400 h-full rounded-r-full transition-all duration-500 shadow-sm" 
                   title={`Bank Credit Loan (${financialRules.loanPct}%)`}
                 />
               </div>
 
               {/* Legend Cards (Dynamic % and Amounts) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
-                <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
-                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-600 shrink-0" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
+                <div className="p-3.5 bg-white/90 dark:bg-zinc-900/80 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-emerald-500/40 transition-all">
+                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shrink-0 shadow-xs" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">YOUR EQUITY ({financialRules.equityPct}%)</p>
-                    <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(numericValue)}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-wider">YOUR EQUITY ({financialRules.equityPct}%)</p>
+                    <p className="font-black text-gray-900 dark:text-white text-sm font-mono">{formatIndianWords(numericValue)}</p>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
-                  <div className="w-3.5 h-3.5 rounded-full bg-amber-500 shrink-0" />
+                <div className="p-3.5 bg-white/90 dark:bg-zinc-900/80 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-amber-500/40 transition-all">
+                  <div className="w-3.5 h-3.5 rounded-full bg-amber-500 dark:bg-amber-400 shrink-0 shadow-xs" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">EST. GOVT SUBSIDY ({financialRules.subsidyPct}%)</p>
-                    <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(estimatedSubsidy)}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-wider">EST. GOVT SUBSIDY ({financialRules.subsidyPct}%)</p>
+                    <p className="font-black text-gray-900 dark:text-white text-sm font-mono">{formatIndianWords(estimatedSubsidy)}</p>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-gray-200/80 flex items-center gap-2.5 shadow-2xs">
-                  <div className="w-3.5 h-3.5 rounded-full bg-sky-600 shrink-0" />
+                <div className="p-3.5 bg-white/90 dark:bg-zinc-900/80 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-sky-500/40 transition-all">
+                  <div className="w-3.5 h-3.5 rounded-full bg-sky-500 dark:bg-sky-400 shrink-0 shadow-xs" />
                   <div>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">BANK CREDIT LOAN ({financialRules.loanPct}%)</p>
-                    <p className="font-extrabold text-gray-900 text-xs">{formatIndianWords(estimatedBankLoan)}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-wider">BANK CREDIT LOAN ({financialRules.loanPct}%)</p>
+                    <p className="font-black text-gray-900 dark:text-white text-sm font-mono">{formatIndianWords(estimatedBankLoan)}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Unlocked Location & State Specific Schemes */}
-            <div className="pt-2 border-t border-emerald-100/80 space-y-2">
+            <div className="pt-3 border-t border-gray-200/80 dark:border-zinc-800/80 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-extrabold text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
-                  <Landmark size={14} className="text-emerald-700" />
-                  <span>UNLOCKED CREDIT & SUBSIDY SCHEMES FOR THIS LOCATION</span>
+                <span className="text-[11px] font-black text-gray-800 dark:text-zinc-200 uppercase tracking-wider flex items-center gap-2">
+                  <Landmark size={15} className="text-emerald-500" />
+                  <span>UNLOCKED RURAL CREDIT & SUBSIDY SCHEMES</span>
                 </span>
-                <span className="text-[10px] font-semibold text-gray-500">
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
                   {financialRules.areaLabel}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-                {/* PMEGP Scheme Card with Exact Area Subsidy Rate */}
-                <div className="p-2.5 bg-white rounded-lg border border-emerald-200/80 flex items-center gap-2.5 shadow-2xs">
-                  <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
+                {/* PMEGP Scheme Card */}
+                <div className="p-3 bg-white/90 dark:bg-zinc-900/90 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-emerald-500/40 hover:-translate-y-0.5 transition-all">
+                  <ShieldCheck size={18} className="text-emerald-500 shrink-0" />
                   <div>
-                    <p className="font-bold text-gray-900">PMEGP Scheme</p>
-                    <p className="text-[10px] text-emerald-700 font-semibold">{financialRules.subsidyPct}% Capital Subsidy ({financialRules.areaLabel})</p>
+                    <p className="font-extrabold text-gray-900 dark:text-white text-xs">PMEGP Scheme</p>
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">{financialRules.subsidyPct}% Capital Subsidy</p>
                   </div>
                 </div>
 
                 {/* Location / State Specific Subsidy Scheme */}
-                <div className={`p-2.5 bg-white rounded-lg border border-emerald-200/80 flex items-center gap-2.5 shadow-2xs`}>
-                  <Landmark size={16} className="text-purple-600 shrink-0" />
+                <div className="p-3 bg-white/90 dark:bg-zinc-900/90 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-purple-500/40 hover:-translate-y-0.5 transition-all">
+                  <Landmark size={18} className="text-purple-500 shrink-0" />
                   <div>
-                    <p className="font-bold text-gray-900">{stateSchemes.stateSchemeName}</p>
-                    <p className="text-[10px] text-purple-700 font-semibold">{stateSchemes.stateSchemeDesc}</p>
+                    <p className="font-extrabold text-gray-900 dark:text-white text-xs">{stateSchemes.stateSchemeName}</p>
+                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">{stateSchemes.stateSchemeDesc}</p>
                   </div>
                 </div>
 
                 {/* MUDRA / AIF Financing */}
-                <div className="p-2.5 bg-white rounded-lg border border-emerald-200/80 flex items-center gap-2.5 shadow-2xs">
-                  <Zap size={16} className="text-amber-600 shrink-0" />
+                <div className="p-3 bg-white/90 dark:bg-zinc-900/90 rounded-xl border border-gray-200 dark:border-zinc-800 flex items-center gap-3 shadow-xs hover:border-amber-500/40 hover:-translate-y-0.5 transition-all">
+                  <Zap size={18} className="text-amber-500 shrink-0" />
                   <div>
-                    <p className="font-bold text-gray-900">MUDRA / NABARD AIF</p>
-                    <p className="text-[10px] text-amber-700 font-semibold">Collateral-Free + 3% Subvention</p>
+                    <p className="font-extrabold text-gray-900 dark:text-white text-xs">MUDRA Loan</p>
+                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">Collateral-Free Credit</p>
                   </div>
                 </div>
               </div>
@@ -515,17 +519,17 @@ export default function Step3Margin({ data, onNext, onBack }: any) {
       <div className="flex justify-between items-center pt-2">
         <button 
           onClick={onBack} 
-          className="px-5 py-2.5 text-gray-600 font-semibold text-sm hover:bg-gray-100 rounded-xl transition cursor-pointer"
+          className="px-6 py-3 text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800/80 font-bold text-sm rounded-2xl transition cursor-pointer"
         >
           {t('wizard_back', 'Back')}
         </button>
         <button 
           onClick={handleContinue}
           disabled={!numericValue || numericValue <= 0}
-          className="px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-xs hover:shadow-md cursor-pointer flex items-center gap-2"
+          className="px-8 py-3.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-2"
         >
           <span>{t('wizard_next', 'Next Step')}</span>
-          <ChevronRight size={16} />
+          <ChevronRight size={18} />
         </button>
       </div>
     </div>
