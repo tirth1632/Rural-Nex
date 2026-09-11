@@ -150,35 +150,53 @@ class BusinessProposalViewSet(viewsets.ModelViewSet):
                     language=language
                 )
             except Exception as llm_err:
-                # High quality deterministic fallback when LLM API keys are unconfigured or timing out
+                # Run real scoring engine to get deterministic score
+                # (LLM API is unavailable but scoring still works)
+                try:
+                    scoring_svc = FeasibilityScoringService()
+                    real_score_result = scoring_svc.analyze(
+                        lat, lng, 5.0, category_name,
+                        float(fin_assessment.feasible_project_cost)
+                    )
+                    real_overall = real_score_result.get('overall_score', 70)
+                    real_dims = real_score_result.get('dimensions', {})
+                except Exception:
+                    real_overall = 70
+                    real_dims = {}
+
                 ai_result = {
                     "deterministic_data": {
-                        "overall_score": 82,
-                        "verdict": "FEASIBLE",
+                        "overall_score": real_overall,
+                        "verdict": "FEASIBLE" if real_overall >= 55 else "MARGINAL",
                         "dimensions": {
-                            "demand": 85,
-                            "competition": 78,
-                            "infrastructure": 84,
-                            "raw_materials": 80
+                            "demand": real_dims.get('demand', real_overall),
+                            "competition": real_dims.get('competition', real_overall),
+                            "infrastructure": real_dims.get('infrastructure', real_overall),
+                            "raw_materials": real_dims.get('raw_materials', real_overall)
                         }
                     },
                     "ai_analysis": {
-                        "executive_summary": f"High feasibility score of 82/100 for {category_name}. Strong local demand combined with eligible government scheme financing (PMEGP & Mudra) provides a favorable ROI horizon of 18-24 months.",
-                        "summary": f"The proposed enterprise is highly viable at the selected location.",
-                        "key_strengths": ["Strong local market demand", "High government subsidy eligibility", "Favorable competitor density"],
+                        "executive_summary": f"Feasibility score of {real_overall}/100 for {category_name}. " +
+                            ("Strong commercial viability with eligible government scheme financing." if real_overall >= 70
+                             else "Viable with targeted differentiation and market development."),
+                        "summary": f"The proposed enterprise scores {real_overall}/100 at the selected location.",
+                        "key_strengths": ["Local market demand", "Government scheme eligibility", "Rural enterprise support"],
                         "risk_mitigations": ["Maintain initial working capital reserve", "Leverage local digital marketing"]
                     }
                 }
 
-            # Safely save executive summary to report
+            # Save the real score to FeasibilityReport (not a hardcoded 82)
+            computed_score = ai_result.get('deterministic_data', {}).get('overall_score', 70)
             report, _ = FeasibilityReport.objects.get_or_create(
                 analysis_run=run,
                 defaults={
-                    'overall_score': 82,
-                    'is_feasible': True,
+                    'overall_score': computed_score,
+                    'is_feasible': computed_score >= 55,
                     'executive_summary': ai_result.get('ai_analysis', {}).get('summary', '')
                 }
             )
+            report.overall_score = computed_score
+            report.is_feasible = computed_score >= 55
             report.executive_summary = ai_result.get('ai_analysis', {}).get('summary', report.executive_summary)
             report.save()
             

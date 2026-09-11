@@ -174,10 +174,10 @@ export default function Dashboard() {
     const scoringData = report?.scoring_data || {};
     const dimensions = scoringData.dimensions || {};
 
-    // Overall Feasibility Score
+    // Overall Feasibility Score — ONLY from real analysis run, never hardcoded
     const overallScore = report?.overall_score !== undefined && report?.overall_score !== null
         ? Math.round(Number(report.overall_score))
-        : 84; // Benchmark default
+        : 0; // 0 means no real analysis yet — dashboard will show empty/onboarding state
 
     // Business Status Determination: Good / Moderate / High Risk
     let businessStatus: 'Good' | 'Moderate' | 'High Risk' = 'Good';

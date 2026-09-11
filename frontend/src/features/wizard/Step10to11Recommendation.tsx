@@ -32,7 +32,7 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
 
   // Fallback metrics
   const isFeasible = report?.is_feasible ?? true;
-  const score = parseFloat(report?.overall_score || '84');
+  const score = parseFloat(String(report?.overall_score ?? 0)); // 0 = no real analysis yet
   const categoryName = proposal?.category?.name || proposal?.category_name || proposal?.specific_business || 'Proposed Enterprise';
   const estProjectCost = proposal?.margin_capital ? (Number(proposal.margin_capital) * 10).toLocaleString('en-IN') : '50,00,000';
 

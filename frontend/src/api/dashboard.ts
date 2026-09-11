@@ -96,51 +96,17 @@ export const getUserProposals = async (): Promise<ProposalItem[]> => {
 
     const map = new Map<number, ProposalItem>();
 
-    // Initial benchmark proposal #101
-    const benchmarkProposal: ProposalItem = {
-        id: 101,
-        category: { id: 1, name: 'Agro & Dairy Processing Unit' },
-        village_name: 'Vastral',
-        block_name: 'Daskroi',
-        district_name: 'Ahmedabad',
-        margin_capital: 500000,
-        current_step: 7,
-        created_at: '2026-01-15T00:00:00Z',
-        analysis_runs: [{
-            id: 101,
-            status: 'COMPLETED',
-            report: {
-                id: 101,
-                overall_score: 84,
-                is_feasible: true,
-                executive_summary: 'Agro & Dairy Processing Unit has strong commercial viability with high local demand density.',
-                scoring_data: {
-                    dimensions: {
-                        market_reach: { score: 82, factors: { estimated_population: 38500 } },
-                        competition: { score: 75, factors: { competitor_count: 2 } },
-                        opportunity: { score: 68 }
-                    }
-                }
-            }
-        }],
-        financial_assessment: {
-            feasible_project_cost: 2000000,
-            loan_amount: 1500000,
-            scheme_name: 'PMEGP (25-35% Capital Subsidy)'
-        }
-    };
-    map.set(101, benchmarkProposal);
-
-    // Merge backend proposals
+    // Merge backend proposals (real data from API)
     for (const p of backendProposals) {
         map.set(p.id, p);
     }
 
-    // Merge locally saved proposals (from wizard)
+    // Merge locally saved proposals (from wizard completion)
     for (const p of localProposals) {
         if (!map.has(p.id)) {
             map.set(p.id, p);
         } else {
+            // Local data (wizard-saved) overrides backend stale fields
             map.set(p.id, { ...map.get(p.id)!, ...p });
         }
     }
@@ -167,41 +133,7 @@ export const getProposalDetail = async (id: number): Promise<ProposalItem | null
         if (found) return found;
     } catch {}
 
-    if (id === 101) {
-        return {
-            id: 101,
-            category: { id: 1, name: 'Agro & Dairy Processing Unit' },
-            village_name: 'Vastral',
-            block_name: 'Daskroi',
-            district_name: 'Ahmedabad',
-            margin_capital: 500000,
-            current_step: 7,
-            created_at: '2026-01-15T00:00:00Z',
-            analysis_runs: [{
-                id: 101,
-                status: 'COMPLETED',
-                report: {
-                    id: 101,
-                    overall_score: 84,
-                    is_feasible: true,
-                    executive_summary: 'Agro & Dairy Processing Unit has strong commercial viability with high local demand density.',
-                    scoring_data: {
-                        dimensions: {
-                            market_reach: { score: 82, factors: { estimated_population: 38500 } },
-                            competition: { score: 75, factors: { competitor_count: 2 } },
-                            opportunity: { score: 68 }
-                        }
-                    }
-                }
-            }],
-            financial_assessment: {
-                feasible_project_cost: 2000000,
-                loan_amount: 1500000,
-                scheme_name: 'PMEGP (25-35% Capital Subsidy)'
-            }
-        };
-    }
-
+    // No real proposal found — return null so dashboard shows empty state
     return null;
 };
 
