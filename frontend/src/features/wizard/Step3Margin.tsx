@@ -10,9 +10,7 @@ import {
   Users,
   Building2,
   Mountain,
-  CheckCircle2,
-  Layers,
-  ArrowUpRight
+  CheckCircle2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
