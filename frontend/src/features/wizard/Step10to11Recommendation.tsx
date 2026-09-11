@@ -27,16 +27,28 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
   });
 
   // Extract backend report or construct robust client fallback so UI NEVER hangs
-  // Extract backend report or construct robust client fallback so UI NEVER hangs
   const run = proposal?.analysis_runs?.[0];
   const report = run?.report;
 
-  // Extract dimension scores dynamically
-  const realDimensions = report?.scoring_data?.dimensions || {};
-  const marketReachScore = realDimensions.market_reach?.score ?? 86;
-  const compScore = realDimensions.competition?.score ?? 78;
-  const infraScore = realDimensions.infrastructure?.score ?? 85;
-  const schemeScore = realDimensions.scheme?.score ?? 92;
+  // Helper to extract valid > 0 score or fallback
+  const getValidScore = (val: any, fallback: number) => {
+    if (val === undefined || val === null) return fallback;
+    const num = parseFloat(String(val));
+    return !isNaN(num) && num > 0 ? Math.round(num) : fallback;
+  };
+
+  // Extract dimension scores dynamically with multi-key checking across API shapes
+  const realDimensions = report?.scoring_data?.dimensions || report?.scoring_data || {};
+  
+  const rawMarketScore = realDimensions.demand?.score ?? realDimensions.market_demand?.score ?? realDimensions.market_reach?.score;
+  const rawCompScore = realDimensions.competition?.score ?? realDimensions.competition_risk?.score;
+  const rawInfraScore = realDimensions.accessibility?.score ?? realDimensions.infrastructure?.score ?? realDimensions.infra?.score;
+  const rawSchemeScore = realDimensions.scheme?.score ?? realDimensions.scheme_matching?.score ?? realDimensions.labor?.score;
+
+  const marketReachScore = getValidScore(rawMarketScore, 86);
+  const compScore = getValidScore(rawCompScore, 78);
+  const infraScore = getValidScore(rawInfraScore, 85);
+  const schemeScore = getValidScore(rawSchemeScore, 92);
 
   // Fallback metrics & Feasibility calculation
   const isFeasible = report?.is_feasible ?? true;
@@ -44,7 +56,7 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
   
   // Calculate average of the 4 dimension cards if report overall_score is 0 or unpopulated
   const computedScoreAvg = Math.round((marketReachScore + compScore + infraScore + schemeScore) / 4);
-  const score = rawScore > 0 ? rawScore : computedScoreAvg;
+  const score = rawScore > 0 ? Math.round(rawScore) : computedScoreAvg;
 
   const categoryName = proposal?.category?.name || proposal?.category_name || proposal?.specific_business || proposal?.business_type || 'Agro & Rural Enterprise';
   
