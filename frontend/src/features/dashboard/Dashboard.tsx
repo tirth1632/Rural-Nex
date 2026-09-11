@@ -344,7 +344,7 @@ export default function Dashboard() {
                                 Active: {selectedBusiness}
                             </span>
                             <span className="font-mono font-bold bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-gray-700 dark:text-zinc-300">
-                                {overallScore}/100 Score
+                                {overallScore > 0 ? `${overallScore}/100 Score` : 'No Score Yet'}
                             </span>
                         </div>
 
@@ -487,7 +487,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
                             <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300">
-                                {activeProposal?.id || '101'}
+                                {activeProposal?.id && activeProposal.id !== 101 ? activeProposal.id : '--'}
                             </span>
                         </div>
 
@@ -500,6 +500,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Score Meter Gauge & Status */}
+                        {overallScore > 0 ? (
                         <div className="mt-6 flex items-center gap-5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/60 border border-gray-100 dark:border-zinc-800">
                             {/* Visual Score Ring */}
                             <div className="relative w-20 h-20 shrink-0 flex items-center justify-center">
@@ -544,6 +545,26 @@ export default function Dashboard() {
                                 </p>
                             </div>
                         </div>
+                        ) : (
+                        /* No analysis yet — show onboarding prompt */
+                        <div className="mt-6 flex flex-col items-center gap-3 p-5 rounded-2xl bg-gray-50 dark:bg-zinc-900/60 border border-dashed border-gray-300 dark:border-zinc-700 text-center">
+                            <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+                                <svg className="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-sm font-black text-gray-900 dark:text-white">No Analysis Yet</p>
+                                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">Complete the wizard to get your real feasibility score</p>
+                            </div>
+                            <button
+                                onClick={() => navigate('/wizard')}
+                                className="mt-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl shadow-sm transition cursor-pointer"
+                            >
+                                Start Assessment →
+                            </button>
+                        </div>
+                        )}
 
                         {/* Recommended business category */}
                         <div className="mt-5 p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/40 space-y-1">
@@ -551,7 +572,7 @@ export default function Dashboard() {
                                 {t('dashboard_recommended_category', 'Recommended Business Category')}
                             </p>
                             <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
-                                {recommendedCategory}
+                                {overallScore > 0 ? recommendedCategory : 'Complete your assessment to get a recommendation'}
                             </p>
                         </div>
                     </div>
