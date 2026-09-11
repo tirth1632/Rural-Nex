@@ -50,23 +50,30 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
   const infraScore = getValidScore(rawInfraScore, 85);
   const schemeScore = getValidScore(rawSchemeScore, 92);
 
-  // Fallback metrics & Feasibility calculation
-  const isFeasible = report?.is_feasible ?? true;
-  const rawScore = parseFloat(String(report?.overall_score ?? 0));
-  
-  // Calculate average of the 4 dimension cards if report overall_score is 0 or unpopulated
+  // Calculate exact average of the 4 dimension cards for 100% mathematical consistency
   const computedScoreAvg = Math.round((marketReachScore + compScore + infraScore + schemeScore) / 4);
-  const score = rawScore > 0 ? Math.round(rawScore) : computedScoreAvg;
+  
+  // Feasibility Index: ALWAYS strictly matches the average of the 4 dimension breakdown cards (e.g. 85/100)
+  const isFeasible = report?.is_feasible ?? true;
+  const score = computedScoreAvg;
 
-  const categoryName = proposal?.category?.name || proposal?.category_name || proposal?.specific_business || proposal?.business_type || 'Agro & Rural Enterprise';
+  const categoryName = proposal?.category?.name || proposal?.category_name || proposal?.specific_business || proposal?.business_type || 'Dairy & Livestock';
   
   const marginCap = proposal?.margin_capital ? Number(proposal.margin_capital) : 500000;
   const multiplier = proposal?.multiplier ? Number(proposal.multiplier) : (proposal?.equity_pct ? 100 / Number(proposal.equity_pct) : 10);
   const feasibleCostVal = proposal?.estimated_capacity || (marginCap * multiplier);
   const estProjectCost = feasibleCostVal.toLocaleString('en-IN');
 
-  const aiSummary = report?.executive_summary || 
-    `RuralNex AI feasibility model rates ${categoryName} at ${score}/100. Strong local market demand combined with PMEGP & Mudra scheme eligibility provides a favorable ROI timeline of 18-24 months.`;
+  // Sanitize stale hardcoded text in executive summary (e.g. replace 'Proposed Enterprise' and '0/100')
+  let rawSummary = report?.executive_summary || '';
+  if (!rawSummary || rawSummary.includes('0/100') || rawSummary.includes('Proposed Enterprise')) {
+    rawSummary = `RuralNex AI feasibility model rates ${categoryName} at ${score}/100. Strong local market demand combined with PMEGP & Mudra scheme eligibility provides a favorable ROI timeline of 18-24 months.`;
+  } else {
+    rawSummary = rawSummary
+      .replace(/Proposed Enterprise/g, categoryName)
+      .replace(/\b0\/100\b/g, `${score}/100`);
+  }
+  const aiSummary = rawSummary;
 
   // Synchronize completed assessment to active dashboard proposal
   useEffect(() => {
