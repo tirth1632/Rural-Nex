@@ -52,6 +52,34 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
         const blockName = proposal?.block_name || parts[1] || 'Taluka';
         const districtName = proposal?.district_name || parts[2] || 'District';
 
+        // Use real scoring dimensions from the report; fall back to score-proportional estimates
+        const realDimensions = report?.scoring_data?.dimensions || {};
+        const realFinAssessment = proposal?.financial_assessment || report?.financial_assessment;
+
+        const marketReachScore = realDimensions.market_reach?.score ?? Math.round(score * 0.95);
+        const marketPopulation = realDimensions.market_reach?.factors?.estimated_population 
+            ?? Math.round(score * 450); // proportional estimate
+        const compScore = realDimensions.competition?.score ?? Math.round(score * 0.90);
+        const compCount = realDimensions.competition?.factors?.competitor_count 
+            ?? (compScore >= 70 ? 2 : compScore >= 50 ? 5 : 10);
+        const opportunityScore = realDimensions.opportunity?.score ?? Math.round(score * 0.88);
+
+        const marginCap = proposal?.margin_capital ? Number(proposal.margin_capital) : 500000;
+        const feasibleCost = realFinAssessment?.feasible_project_cost 
+            ? Number(realFinAssessment.feasible_project_cost) 
+            : marginCap * 4;
+        const loanAmt = realFinAssessment?.loan_amount 
+            ? Number(realFinAssessment.loan_amount) 
+            : Math.max(0, feasibleCost - marginCap);
+
+        // Select scheme based on actual project cost (not hardcoded)
+        const schemeName = realFinAssessment?.scheme_name 
+            || (feasibleCost <= 1000000 
+                ? 'PM MUDRA (Tarun Loan)' 
+                : feasibleCost <= 2500000 
+                    ? 'PMEGP (25-35% Capital Subsidy)' 
+                    : 'PMEGP / CGTMSE (Capital Subsidy + Credit Guarantee)');
+
         const completedProposal = {
           id: proposalId,
           category: {
@@ -61,7 +89,7 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
           village_name: villageName,
           block_name: blockName,
           district_name: districtName,
-          margin_capital: proposal?.margin_capital || 500000,
+          margin_capital: marginCap,
           current_step: 7,
           analysis_runs: [
             {
@@ -74,18 +102,24 @@ export default function Step10to11Recommendation({ proposalId }: { proposalId: n
                 executive_summary: aiSummary,
                 scoring_data: {
                   dimensions: {
-                    market_reach: { score: 86, factors: { estimated_population: 42000 } },
-                    competition: { score: 78, factors: { competitor_count: 2 } },
-                    opportunity: { score: 82 },
+                    market_reach: { 
+                      score: marketReachScore, 
+                      factors: { estimated_population: marketPopulation } 
+                    },
+                    competition: { 
+                      score: compScore, 
+                      factors: { competitor_count: compCount } 
+                    },
+                    opportunity: { score: opportunityScore },
                   },
                 },
               },
             },
           ],
           financial_assessment: {
-            feasible_project_cost: proposal?.margin_capital ? Number(proposal.margin_capital) * 4 : 2000000,
-            loan_amount: proposal?.margin_capital ? Number(proposal.margin_capital) * 3 : 1500000,
-            scheme_name: 'PMEGP (25-35% Capital Subsidy)',
+            feasible_project_cost: feasibleCost,
+            loan_amount: loanAmt,
+            scheme_name: schemeName,
           },
           created_at: new Date().toISOString(),
         };
