@@ -421,13 +421,15 @@ export async function fetchSchemeStats(): Promise<SchemeStats> {
     console.warn('Fallback fetchSchemeStats:', e);
   }
 
+  // Compute real stats from fallback dataset instead of hardcoding numbers
+  const allFallback = (govtSchemesData.schemes as GovtSchemeListItem[]) || [];
   return (govtSchemesData.stats as SchemeStats) || {
-    total_schemes: 24,
-    verified_schemes: 24,
-    central_schemes: 9,
-    state_schemes: 15,
-    last_data_update: '2026-02-01',
-    data_source: 'Ministry Portals & Central Scheme Gazette'
+    total_schemes: allFallback.length || 24,
+    verified_schemes: allFallback.filter(s => s.verification_status === 'OFFICIAL' || s.verification_status === 'VERIFIED').length || 24,
+    central_schemes: allFallback.filter(s => s.level === 'CENTRAL').length || 9,
+    state_schemes: allFallback.filter(s => s.level === 'STATE').length || 15,
+    last_data_update: '2026-01-20',
+    data_source: 'Official Government Portals (KVIC, NABARD, MUDRA, MyScheme.gov.in)'
   };
 }
 
@@ -556,33 +558,227 @@ export async function matchSchemes(payload: {
     console.warn('Fallback matchSchemes:', e);
   }
 
+  // -------------------------------------------------------------------
+  // ACCURATE FALLBACK MATCHER — No more hardcoded 92 / 'Eligible'
+  // Scores each scheme by: location, sector, gender, cost, benefit
+  // -------------------------------------------------------------------
   const allSchemes = getFallbackSchemes();
-  const matched: SchemeMatchItem[] = allSchemes.map(s => {
-    const fin = s.financial_summary;
-    const projectCost = payload.project_cost || 1000000;
+  const projectCost = payload.project_cost || 1000000;
+  const userState = (payload.state || '').toLowerCase().trim();
+  const ruralUrban = (payload.rural_urban || 'rural').toLowerCase();
+  const gender = (payload.gender || 'male').toLowerCase();
+  const socialCat = (payload.promoter_category || 'general').toLowerCase();
+  const userSector = (payload.business_sector || '').toLowerCase();
+  const userActivity = (payload.business_activity || '').toLowerCase();
+  const businessStage = (payload.business_stage || 'new').toLowerCase();
+  const age = payload.age || 28;
 
-    // Extract dynamic subsidy rate & cap from scheme financial summary
+  const isSpecial = gender === 'female' || ['sc','st','obc','minority'].includes(socialCat);
+
+  // Sector keyword mapping for strict matching
+  const SECTOR_MAP: Record<string, string[]> = {
+    'dairy': ['dairy-livestock','dairy','livestock','animal husbandry','milk'],
+    'livestock': ['dairy-livestock','animal husbandry'],
+    'poultry': ['dairy-livestock'],
+    'fish': ['fisheries','aquaculture'],
+    'aquaculture': ['fisheries'],
+    'agriculture': ['agriculture-food','agri','farming','crop'],
+    'food processing': ['agriculture-food','food processing'],
+    'horticulture': ['agriculture-food','horticulture'],
+    'handicraft': ['handicraft-artisan','handloom','artisan','craft'],
+    'handloom': ['handicraft-artisan'],
+    'solar': ['renewable-green','solar','energy'],
+    'renewable': ['renewable-green'],
+    'biogas': ['renewable-green'],
+    'tourism': ['tourism-hospitality','homestay','eco-tourism'],
+    'homestay': ['tourism-hospitality'],
+    'storage': ['infrastructure','cold storage','warehouse'],
+    'warehouse': ['infrastructure'],
+    'shg': ['women-shgs','self help group'],
+    'self help': ['women-shgs'],
+    'manufacturing': ['msme-manufacturing','rural manufacturing'],
+    'service': ['rural-services','services'],
+    'transport': ['rural-services'],
+  };
+
+  function sectorMatchLevel(schemeSlug: string, schemeSectors: string[]): 'exact' | 'broad' | 'none' {
+    const allTerms = [userSector, userActivity].filter(Boolean);
+    if (allTerms.length === 0) return 'broad';
+
+    const schemeSectorsLower = schemeSectors.map(s => s.toLowerCase());
+    const slugLower = schemeSlug.toLowerCase();
+
+    for (const term of allTerms) {
+      // Direct slug match
+      if (slugLower.includes(term) || term.includes(slugLower.split('-')[0])) return 'exact';
+      // Keyword map match
+      for (const [key, cats] of Object.entries(SECTOR_MAP)) {
+        if (term.includes(key) || key.includes(term)) {
+          for (const cat of cats) {
+            if (slugLower.includes(cat) || schemeSectorsLower.some(s => s.includes(cat))) return 'exact';
+          }
+        }
+      }
+    }
+
+    // Broad: scheme covers all MSME/rural/general
+    const broadTerms = ['all msme', 'all sector', 'rural manufacturing', 'general', 'rural services', 'micro enterprise'];
+    if (schemeSectorsLower.some(s => broadTerms.some(b => s.includes(b)))) return 'broad';
+    if (schemeSectors.length === 0) return 'broad';
+
+    return 'none';
+  }
+
+  const scored = allSchemes.map(s => {
+    const fin = s.financial_summary;
+    let dimLocation = 25;
+    let dimBusiness = 25;
+    let dimPromoter = 25;
+    let dimCost = 15;
+    let dimBenefit = 10;
+    const matchedReasons: string[] = [];
+    const unmetReasons: string[] = [];
+    let isDisqualified = false;
+
+    // --- LOCATION ---
+    if (s.level === 'CENTRAL') {
+      matchedReasons.push('✓ Central scheme valid across all states.');
+    } else if (s.state && userState) {
+      if (s.state.toLowerCase() === userState) {
+        matchedReasons.push(`✓ State scheme for ${s.state}.`);
+      } else {
+        dimLocation = 0;
+        isDisqualified = true;
+        unmetReasons.push(`✕ Only applicable in ${s.state}.`);
+      }
+    } else {
+      dimLocation = 15;
+    }
+
+    // --- SECTOR ---
+    const sectorLevel = sectorMatchLevel(s.category_slug, s.sectors);
+    if (sectorLevel === 'exact') {
+      dimBusiness = 25;
+      matchedReasons.push(`✓ Directly supports ${userSector || userActivity || 'your'} sector.`);
+    } else if (sectorLevel === 'broad') {
+      dimBusiness = 15;
+      matchedReasons.push('✓ Broad MSME/rural scheme — potentially applicable.');
+      unmetReasons.push('Scheme covers all MSME sectors, not exclusively your activity.');
+    } else {
+      dimBusiness = 5;
+      unmetReasons.push(`Scheme targets: ${s.sectors.join(', ')} — sector mismatch.`);
+    }
+
+    // Business stage check (from badges/description heuristic in fallback)
+    if (businessStage === 'new' && s.description.toLowerCase().includes('existing') && !s.description.toLowerCase().includes('new')) {
+      dimBusiness = Math.max(0, dimBusiness - 10);
+      unmetReasons.push('Scheme targets existing enterprises; yours is new.');
+    }
+
+    // --- PROMOTER ---
+    // Gender check from description/name heuristics (since fallback has no eligibility_rules)
+    const descLower = (s.name + ' ' + s.description).toLowerCase();
+    const isWomenOnly = descLower.includes('women only') || descLower.includes('women entrepreneur') ||
+      s.official_id.includes('WOMEN') || s.official_id.includes('MMUY') ||
+      descLower.includes('exclusively for women') || s.official_id === 'DAY_NRLM' ||
+      s.official_id === 'WE_HUB' || s.official_id.includes('KUDUMBASHREE');
+
+    if (isWomenOnly && gender !== 'female') {
+      dimPromoter = 0;
+      isDisqualified = true;
+      unmetReasons.push('✕ Reserved exclusively for women applicants.');
+    } else if (isWomenOnly && gender === 'female') {
+      matchedReasons.push('✓ Women-only scheme — you qualify.');
+    }
+
+    const isScStOnly = descLower.includes('sc/st only') || descLower.includes('exclusively for sc') ||
+      (descLower.includes('sc/st') && descLower.includes('reserved')) ||
+      s.official_id.includes('DALIT') || s.official_id.includes('SCST') || s.official_id === 'BALIA';
+
+    if (isScStOnly && !isDisqualified && !['sc','st'].includes(socialCat)) {
+      dimPromoter = 0;
+      isDisqualified = true;
+      unmetReasons.push('✕ Reserved for SC/ST applicants only.');
+    } else if (isScStOnly && ['sc','st'].includes(socialCat)) {
+      matchedReasons.push(`✓ SC/ST scheme — eligible for maximum subsidy tier.`);
+    }
+
+    if (!isDisqualified && age < 18) {
+      dimPromoter = 0;
+      isDisqualified = true;
+      unmetReasons.push('✕ Minimum age 18 years required.');
+    } else if (!isDisqualified) {
+      matchedReasons.push(`✓ Age (${age} years) meets eligibility criteria.`);
+    }
+
+    if (isSpecial && !isDisqualified) {
+      matchedReasons.push('✓ Eligible for enhanced special category subsidy.');
+    }
+
+    // --- COST ---
+    const maxCost = fin?.max_project_cost;
+    const minCost = fin?.min_project_cost || 0;
+    if (maxCost && projectCost > maxCost) {
+      dimCost = 8;
+      unmetReasons.push(`Project cost ₹${projectCost.toLocaleString('en-IN')} exceeds ceiling ₹${maxCost.toLocaleString('en-IN')}.`);
+    } else if (projectCost < minCost) {
+      dimCost = 5;
+      unmetReasons.push(`Project cost ₹${projectCost.toLocaleString('en-IN')} below minimum ₹${minCost.toLocaleString('en-IN')}.`);
+    } else {
+      dimCost = 15;
+      matchedReasons.push(`✓ Project cost within scheme limits.`);
+    }
+
+    // --- BENEFIT ---
     let subPct = 0;
     let maxSubCap = 0;
     if (fin?.max_subsidy) {
-      const numStr = fin.max_subsidy.replace(/[^0-9.]/g, '');
-      const parsed = parseFloat(numStr);
+      const parsed = parseFloat(fin.max_subsidy.replace(/[^0-9.]/g, ''));
       if (!isNaN(parsed)) maxSubCap = parsed;
     }
-
     if (fin?.subsidy_rate_display) {
-      const match = fin.subsidy_rate_display.match(/(\d+)%/);
-      if (match) subPct = parseInt(match[1], 10);
+      const m = fin.subsidy_rate_display.match(/(\d+)%/);
+      if (m) subPct = parseInt(m[1], 10);
+      // Use special rate for eligible special category
+      if (isSpecial && fin.subsidy_rate_display.includes('–')) {
+        const highM = fin.subsidy_rate_display.match(/(\d+)%.*$/);  // take last number
+        if (highM) subPct = parseInt(highM[1], 10);
+      }
     }
-
-    let potentialSub = 0;
-    if (subPct > 0) {
-      potentialSub = projectCost * (subPct / 100);
-      if (maxSubCap > 0) potentialSub = Math.min(potentialSub, maxSubCap);
-    }
+    const effectiveCost = maxCost ? Math.min(projectCost, maxCost) : projectCost;
+    let potentialSub = subPct > 0 ? effectiveCost * (subPct / 100) : 0;
+    if (maxSubCap > 0 && potentialSub > maxSubCap) potentialSub = maxSubCap;
 
     const interestSubvention = fin?.interest_subvention_pct || 0;
     const effInterestRate = Math.max(0, 8.5 - interestSubvention);
+
+    if (potentialSub > 0) {
+      matchedReasons.push(`✓ Potential subsidy: ₹${Math.round(potentialSub).toLocaleString('en-IN')} (${subPct}%).`);
+      dimBenefit = 10;
+    } else if (interestSubvention > 0) {
+      matchedReasons.push(`✓ Interest subvention: ${interestSubvention}% p.a.`);
+      dimBenefit = 9;
+    } else if (fin?.collateral_requirement?.toLowerCase().includes('free')) {
+      matchedReasons.push('✓ Collateral-free credit guarantee available.');
+      dimBenefit = 8;
+    } else {
+      dimBenefit = 6;
+    }
+
+    // --- TOTAL SCORE ---
+    const rawScore = dimLocation + dimBusiness + dimPromoter + dimCost + dimBenefit;
+    const totalScore = isDisqualified ? 0 : Math.min(100, rawScore);
+
+    let eligStatus: SchemeMatchItem['eligibility_status'];
+    if (isDisqualified || totalScore < 25) {
+      eligStatus = 'Not Eligible';
+    } else if (totalScore >= 70 && sectorLevel === 'exact') {
+      eligStatus = 'Eligible';
+    } else if (totalScore >= 45) {
+      eligStatus = 'Potentially Eligible';
+    } else {
+      eligStatus = 'Not Eligible';
+    }
 
     return {
       id: s.id,
@@ -599,41 +795,59 @@ export async function matchSchemes(payload: {
       sectors: s.sectors,
       description: s.description,
       short_description: s.short_description,
-      eligibility_status: 'Eligible',
-      match_score: 92,
-      dimension_scores: { location: 95, business: 90, promoter: 92, cost: 90, benefit: 94 },
-      matched_reasons: ['Official scheme guidelines match project location and promoter profile.'],
-      unmet_reasons: [],
+      eligibility_status: eligStatus,
+      match_score: totalScore,
+      sector_match_level: sectorLevel,
+      dimension_scores: { location: dimLocation, business: dimBusiness, promoter: dimPromoter, cost: dimCost, benefit: dimBenefit },
+      matched_reasons: matchedReasons,
+      unmet_reasons: unmetReasons,
       financial_preview: {
         project_cost: projectCost,
-        eligible_base: projectCost,
+        eligible_base: effectiveCost,
         applicable_subsidy_pct: subPct,
         potential_subsidy_amount: Math.round(potentialSub),
-        required_promoter_margin_pct: 10,
-        required_promoter_margin_amount: projectCost * 0.1,
+        required_promoter_margin_pct: isSpecial ? 5 : 10,
+        required_promoter_margin_amount: effectiveCost * (isSpecial ? 0.05 : 0.1),
         interest_rate_min: 8.5,
         interest_subvention_pct: interestSubvention,
         effective_interest_rate: effInterestRate,
         collateral_requirement: fin?.collateral_requirement || 'Collateral-Free Cover Available',
         subsidy_timing: 'BACK_ENDED'
       },
-      primary_benefit: s.primary_benefit || (potentialSub > 0 ? `Capital Subsidy: ₹${Math.round(potentialSub).toLocaleString('en-IN')} (${subPct}%)` : interestSubvention > 0 ? `Interest Subvention: ${interestSubvention}% p.a.` : (fin?.collateral_requirement || 'Credit Guarantee Cover')),
+      primary_benefit: s.primary_benefit || (
+        potentialSub > 0 ? `Capital Subsidy: ₹${Math.round(potentialSub).toLocaleString('en-IN')} (${subPct}%)` :
+        interestSubvention > 0 ? `Interest Subvention: ${interestSubvention}% p.a.` :
+        'Credit Guarantee Cover'
+      ),
       official_portal_url: s.official_portal_url,
       source_name: s.source_name,
       source_document: s.source_document,
       scheme_version: s.scheme_version,
       last_verified_date: s.last_verified_date,
       verification_status: s.verification_status
-    };
+    } as SchemeMatchItem;
   });
+
+  // Sort: Eligible > Potentially Eligible > Not Eligible, then by score
+  const statusOrder: Record<string, number> = { 'Eligible': 0, 'Potentially Eligible': 1, 'Verification Required': 2, 'Not Eligible': 3 };
+  const matched = scored
+    .filter(s => s.match_score >= 20)
+    .sort((a, b) => {
+      const sr = (statusOrder[a.eligibility_status] || 4) - (statusOrder[b.eligibility_status] || 4);
+      if (sr !== 0) return sr;
+      return b.financial_preview.potential_subsidy_amount - a.financial_preview.potential_subsidy_amount || b.match_score - a.match_score;
+    });
+
+  const verifiedCount = matched.filter(s => s.eligibility_status === 'Eligible').length;
+  const potentialCount = matched.filter(s => s.eligibility_status === 'Potentially Eligible').length;
 
   return {
     matched_schemes: matched,
     total_matches: matched.length,
-    verified_matches: matched.length,
+    verified_matches: verifiedCount + potentialCount,
     needs_verification: 0,
-    total_evaluated: matched.length,
-    disclaimer: 'Grounded in official Central & State government scheme guidelines.'
+    total_evaluated: allSchemes.length,
+    disclaimer: 'Eligibility assessed based on official government scheme parameters. Final determination subject to lender/department verification.'
   };
 }
 
