@@ -498,7 +498,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-primary">
-                    {loadingStats ? '...' : `${(stats?.verified_schemes || 4520).toLocaleString('en-IN')}+`}
+                    {loadingStats ? '...' : `${(stats?.verified_schemes || stats?.total_schemes || 394).toLocaleString('en-IN')}+`}
                   </div>
                   <ShieldCheck className="text-primary/70 shrink-0" size={20} />
                 </div>
@@ -510,7 +510,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-gray-950 dark:text-white">
-                    {loadingStats ? '...' : `${(stats?.central_schemes || 1250).toLocaleString('en-IN')}+`}
+                    {loadingStats ? '...' : `${(stats?.central_schemes || 20).toLocaleString('en-IN')}+`}
                   </div>
                   <Landmark className="text-blue-500/70 shrink-0" size={20} />
                 </div>
@@ -522,7 +522,7 @@ export default function GovtSchemesPage() {
               <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-2xl sm:text-3xl font-black text-gray-950 dark:text-white">
-                    {loadingStats ? '...' : `${(stats?.state_schemes || 3270).toLocaleString('en-IN')}+`}
+                    {loadingStats ? '...' : `${(stats?.state_schemes || 374).toLocaleString('en-IN')}+`}
                   </div>
                   <Scale className="text-purple-500/70 shrink-0" size={20} />
                 </div>

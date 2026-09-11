@@ -1,11 +1,11 @@
 {
   "stats": {
-    "total_schemes": 4520,
-    "verified_schemes": 4520,
-    "central_schemes": 1250,
-    "state_schemes": 3270,
-    "last_data_update": "2026-02-01",
-    "data_source": "MyScheme.gov.in, Ministry Portals & Central Scheme Gazette"
+    "total_schemes": 394,
+    "verified_schemes": 394,
+    "central_schemes": 20,
+    "state_schemes": 374,
+    "last_data_update": "2026-01-20",
+    "data_source": "KVIC, NABARD, MUDRA, MoFPI, MNRE, MyScheme.gov.in & State Portal Guidelines"
   },
   "categories": [
     {
