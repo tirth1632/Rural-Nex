@@ -31,12 +31,12 @@ export interface SectorDefinition {
 }
 
 export interface BusinessDatasetStatus {
-  population: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
-  infrastructure: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
-  market: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
-  wages: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
-  livestock: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
-  groundwater: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' };
+  population: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
+  infrastructure: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
+  market: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
+  wages: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
+  livestock: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
+  groundwater: { status: 'Available' | 'Unavailable' | 'Not Relevant'; details: string; confidence: 'Official Dataset Fact' | 'Calculated' | 'Unavailable' | 'Not Relevant' };
 }
 
 export interface BusinessContextResult {

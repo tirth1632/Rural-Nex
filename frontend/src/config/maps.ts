@@ -1,5 +1,5 @@
 export const GOOGLE_MAPS_API_KEY =
-  import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyC0EMn8kBc9Hcji1n7qGcob4Ol2TnRZ4L8';
+  import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
 export const GOOGLE_MAPS_TILE_URLS = {
   roadmap: `https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&key=${GOOGLE_MAPS_API_KEY}`,

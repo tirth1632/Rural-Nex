@@ -51,7 +51,13 @@ class MockLLMProvider(BaseLLMProvider):
         }
         
     def generate_chat_response(self, system_prompt: str, context: Dict[str, Any], chat_history: list, user_message: str) -> str:
-        return f"Mock AI Response to: '{user_message}'. I have read the context with score {context.get('feasibility_score')}."
+        if context and "dataset_query_analysis" in context:
+            answer = context["dataset_query_analysis"]
+            table = context.get("crop_state_comparison_table", "")
+            return f"{answer}\n\n### State-wise Production & Yield Analysis (All-India Crop Dataset):\n{table}"
+        score = context.get('feasibility_score')
+        score_note = f" (Feasibility Score: {score})" if score is not None else ""
+        return f"Based on RuralNex dataset analysis for '{user_message}'{score_note}: Please feel free to ask about crop yields, state-wise agricultural production, or business feasibility!"
 
 class OpenRouterProvider(BaseLLMProvider):
     def __init__(self, api_key=None, model=None):

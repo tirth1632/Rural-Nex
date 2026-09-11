@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSettings } from '../SettingsContext';
 import { Globe, Sun, Moon, Check } from 'lucide-react';
 
@@ -6,14 +7,18 @@ const LANGUAGES = [
   { code: 'en', label: 'English' },
   { code: 'hi', label: 'हिंदी (Hindi)' },
   { code: 'gu', label: 'ગુજરાતી (Gujarati)' },
-  { code: 'mr', label: 'मराठी (Marathi)' },
-  { code: 'ta', label: 'தமிழ் (Tamil)' },
-  { code: 'te', label: 'తెలుగు (Telugu)' },
-  { code: 'bn', label: 'বাংলা (Bengali)' },
 ];
 
 export const SectionLanguageAppearance: React.FC = () => {
   const { draftSettings, updateDraft } = useSettings();
+  const { i18n } = useTranslation();
+
+  const handleLanguageChange = (code: string) => {
+    updateDraft('interfaceLanguage', code);
+    i18n.changeLanguage(code);
+    localStorage.setItem('i18nextLng', code);
+    window.dispatchEvent(new CustomEvent('ruralnex_language_changed', { detail: { language: code } }));
+  };
 
   return (
     <div className="space-y-6">
@@ -32,7 +37,7 @@ export const SectionLanguageAppearance: React.FC = () => {
           </label>
           <select
             value={draftSettings.interfaceLanguage}
-            onChange={e => updateDraft('interfaceLanguage', e.target.value)}
+            onChange={e => handleLanguageChange(e.target.value)}
             className="w-full sm:w-80 px-3.5 py-2 border border-gray-300 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-white dark:bg-slate-800"
           >
             {LANGUAGES.map(lang => (

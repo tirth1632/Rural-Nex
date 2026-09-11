@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Circle, useMap, Popup, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -15,13 +15,12 @@ import {
   Minimize2, 
   Building2, 
   Store,
-  Landmark,
-  ShoppingCart,
+  Users,
+  TrendingUp,
   X,
   ChevronRight,
   Search,
-  CheckCircle2,
-  GripHorizontal
+  CheckCircle2
 } from 'lucide-react';
 import { geoService, type CandidateLocation, type LayerFeature, type MapFeatureCategory, type GeoSearchParams } from '../../services/geoService';
 import { detectUserLocation } from '../../services/geolocationService';
@@ -164,8 +163,8 @@ const createFeatureMarkerIcon = (
     bgColor = '#F59E0B'; // Amber Orange
     shadowColor = 'rgba(245, 158, 11, 0.4)';
   } else if (category === 'market') {
-    bgColor = '#0D9488'; // Teal Green
-    shadowColor = 'rgba(13, 148, 136, 0.4)';
+    bgColor = '#CA8A04'; // Dark Yellow / Gold Amber
+    shadowColor = 'rgba(202, 138, 4, 0.65)';
   }
 
   // Exact color-wise symbol synchronized with legend
@@ -650,11 +649,10 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
     }
   };
 
-  // Layer category filters matching the screenshot
+  // Layer category filters — only Competitor and Market (Target Market circles)
   const [visibleCategories, setVisibleCategories] = useState<Record<string, boolean>>({
     competitor: true,
     similar: true,
-    poi: true,
     market: true,
   });
 
@@ -709,11 +707,10 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
     setVisibleCategories((prev) => ({ ...prev, [cat]: !prev[cat] }));
   };
 
-  // Counts for legend
+  // Counts for legend — POI layer removed
   const counts = {
     competitors: layerFeatures.filter((f) => f.category === 'competitor').length,
     similar: layerFeatures.filter((f) => f.category === 'similar').length,
-    pois: layerFeatures.filter((f) => f.category === 'poi').length,
     markets: layerFeatures.filter((f) => f.category === 'market').length,
   };  // Filtered actual existing businesses for the drawer
   const filteredExistingFeatures = layerFeatures
@@ -970,41 +967,15 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
             </button>
           </div>
 
-          {/* === NEW 3-Card Semantic Legend === */}
+          {/* Compact 2-Layer Legend — Competitors + Target Market only */}
           <div className="w-52 sm:w-56 bg-white/95 dark:bg-[#0a0a0c]/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-2xl border border-gray-200/90 dark:border-zinc-800 shadow-xl flex flex-col gap-2 select-none">
             {/* Legend Header */}
             <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-100 dark:border-zinc-800/80">
               <Layers size={10} className="text-gray-400 dark:text-zinc-500" />
               <span className="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-zinc-500">Map Layers</span>
             </div>
-            {/* Card 1: Key POIs — Real facilities from OSM */}
-            <button
-              type="button"
-              onClick={() => toggleCategory('poi')}
-              className={`group flex items-start gap-2.5 p-2.5 rounded-2xl border transition-all cursor-pointer text-left active:scale-[0.98] shadow-sm ${
-                visibleCategories.poi
-                  ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200/80 dark:border-amber-800/50 hover:bg-amber-100/80 dark:hover:bg-amber-900/50'
-                  : 'bg-white/80 dark:bg-zinc-900/80 border-gray-200 dark:border-zinc-800 opacity-50 hover:opacity-80'
-              }`}
-              title="Click to toggle Key POI markers on map"
-            >
-              <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${visibleCategories.poi ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/40' : 'bg-gray-200 dark:bg-zinc-700 text-gray-500'}`}>
-                <Landmark size={13} strokeWidth={2.5} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10.5px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">Key POIs</span>
-                  <span className="text-[11px] font-black px-1.5 py-0.5 rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/60 min-w-[22px] text-center">{counts.pois}</span>
-                </div>
-                <p className="text-[9.5px] text-gray-500 dark:text-zinc-400 leading-tight mt-0.5">
-                  {counts.pois > 0
-                    ? [...new Set(layerFeatures.filter(f => f.category === 'poi').map(f => f.poiType || f.type).slice(0, 3))].join(' · ')
-                    : 'Business-relevant facilities'}
-                </p>
-              </div>
-            </button>
 
-            {/* Card 2: Target Market — Real demand/customer locations */}
+            {/* Card 1: Target Market Demand Zones (circles) */}
             <button
               type="button"
               onClick={() => toggleCategory('market')}
@@ -1013,10 +984,11 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
                   ? 'bg-teal-50 dark:bg-teal-950/40 border-teal-200/80 dark:border-teal-800/50 hover:bg-teal-100/80 dark:hover:bg-teal-900/50'
                   : 'bg-white/80 dark:bg-zinc-900/80 border-gray-200 dark:border-zinc-800 opacity-50 hover:opacity-80'
               }`}
-              title="Click to toggle Target Market (demand locations) on map"
+              title="Toggle Target Market demand circles"
             >
+              {/* Circle icon to represent the demand zone visualization */}
               <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${visibleCategories.market ? 'bg-teal-500 text-white shadow-sm shadow-teal-500/40' : 'bg-gray-200 dark:bg-zinc-700 text-gray-500'}`}>
-                <ShoppingCart size={13} strokeWidth={2.5} />
+                <Users size={13} strokeWidth={2.5} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">
@@ -1027,21 +999,16 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
                   {counts.markets > 0
                     ? (() => {
                         const mFeats = layerFeatures.filter(f => f.category === 'market');
-                        const villages = mFeats.filter(f => f.locationType === 'village').length;
-                        const towns = mFeats.filter(f => f.locationType === 'town').length;
                         const totalPop = mFeats.reduce((s, f) => s + (f.population || 0), 0);
-                        const parts: string[] = [];
-                        if (towns > 0) parts.push(`${towns} town${towns > 1 ? 's' : ''}`);
-                        if (villages > 0) parts.push(`${villages} village${villages > 1 ? 's' : ''}`);
-                        if (totalPop > 0) parts.push(`~${(totalPop / 1000).toFixed(0)}K pop.`);
-                        return parts.join(' · ') || `${counts.markets} demand locations`;
+                        if (totalPop > 0) return `~${(totalPop / 1000).toFixed(0)}K pop. demand zones`;
+                        return `${counts.markets} demand zones`;
                       })()
-                    : 'Villages, towns & demand centres'}
+                    : 'Demand zones shown as circles'}
                 </p>
               </div>
             </button>
 
-            {/* Card 3: Competitors — Existing competing businesses */}
+            {/* Card 2: Competitors — Existing competing businesses */}
             <button
               type="button"
               onClick={() => { setVisibleCategories(prev => ({ ...prev, competitor: !prev.competitor, similar: !prev.competitor })); }}
@@ -1050,7 +1017,7 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
                   ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200/80 dark:border-rose-800/50 hover:bg-rose-100/80 dark:hover:bg-rose-900/50'
                   : 'bg-white/80 dark:bg-zinc-900/80 border-gray-200 dark:border-zinc-800 opacity-50 hover:opacity-80'
               }`}
-              title="Click to toggle Competitor markers on map"
+              title="Toggle Competitor & Similar Business markers"
             >
               <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${visibleCategories.competitor ? 'bg-rose-600 text-white shadow-sm shadow-rose-500/40' : 'bg-gray-200 dark:bg-zinc-700 text-gray-500'}`}>
                 <Building2 size={13} strokeWidth={2.5} />
@@ -1068,32 +1035,38 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
               </div>
             </button>
 
-            {/* Divider */}
-            <div className="border-t border-gray-200/60 dark:border-zinc-800/60 my-0.5" />
-
-            {/* Summary Stats */}
-            <div className="px-1 space-y-1">
-              <div className="flex items-center justify-between text-[9px] text-gray-500 dark:text-zinc-500">
-                <span className="font-semibold">Est. Pop. Coverage</span>
-                <span className="font-black text-gray-700 dark:text-zinc-300">
-                  ~{(layerFeatures.filter(f => f.category === 'market').reduce((s, f) => s + (f.population || 0), 0) / 1000).toFixed(0)}K
-                </span>
+            {/* Footfall & Market Data Stats */}
+            <div className="border-t border-gray-200/60 dark:border-zinc-800/60 pt-2">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <TrendingUp size={9} className="text-gray-400" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-zinc-500">Footfall Data</span>
               </div>
-              <div className="flex items-center justify-between text-[9px] text-gray-500 dark:text-zinc-500">
-                <span className="font-semibold">Total Map Pins</span>
-                <span className="font-black text-gray-700 dark:text-zinc-300">{layerFeatures.length}</span>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-[9px] text-gray-500 dark:text-zinc-500">
+                  <span className="font-semibold">Est. Market Pop.</span>
+                  <span className="font-black text-teal-600 dark:text-teal-400">
+                    ~{(layerFeatures.filter(f => f.category === 'market').reduce((s, f) => s + (f.population || 0), 0) / 1000).toFixed(0)}K
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[9px] text-gray-500 dark:text-zinc-500">
+                  <span className="font-semibold">Competitor Density</span>
+                  <span className={`font-black ${
+                    counts.competitors + counts.similar > 8 ? 'text-rose-500' :
+                    counts.competitors + counts.similar > 4 ? 'text-amber-500' : 'text-emerald-500'
+                  }`}>
+                    {counts.competitors + counts.similar > 8 ? 'High' : counts.competitors + counts.similar > 4 ? 'Medium' : 'Low'}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5 pt-0.5">
-                <button
-                  type="button"
-                  onClick={() => setShowExistingList(prev => !prev)}
-                  className="flex-1 text-[9.5px] font-bold px-2 py-1 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 transition-all flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <Store size={9} />
-                  Business List
-                  <ChevronRight size={9} className={`transition-transform ${showExistingList ? 'rotate-90' : ''}`} />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowExistingList(prev => !prev)}
+                className="w-full mt-2 text-[9.5px] font-bold px-2 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 transition-all flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <Store size={9} />
+                Business List
+                <ChevronRight size={9} className={`transition-transform ${showExistingList ? 'rotate-90' : ''}`} />
+              </button>
             </div>
           </div>
         </div>
@@ -1290,149 +1263,161 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
           </>
         )}
 
-        {/* Category Layer Feature Markers (Competitors, Similar Enterprises, POIs, Markets) */}
-        {layerFeatures.map((feat) => {
-          if (!visibleCategories[feat.category]) return null;
-          const isExisting = feat.isExisting;
-          const isSelected = selectedFeatureId === feat.id;
+        {/* Category Layer Feature Markers — Competitors & Similar Enterprises (Markers) */}
+        {layerFeatures
+          .filter(feat => feat.category === 'competitor' || feat.category === 'similar')
+          .filter(feat => visibleCategories[feat.category])
+          .map((feat) => {
+            const isExisting = feat.isExisting;
 
-          return (
-            <Marker
-              key={feat.id}
-              position={[feat.lat, feat.lng]}
-              icon={createFeatureMarkerIcon(feat.category, feat.type, feat.subTypeIcon, feat.name, isExisting)}
-              zIndexOffset={feat.category === 'competitor' ? 350 : feat.category === 'similar' ? 300 : 250}
-              eventHandlers={{
-                click: () => {
-                  setSelectedFeatureId(feat.id);
-                  const featureAsLocation: CandidateLocation = {
-                    id: feat.id,
-                    name: feat.name,
-                    areaName: areaName || districtName || 'Local Sector',
-                    districtName: districtName || 'District',
-                    stateName: 'Gujarat',
-                    lat: feat.lat,
-                    lng: feat.lng,
-                    distanceKm: feat.distanceKm || 1.2,
-                    businessCategory: feat.category === 'competitor' ? 'Competitor Business' : feat.category === 'similar' ? 'Similar Enterprise' : feat.category === 'poi' ? 'Key Landmark / POI' : 'Target Market Mandi',
-                    subType: feat.capacity || feat.status || 'Verified Operating Unit',
-                    population: feat.capacity ? `Operating Capacity: ${feat.capacity}` : 'Active Unit',
-                    scoreResult: {
-                      overallScore: feat.category === 'competitor' ? 88 : feat.category === 'similar' ? 82 : feat.category === 'poi' ? 90 : 85,
-                      tier: {
-                        label: feat.category === 'competitor' ? 'Competitor' : feat.category === 'similar' ? 'Similar Biz' : feat.category === 'poi' ? 'Key POI' : 'Target Market',
-                        badgeColor: feat.category === 'competitor' ? 'bg-rose-600 text-white' : feat.category === 'similar' ? 'bg-blue-600 text-white' : feat.category === 'poi' ? 'bg-amber-600 text-white' : 'bg-teal-600 text-white',
-                        textColor: 'text-white',
-                        borderColor: 'border-white',
-                        bgLight: 'bg-[#161f2e]',
+            return (
+              <Marker
+                key={feat.id}
+                position={[feat.lat, feat.lng]}
+                icon={createFeatureMarkerIcon(feat.category, feat.type, feat.subTypeIcon, feat.name, isExisting)}
+                zIndexOffset={feat.category === 'competitor' ? 350 : 300}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedFeatureId(feat.id);
+                    const featureAsLocation = {
+                      id: feat.id,
+                      name: feat.name,
+                      areaName: areaName || districtName || 'Local Sector',
+                      districtName: districtName || 'District',
+                      stateName: 'India',
+                      lat: feat.lat,
+                      lng: feat.lng,
+                      distanceKm: feat.distanceKm || 1.2,
+                      businessCategory: feat.category === 'competitor' ? 'Competitor Business' : 'Similar Enterprise',
+                      subType: feat.capacity || feat.status || 'Verified Operating Unit',
+                      population: feat.capacity ? `Operating Capacity: ${feat.capacity}` : 'Active Unit',
+                      scoreResult: {
+                        overallScore: feat.category === 'competitor' ? 88 : 82,
+                        tier: {
+                          label: feat.category === 'competitor' ? 'Low' : 'Moderate',
+                          badgeColor: feat.category === 'competitor' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white',
+                          textColor: 'text-white',
+                          borderColor: 'border-white',
+                          bgLight: 'bg-[#161f2e]',
+                        },
+                        breakdown: {
+                          marketDemand: 82,
+                          competition: 90,
+                          accessibility: 85,
+                          customerDensity: 80,
+                          infrastructure: 84,
+                          investmentFit: 78,
+                          growthPotential: 80
+                        },
+                        keyDrivers: [feat.details || 'Active operating entity in search radius']
                       },
-                      breakdown: {
-                        marketDemand: 85,
-                        competition: 80,
-                        accessibility: 88,
-                        customerDensity: 82,
-                        infrastructure: 85,
-                        investmentFit: 80,
-                        growthPotential: 85
-                      },
-                      keyDrivers: [feat.details || 'Active operating entity in search radius']
-                    },
-                    estimatedAnnualProfit: feat.capacity || feat.details || 'Operating Entity',
-                    estimatedBreakevenMonths: feat.establishedYear ? `Est. ${feat.establishedYear} (${feat.yearsOperating || (new Date().getFullYear() - feat.establishedYear)} yrs operating)` : 'Operating & Active',
-                  };
+                      estimatedAnnualProfit: feat.capacity || feat.details || 'Operating Entity',
+                      estimatedBreakevenMonths: feat.establishedYear ? `Est. ${feat.establishedYear} (${feat.yearsOperating || (new Date().getFullYear() - feat.establishedYear)} yrs operating)` : 'Operating & Active',
+                    } as unknown as CandidateLocation;
 
-                  setOpenCards(prev => {
-                    if (prev.some(c => c.location.id === featureAsLocation.id)) {
+                    setOpenCards(prev => {
+                      if (prev.some(c => c.location.id === featureAsLocation.id)) {
+                        const maxZ = Math.max(2000, ...prev.map(c => c.zIndex));
+                        return prev.map(c => c.location.id === featureAsLocation.id ? { ...c, zIndex: maxZ + 1 } : c);
+                      }
+                      const offsetCount = prev.length;
+                      const initialX = Math.min(window.innerWidth - 380, 20 + (offsetCount % 4) * 45);
+                      const initialY = Math.min(window.innerHeight - 500, 70 + (offsetCount % 4) * 35);
                       const maxZ = Math.max(2000, ...prev.map(c => c.zIndex));
-                      return prev.map(c => c.location.id === featureAsLocation.id ? { ...c, zIndex: maxZ + 1 } : c);
-                    }
-                    const offsetCount = prev.length;
-                    const initialX = Math.min(window.innerWidth - 380, 20 + (offsetCount % 4) * 45);
-                    const initialY = Math.min(window.innerHeight - 500, 70 + (offsetCount % 4) * 35);
-                    const maxZ = Math.max(2000, ...prev.map(c => c.zIndex));
-                    return [...prev, {
-                      id: featureAsLocation.id,
-                      location: featureAsLocation,
-                      pos: { x: initialX, y: initialY },
-                      zIndex: maxZ + 1,
-                    }];
-                  });
-                },
-              }}
-            >
-              {/* Detailed Hover Tooltip - Appears on hover */}
-              <Tooltip
-                direction="top"
-                offset={[0, isExisting ? -18 : -15]}
-                opacity={1}
-                className="custom-feature-tooltip"
+                      return [...prev, {
+                        id: featureAsLocation.id,
+                        location: featureAsLocation,
+                        pos: { x: initialX, y: initialY },
+                        zIndex: maxZ + 1,
+                      }];
+                    });
+                  },
+                }}
               >
-                <div className="p-2 text-xs font-sans min-w-[210px] max-w-[280px] space-y-1.5 pointer-events-none">
-                  {/* Category Pill & Distance */}
-                  <div className="flex items-center justify-between gap-2 pb-1 border-b border-gray-100 dark:border-zinc-800">
-                    <span className="flex items-center gap-1.5 text-[9.5px] font-extrabold uppercase tracking-wide">
-                      <span
-                        className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-white shadow-2xs"
-                        style={{
-                          backgroundColor:
-                            feat.category === 'competitor' ? '#E11D48' :
-                            feat.category === 'similar' ? '#2563EB' :
-                            feat.category === 'poi' ? '#F59E0B' : '#0D9488'
-                        }}
-                      >
-                        {feat.category === 'competitor' && <Building2 size={9} strokeWidth={2.5} />}
-                        {feat.category === 'similar' && <Store size={9} strokeWidth={2.5} />}
-                        {feat.category === 'poi' && <Landmark size={9} strokeWidth={2.5} />}
-                        {feat.category === 'market' && <ShoppingCart size={9} strokeWidth={2.5} />}
+                <Tooltip direction="top" offset={[0, isExisting ? -18 : -15]} opacity={1} className="custom-feature-tooltip">
+                  <div className="p-2 text-xs font-sans min-w-[200px] max-w-[260px] space-y-1.5 pointer-events-none">
+                    <div className="flex items-center justify-between gap-2 pb-1 border-b border-gray-100 dark:border-zinc-800">
+                      <span className="flex items-center gap-1.5 text-[9.5px] font-extrabold uppercase tracking-wide">
+                        <span
+                          className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-white"
+                          style={{ backgroundColor: feat.category === 'competitor' ? '#E11D48' : '#2563EB' }}
+                        >
+                          {feat.category === 'competitor' ? <Building2 size={9} strokeWidth={2.5} /> : <Store size={9} strokeWidth={2.5} />}
+                        </span>
+                        <span className={feat.category === 'competitor' ? 'text-rose-600 dark:text-rose-400' : 'text-blue-600 dark:text-blue-400'}>
+                          {feat.category === 'competitor' ? 'Competitor' : 'Similar Business'}
+                        </span>
                       </span>
-                      <span className={
-                        feat.category === 'competitor' ? 'text-rose-600 dark:text-rose-400' :
-                        feat.category === 'similar' ? 'text-blue-600 dark:text-blue-400' :
-                        feat.category === 'poi' ? 'text-amber-600 dark:text-amber-400' :
-                        'text-teal-600 dark:text-teal-400'
-                      }>
-                        {feat.category === 'competitor' ? 'Competitor' :
-                         feat.category === 'similar' ? 'Similar Business' :
-                         feat.category === 'poi' ? 'Key POI' : 'Target Market'}
-                      </span>
-                    </span>
-                    <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400">
-                      {feat.distanceKm} km away
-                    </span>
-                  </div>
-
-                  {/* Full Enterprise Name */}
-                  <h5 className="font-extrabold text-[12px] text-gray-900 dark:text-white leading-snug">
-                    {feat.name}
-                  </h5>
-
-                  {/* Operational Details */}
-                  {feat.details && (
-                    <p className="text-[10px] text-gray-600 dark:text-zinc-300 leading-snug line-clamp-2">
-                      {feat.details}
-                    </p>
-                  )}
-
-                  {/* Established Year & Capacity Metadata */}
-                  {isExisting && (
-                    <div className="flex items-center justify-between text-[10px] pt-1 mt-0.5 border-t border-gray-100 dark:border-zinc-800/80 bg-gray-50/80 dark:bg-zinc-900/60 px-2 py-1 rounded-lg">
-                      <span className="text-gray-500 dark:text-zinc-400 font-medium">
-                        {feat.establishedYear ? `Est. ${feat.establishedYear} (${feat.yearsOperating || (new Date().getFullYear() - feat.establishedYear)} yrs)` : 'Operating'}
-                      </span>
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                        {feat.capacity || 'Verified Active'}
-                      </span>
+                      <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400">{feat.distanceKm} km</span>
                     </div>
-                  )}
-
-                  <div className="text-[9px] text-emerald-500 font-bold pt-0.5 text-right">
-                    Click logo to drag floating profile ›
+                    <h5 className="font-extrabold text-[12px] text-gray-900 dark:text-white leading-snug">{feat.name}</h5>
+                    {feat.details && (
+                      <p className="text-[10px] text-gray-600 dark:text-zinc-300 leading-snug line-clamp-2">{feat.details}</p>
+                    )}
+                    {isExisting && (
+                      <div className="flex items-center justify-between text-[10px] pt-1 border-t border-gray-100 dark:border-zinc-800/80 px-2 py-1 bg-gray-50 dark:bg-zinc-900/60 rounded-lg">
+                        <span className="text-gray-500 dark:text-zinc-400">
+                          {feat.establishedYear ? `Est. ${feat.establishedYear}` : 'Operating'}
+                        </span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">{feat.capacity || 'Active'}</span>
+                      </div>
+                    )}
+                    <div className="text-[9px] text-emerald-500 font-bold pt-0.5 text-right">Click to view details ›</div>
                   </div>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        })}
+                </Tooltip>
+              </Marker>
+            );
+          })}
+
+        {/* Target Market — Rendered as high-visibility vibrant demand circles & center badge pins */}
+        {visibleCategories.market && layerFeatures
+          .filter(feat => feat.category === 'market')
+          .map((feat) => {
+            const pop = feat.population || 2000;
+            const circleRadiusM = Math.max(400, Math.min(2500, pop * 0.18));
+            return (
+              <React.Fragment key={feat.id}>
+                <Circle
+                  center={[feat.lat, feat.lng]}
+                  radius={circleRadiusM}
+                  pathOptions={{
+                    color: '#EAB308',
+                    fillColor: '#CA8A04',
+                    fillOpacity: 0.22,
+                    weight: 3.5,
+                    dashArray: '8 5',
+                  }}
+                >
+                  <Tooltip direction="top" offset={[0, -10]} opacity={1} className="custom-feature-tooltip">
+                    <div className="p-2 text-xs font-sans min-w-[190px] max-w-[250px] space-y-1 pointer-events-none">
+                      <div className="flex items-center justify-between gap-2 pb-1 border-b border-gray-100 dark:border-zinc-800">
+                        <span className="flex items-center gap-1.5 text-[9.5px] font-extrabold uppercase tracking-wide text-amber-600 dark:text-amber-400">
+                          <Users size={10} strokeWidth={2.5} className="text-amber-500" />
+                          Target Market Zone
+                        </span>
+                        <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400">{feat.distanceKm} km</span>
+                      </div>
+                      <h5 className="font-extrabold text-[11.5px] text-gray-900 dark:text-white leading-snug">{feat.name}</h5>
+                      <div className="flex items-center justify-between text-[10px] pt-0.5">
+                        <span className="text-gray-500 dark:text-zinc-400">Est. Population</span>
+                        <span className="font-bold text-amber-600 dark:text-amber-400">~{pop.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </Tooltip>
+                </Circle>
+                <Marker
+                  position={[feat.lat, feat.lng]}
+                  icon={createFeatureMarkerIcon('market', feat.type, feat.subTypeIcon, feat.name, false)}
+                  zIndexOffset={250}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedFeatureId(feat.id);
+                    }
+                  }}
+                />
+              </React.Fragment>
+            );
+          })}
 
         {/* Evaluated Opportunity Candidate Location Nodes (Ordered Rank & Score) */}
         {visibleCandidates.map((cand, candIndex) => {
@@ -1491,10 +1476,10 @@ export const GeoMapContainer: React.FC<GeoMapContainerProps> = ({
         const rankIndex = visibleCandidates.findIndex(c => c.id === cand.id);
         const rank = rankIndex >= 0 ? rankIndex + 1 : 1;
 
-        const isCompetitor = cand.scoreResult?.tier?.label === 'Competitor' || cand.id.includes('comp');
-        const isSimilar = cand.scoreResult?.tier?.label === 'Similar Biz' || cand.id.includes('sim');
-        const isPoi = cand.scoreResult?.tier?.label === 'Key POI' || cand.id.includes('poi');
-        const isMarket = cand.scoreResult?.tier?.label === 'Target Market' || cand.id.includes('mkt');
+        const isCompetitor = cand.id.startsWith('osm_biz') && (cand.id.includes('comp') || (cand.businessCategory || '').includes('Competitor'));
+        const isSimilar = cand.id.startsWith('osm_biz') && (cand.id.includes('sim') || (cand.businessCategory || '').includes('Similar'));
+        const isPoi = cand.id.includes('poi');
+        const isMarket = cand.id.includes('mkt');
 
         let badgeLabel = `Rank #${rank} Opportunity`;
         let badgeStyle = 'text-emerald-400 bg-emerald-500/20 border-emerald-500/40';

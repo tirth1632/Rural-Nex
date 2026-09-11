@@ -1,6 +1,7 @@
-import { User, Sparkles, Volume2, Loader2 } from 'lucide-react';
+import { User, Volume2, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { synthesizeText } from '../../api/chat';
+import { RuralNexLogoMark } from '../../components/RuralNexLogo';
 
 interface Message {
     id: number | string;
@@ -48,9 +49,9 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
             {messages.map((msg) => (
                 <div key={msg.id} className={`flex gap-4 max-w-3xl ${msg.role === 'USER' ? 'ml-auto flex-row-reverse' : ''}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                        msg.role === 'USER' ? 'bg-primary text-white' : 'bg-purple-100 text-purple-600'
+                        msg.role === 'USER' ? 'bg-primary text-white' : 'bg-emerald-50 dark:bg-emerald-950 border border-emerald-500/30'
                     }`}>
-                        {msg.role === 'USER' ? <User size={16} /> : <Sparkles size={16} />}
+                        {msg.role === 'USER' ? <User size={16} /> : <RuralNexLogoMark size={20} />}
                     </div>
                     
                     <div className={`p-4 rounded-2xl relative group ${
@@ -76,8 +77,8 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
             
             {isLoading && (
                 <div className="flex gap-4 max-w-3xl">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-purple-100 text-purple-600">
-                        <Sparkles size={16} />
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 dark:bg-emerald-950 border border-emerald-500/30">
+                        <RuralNexLogoMark size={20} />
                     </div>
                     <div className="p-4 rounded-2xl bg-gray-100 text-gray-800 rounded-tl-none flex items-center gap-2">
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />

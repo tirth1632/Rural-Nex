@@ -176,8 +176,8 @@ export const Step6LoanCalculator: React.FC<Step6Props> = ({
 
               <span className="text-[10px] text-gray-500 dark:text-zinc-400 mt-1 block">
                 {tenureUnit === 'years'
-                  ? `Equivalent to ${Math.round((loanInputs.tenureYears || 0) * 12)} Months total repayment tenure. (Touch '${tenureUnit === 'years' ? 'Years' : 'Months'}' button above to switch)`
-                  : `Equivalent to ${((loanInputs.tenureYears || 0)).toFixed(1)} Years total repayment tenure. (Touch '${tenureUnit === 'years' ? 'Years' : 'Months'}' button above to switch)`}
+                  ? `Equivalent to ${Math.round((loanInputs.tenureYears || 0) * 12)} Months total repayment tenure. (Touch 'Years' button above to switch)`
+                  : `Equivalent to ${((loanInputs.tenureYears || 0)).toFixed(1)} Years total repayment tenure. (Touch 'Months' button above to switch)`}
               </span>
             </div>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   User,
   ShieldCheck,
@@ -27,44 +28,50 @@ export type SettingsSectionId =
   | 'about';
 
 interface NavGroup {
-  title: string;
+  titleKey: string;
+  defaultTitle: string;
   items: {
     id: SettingsSectionId;
-    label: string;
+    labelKey: string;
+    defaultLabel: string;
     icon: React.ElementType;
   }[];
 }
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    title: 'ACCOUNT',
+    titleKey: 'settings_group_account',
+    defaultTitle: 'ACCOUNT',
     items: [
-      { id: 'profile', label: 'Profile', icon: User },
-      { id: 'security', label: 'Security', icon: ShieldCheck },
-      { id: 'notifications', label: 'Notifications', icon: Bell },
+      { id: 'profile', labelKey: 'settings_nav_profile', defaultLabel: 'Profile', icon: User },
+      { id: 'security', labelKey: 'settings_nav_security', defaultLabel: 'Security', icon: ShieldCheck },
+      { id: 'notifications', labelKey: 'settings_nav_notifications', defaultLabel: 'Notifications', icon: Bell },
     ],
   },
   {
-    title: 'BUSINESS',
+    titleKey: 'settings_group_business',
+    defaultTitle: 'BUSINESS',
     items: [
-      { id: 'business-preferences', label: 'Business Preferences', icon: Briefcase },
-      { id: 'default-location', label: 'Default Location', icon: MapPin },
-      { id: 'financial-preferences', label: 'Financial Preferences', icon: TrendingUp },
+      { id: 'business-preferences', labelKey: 'settings_nav_business', defaultLabel: 'Business Preferences', icon: Briefcase },
+      { id: 'default-location', labelKey: 'settings_nav_location', defaultLabel: 'Default Location', icon: MapPin },
+      { id: 'financial-preferences', labelKey: 'settings_nav_financial', defaultLabel: 'Financial Preferences', icon: TrendingUp },
     ],
   },
   {
-    title: 'AI & DATA',
+    titleKey: 'settings_group_ai',
+    defaultTitle: 'AI & DATA',
     items: [
-      { id: 'ai-advisor', label: 'AI Advisor', icon: Sparkles },
-      { id: 'data-privacy', label: 'Data & Privacy', icon: Database },
+      { id: 'ai-advisor', labelKey: 'settings_nav_ai', defaultLabel: 'AI Advisor', icon: Sparkles },
+      { id: 'data-privacy', labelKey: 'settings_nav_privacy', defaultLabel: 'Data & Privacy', icon: Database },
     ],
   },
   {
-    title: 'APPLICATION',
+    titleKey: 'settings_group_app',
+    defaultTitle: 'APPLICATION',
     items: [
-      { id: 'language-appearance', label: 'Language & Appearance', icon: Globe },
-      { id: 'currency-units', label: 'Currency & Units', icon: Coins },
-      { id: 'about', label: 'About RuralNex', icon: Info },
+      { id: 'language-appearance', labelKey: 'settings_nav_appearance', defaultLabel: 'Language & Appearance', icon: Globe },
+      { id: 'currency-units', labelKey: 'settings_nav_currency', defaultLabel: 'Currency & Units', icon: Coins },
+      { id: 'about', labelKey: 'settings_nav_about', defaultLabel: 'About RuralNex', icon: Info },
     ],
   },
 ];
@@ -75,14 +82,16 @@ interface SettingsSidebarProps {
 }
 
 export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeSection, onSelectSection }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* Desktop Vertical Sidebar Navigation */}
       <nav className="hidden md:block w-64 lg:w-72 shrink-0 space-y-5">
         {NAV_GROUPS.map((group, groupIdx) => (
-          <div key={group.title} className={groupIdx > 0 ? 'pt-4 border-t border-gray-200/80 dark:border-zinc-800/80' : ''}>
+          <div key={group.defaultTitle} className={groupIdx > 0 ? 'pt-4 border-t border-gray-200/80 dark:border-zinc-800/80' : ''}>
             <h4 className="px-3.5 text-xs font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
-              {group.title}
+              {t(group.titleKey, group.defaultTitle)}
             </h4>
             <div className="space-y-1">
               {group.items.map(item => {
@@ -100,7 +109,7 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeSection,
                     }`}
                   >
                     <Icon size={18} className="shrink-0" />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey, item.defaultLabel)}</span>
                   </button>
                 );
               })}
@@ -112,18 +121,18 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeSection,
       {/* Mobile Header Selector */}
       <div className="md:hidden w-full pb-3 border-b border-gray-200 mb-4">
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-          Select Settings Section
+          {t('settings_select_section', 'Select Settings Section')}
         </label>
         <select
           value={activeSection}
           onChange={e => onSelectSection(e.target.value as SettingsSectionId)}
-          className="w-full bg-white border border-gray-300 text-gray-900 text-sm font-semibold rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+          className="w-full bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-sm font-semibold rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-primary focus:border-primary"
         >
           {NAV_GROUPS.map(group => (
-            <optgroup key={group.title} label={group.title}>
+            <optgroup key={group.defaultTitle} label={t(group.titleKey, group.defaultTitle)}>
               {group.items.map(item => (
                 <option key={item.id} value={item.id}>
-                  {item.label}
+                  {t(item.labelKey, item.defaultLabel)}
                 </option>
               ))}
             </optgroup>

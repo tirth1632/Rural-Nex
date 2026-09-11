@@ -89,7 +89,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # Geo Provider Configuration
 GEO_PROVIDER = 'GOOGLE'
-GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY', 'AIzaSyC0EMn8kBc9Hcji1n7qGcob4Ol2TnRZ4L8')
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY', '')
 
 ROOT_URLCONF = 'config.urls'
 
@@ -156,7 +156,7 @@ else:
             'ENGINE': DB_ENGINE,
             'NAME': os.environ.get('DB_NAME', 'ruralnex'),
             'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'Vansh@1234'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
             'HOST': os.environ.get('DB_HOST', 'localhost'),
             'PORT': os.environ.get('DB_PORT', '5433'),
         }

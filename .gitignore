@@ -8,28 +8,55 @@ venv/
 **/venv/
 env/
 **/env/
+ENV/
 
 # Distribution / packaging
 build/
 dist/
 **/dist/
 *.whl
+*.egg-info/
+.eggs/
 
 # Database
 *.sqlite3
 *.db
+*.sqlite
 
-# Node
+# Node & Frontend
 node_modules/
 **/node_modules/
+.npm/
+.eslintcache
+.vite/
+frontend/dist/
 
-# Environment variables
+# Environment variables & secrets (CRITICAL for public release)
 .env
 *.env
 **/.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
 
-# IDE / OS
+# Datasets, raw data & scratch scripts
+Datasets/
+data/
+scratch/
+
+# OS / IDE junk files
 .DS_Store
+._*
+**/._*
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+**/logs/

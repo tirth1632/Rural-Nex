@@ -74,9 +74,25 @@ class ChatService:
         
     def converse(self, report_context: Dict[str, Any], chat_history: list, user_message: str) -> str:
         from .prompts import CHAT_SYSTEM_PROMPT
+        from data.services.data_engine import DataEngine
+
+        merged_context = dict(report_context or {})
+        
+        # Query DataEngine for dataset analytics on user message
+        try:
+            crop_analysis = DataEngine.get_instance().analyze_crop_query(user_message)
+            if crop_analysis:
+                merged_context["dataset_query_analysis"] = crop_analysis["direct_answer"]
+                merged_context["crop_data_summary"] = crop_analysis["ranking"]
+                merged_context["crop_state_comparison_table"] = crop_analysis["comparison_table"]
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Crop dataset analysis failed: {e}")
+
         return self.provider.generate_chat_response(
             system_prompt=CHAT_SYSTEM_PROMPT,
-            context=report_context,
+            context=merged_context,
             chat_history=chat_history,
             user_message=user_message
         )
+

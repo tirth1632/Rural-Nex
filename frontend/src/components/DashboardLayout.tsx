@@ -25,6 +25,7 @@ import { useSettings } from '../features/settings/SettingsContext';
 import LanguageSelector from './LanguageSelector';
 import { RuralNexLogoMark } from './RuralNexLogo';
 import { DataStatusModal } from './DataStatusModal';
+import FloatingAIChatbot from '../features/chat/FloatingAIChatbot';
 
 export default function DashboardLayout() {
     const { t } = useTranslation();
@@ -32,11 +33,9 @@ export default function DashboardLayout() {
     const { user, logout } = useAuth();
     const { toggleTheme, isDarkMode } = useSettings();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [dataStatusOpen, setDataStatusOpen] = useState(false);
 
-    const toolsDropdownRef = useRef<HTMLDivElement>(null);
     const userDropdownRef = useRef<HTMLDivElement>(null);
 
     const handleLogout = () => {
@@ -47,9 +46,6 @@ export default function DashboardLayout() {
     // Close dropdowns on outside click
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target as Node)) {
-                setToolsMenuOpen(false);
-            }
             if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
                 setUserMenuOpen(false);
             }
@@ -104,44 +100,6 @@ export default function DashboardLayout() {
                                 <span>{item.label}</span>
                             </NavLink>
                         ))}
-
-                        {/* More Tools Dropdown */}
-                        <div 
-                            className="relative" 
-                            ref={toolsDropdownRef}
-                            onMouseEnter={() => setToolsMenuOpen(true)}
-                            onMouseLeave={() => setToolsMenuOpen(false)}
-                        >
-                            <button
-                                onClick={() => setToolsMenuOpen(!toolsMenuOpen)}
-                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white transition-colors ${
-                                    toolsMenuOpen ? 'bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white' : ''
-                                }`}
-                            >
-                                <span>{t('nav_more_tools', 'More Tools')}</span>
-                            </button>
-
-                            {toolsMenuOpen && (
-                                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50">
-                                    <div className="w-56 bg-white dark:bg-[#0a0a0c] rounded-xl shadow-xl border border-gray-200 dark:border-zinc-800 py-1.5 animate-in fade-in zoom-in-95 duration-100">
-                                        {toolItems.map((item) => (
-                                            <NavLink
-                                                key={item.path}
-                                                to={item.path}
-                                                onClick={() => setToolsMenuOpen(false)}
-                                                className={({ isActive }) => `
-                                                    flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors
-                                                    ${isActive ? 'bg-primary/10 text-primary font-bold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900 hover:text-gray-900 dark:hover:text-white'}
-                                                `}
-                                            >
-                                                <item.icon size={16} className="shrink-0" />
-                                                <span>{item.label}</span>
-                                            </NavLink>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
                     </nav>
 
                     {/* Right Side Actions */}
@@ -364,6 +322,9 @@ export default function DashboardLayout() {
 
             {/* Live Dataset Quality & Status Modal */}
             <DataStatusModal isOpen={dataStatusOpen} onClose={() => setDataStatusOpen(false)} />
+
+            {/* Global Floating AI Business Advisor Chatbot */}
+            <FloatingAIChatbot />
         </div>
     );
 }

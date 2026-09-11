@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   Landmark, 
   Search, 
@@ -75,6 +76,7 @@ export function getCategoryIcon(name: string): string {
 
 export default function GovtSchemesPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Master Data & Stats
   const [stats, setStats] = useState<SchemeStats | null>(null);
@@ -483,13 +485,13 @@ export default function GovtSchemesPage() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide uppercase bg-primary/10 text-primary border border-primary/25 mb-4 shadow-xs">
                 <ShieldCheck size={16} className="text-primary" />
-                <span>OFFICIAL GOVERNMENT WELFARE &amp; SUBSIDIES</span>
+                <span>{t('schemes_hero_badge', 'OFFICIAL GOVERNMENT WELFARE & SUBSIDIES')}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-950 dark:text-white leading-[1.15]">
-                Rural Enterprise Government Schemes &amp; Subsidies
+                {t('schemes_hero_title', 'Rural Enterprise Government Schemes & Subsidies')}
               </h1>
               <p className="mt-4 text-base sm:text-lg text-gray-600 dark:text-zinc-300 font-medium leading-relaxed">
-                Discover verified Central and State government schemes, capital subsidies, credit support, interest benefits, and collateral-free guarantees for your rural enterprise.
+                {t('schemes_hero_desc', 'Discover verified Central and State government schemes, capital subsidies, credit support, interest benefits, and collateral-free guarantees for your rural enterprise.')}
               </p>
             </div>
 
@@ -503,7 +505,7 @@ export default function GovtSchemesPage() {
                   <ShieldCheck className="text-primary/70 shrink-0" size={20} />
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-zinc-400 mt-1.5">
-                  Verified Schemes
+                  {t('schemes_stat_verified', 'Verified Schemes')}
                 </div>
               </div>
 
@@ -515,7 +517,7 @@ export default function GovtSchemesPage() {
                   <Landmark className="text-blue-500/70 shrink-0" size={20} />
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-zinc-400 mt-1.5">
-                  Central Schemes
+                  {t('schemes_stat_central', 'Central Schemes')}
                 </div>
               </div>
 
@@ -527,7 +529,7 @@ export default function GovtSchemesPage() {
                   <Scale className="text-purple-500/70 shrink-0" size={20} />
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-zinc-400 mt-1.5">
-                  State Schemes
+                  {t('schemes_stat_state', 'State Schemes')}
                 </div>
               </div>
 
@@ -539,7 +541,7 @@ export default function GovtSchemesPage() {
                   <Clock className="text-amber-500/80 shrink-0" size={18} />
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-zinc-400 mt-1.5">
-                  Last Update
+                  {t('schemes_stat_update', 'Last Update')}
                 </div>
               </div>
             </div>
@@ -561,7 +563,7 @@ export default function GovtSchemesPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search scheme name, ministry, category, benefit type, business sector..."
+                placeholder={t('schemes_search_ph', 'Search scheme name, ministry, category, benefit type, business sector...')}
                 className="w-full h-12 pl-12 pr-11 bg-gray-50 dark:bg-zinc-800/90 rounded-xl border border-gray-200 dark:border-zinc-700 text-base font-medium text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
               />
               {searchQuery && (
@@ -582,9 +584,9 @@ export default function GovtSchemesPage() {
                 onChange={(e) => handleLocationFilterChange(e.target.value)}
                 className="w-full appearance-none h-12 pl-4 pr-10 bg-gray-50 dark:bg-zinc-800/90 rounded-xl border border-gray-200 dark:border-zinc-700 text-sm font-bold text-gray-900 dark:text-zinc-100 outline-none cursor-pointer focus:ring-2 focus:ring-primary shadow-xs transition"
               >
-                <option value="all">🇮🇳 All India (Central &amp; All States)</option>
-                <option value="central">🏛️ Central Government Only</option>
-                <optgroup label="── State Government Schemes ──" className="font-bold text-gray-500">
+                <option value="all">🇮🇳 {t('schemes_all_india', 'All India (Central & All States)')}</option>
+                <option value="central">🏛️ {t('schemes_central_gov_only', 'Central Government Only')}</option>
+                <optgroup label={`── ${t('schemes_state_gov_schemes', 'State Government Schemes')} ──`} className="font-bold text-gray-500">
                   {combinedStateList.map((st) => (
                     <option key={st} value={st} className="font-medium text-gray-900 dark:text-white">
                       📍 {st} State Schemes

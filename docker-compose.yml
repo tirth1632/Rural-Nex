@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: ruralnex
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "Vansh@1234"
+      POSTGRES_PASSWORD: "postgres"
     ports:
       - "5433:5432"
     volumes:
@@ -17,7 +17,7 @@ services:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@ruralnex.local
-      PGADMIN_DEFAULT_PASSWORD: "Vansh@1234"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
       - "5050:80"
     depends_on:
@@ -37,7 +37,7 @@ services:
     environment:
       - DB_NAME=ruralnex
       - DB_USER=postgres
-      - DB_PASSWORD=Vansh@1234
+      - DB_PASSWORD=postgres
       - DB_HOST=db
       - DB_PORT=5432
       - REDIS_URL=redis://redis:6379/0

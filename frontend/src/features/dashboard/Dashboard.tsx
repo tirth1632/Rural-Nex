@@ -261,8 +261,8 @@ export default function Dashboard() {
     const marketGap = `${opScore}% Unmet Local Gap`;
 
     // EMI interest rate: use scheme-based rate if available, else 9.5% default
-    const schemeInterestRate = fin?.interest_rate 
-        ? Number(fin.interest_rate) 
+    const schemeInterestRate = (fin as any)?.interest_rate 
+        ? Number((fin as any).interest_rate) 
         : (totalProjectCost <= 1000000 ? 9.0 : 9.5);
     const estimatedEMICalc = calculateEMI(expectedLoan, schemeInterestRate, 5);
 
