@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import i18n from '../i18n';
 
@@ -154,7 +155,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/v1/auth/me/', {
+      const res = await apiFetch('/api/v1/auth/me/', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }

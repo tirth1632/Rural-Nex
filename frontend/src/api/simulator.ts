@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 export interface SimulationPayload {
     own_capital: number;
     project_cost: number;
@@ -120,7 +121,7 @@ export const runSimulation = async (payload: SimulationPayload): Promise<Simulat
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const res = await fetch(`/api/v1/advisory/simulate/`, {
+        const res = await apiFetch(`/api/v1/advisory/simulate/`, {
             method: 'POST',
             headers,
             body: JSON.stringify(payload)

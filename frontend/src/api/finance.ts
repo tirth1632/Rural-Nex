@@ -1,5 +1,6 @@
+import { apiFetch } from './apiFetch';
 export const calculateFinance = async (data: { available_margin: number, desired_project_cost?: number }) => {
-    const res = await fetch('/api/v1/finance/calculate/', {
+    const res = await apiFetch('/api/v1/finance/calculate/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -12,7 +13,7 @@ export const calculateFinance = async (data: { available_margin: number, desired
 };
 
 export const fetchRepaymentSchedule = async (data: { principal: number, interest_rate: number, tenure_months: number, moratorium_months: number }) => {
-    const res = await fetch('/api/v1/finance/repayment/', {
+    const res = await apiFetch('/api/v1/finance/repayment/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ export const fetchRepaymentSchedule = async (data: { principal: number, interest
 };
 
 export const estimateWorkingCapital = async (data: { projected_annual_turnover: number }) => {
-    const res = await fetch('/api/v1/finance/working-capital/', {
+    const res = await apiFetch('/api/v1/finance/working-capital/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

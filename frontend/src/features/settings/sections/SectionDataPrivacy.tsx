@@ -1,3 +1,4 @@
+import { apiFetch } from '../../../api/apiFetch';
 import React, { useState, useEffect } from 'react';
 import { useSettings } from '../SettingsContext';
 import { Toggle } from '../components/Toggle';
@@ -178,7 +179,7 @@ export const SectionDataPrivacy: React.FC = () => {
   const handleDeleteAccountConfirm = async () => {
     setActionLoading(true);
     try {
-      await fetch('/api/v1/auth/delete-account/', {
+      await apiFetch('/api/v1/auth/delete-account/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

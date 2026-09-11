@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 import { geoSpatialScoringService, type ScoreResult } from './geoSpatialScoringService';
 
 export interface StateLocation {
@@ -2144,11 +2145,11 @@ export const geoService = {
 
     try {
       const url = `/api/v1/geo/radius-search/?lat=${centerLat}&lng=${centerLng}&radius=${params.radiusKm}&category=${encodeURIComponent(params.businessCategory || '')}`;
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       
       let suitabilityData: any = null;
       try {
-        const suitRes = await fetch('/api/v1/geo/suitability-assessment/', {
+        const suitRes = await apiFetch('/api/v1/geo/suitability-assessment/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2891,7 +2892,7 @@ export const geoService = {
 
     const features: LayerFeature[] = [];
     try {
-      const res = await fetch('https://overpass-api.de/api/interpreter', {
+      const res = await apiFetch('https://overpass-api.de/api/interpreter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `data=${encodeURIComponent(query)}`,
@@ -3060,7 +3061,7 @@ out center;`;
 
     const features: LayerFeature[] = [];
     try {
-      const res = await fetch('https://overpass-api.de/api/interpreter', {
+      const res = await apiFetch('https://overpass-api.de/api/interpreter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `data=${encodeURIComponent(query)}`,

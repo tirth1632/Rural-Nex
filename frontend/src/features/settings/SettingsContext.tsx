@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import i18n from '../../i18n';
@@ -255,7 +256,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      await fetch('/api/v1/auth/profile/', {
+      await apiFetch('/api/v1/auth/profile/', {
         method: 'PATCH',
         headers,
         body: JSON.stringify({

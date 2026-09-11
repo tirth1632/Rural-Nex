@@ -1,8 +1,9 @@
+import { apiFetch } from './apiFetch';
 export const fetchCompetitors = async (lat: number, lng: number, radiusKm: number, category?: string) => {
     let url = `/api/v1/market/competitors/?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
     if (category) url += `&category=${category}`;
     
-    const res = await fetch(url, {
+    const res = await apiFetch(url, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch competitors');
@@ -13,7 +14,7 @@ export const fetchDensity = async (lat: number, lng: number, radiusKm: number, c
     let url = `/api/v1/market/density/?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
     if (category) url += `&category=${category}`;
     
-    const res = await fetch(url, {
+    const res = await apiFetch(url, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch market density');
@@ -24,7 +25,7 @@ export const fetchObservations = async (lat: number, lng: number, radiusKm: numb
     let url = `/api/v1/market/observations/?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
     if (category) url += `&category=${category}`;
     
-    const res = await fetch(url, {
+    const res = await apiFetch(url, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch external observations');

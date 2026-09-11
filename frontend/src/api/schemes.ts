@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 import govtSchemesData from '../data/govt_schemes_dataset.json';
 
 const getAuthHeaders = () => {
@@ -347,7 +348,7 @@ export async function fetchSchemes(params?: {
         }
       });
     }
-    const res = await fetch(`${API_BASE}/?${query.toString()}`, {
+    const res = await apiFetch(`${API_BASE}/?${query.toString()}`, {
       headers: getAuthHeaders()
     });
     if (res.ok) {
@@ -395,7 +396,7 @@ export async function searchSchemes(query: string, state?: string, category?: st
     if (state) qParams.append('state', state);
     if (category) qParams.append('category', category);
 
-    const res = await fetch(`${API_BASE}/search/?${qParams.toString()}`, {
+    const res = await apiFetch(`${API_BASE}/search/?${qParams.toString()}`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -413,7 +414,7 @@ export async function searchSchemes(query: string, state?: string, category?: st
 
 export async function fetchSchemeStats(): Promise<SchemeStats> {
   try {
-    const res = await fetch(`${API_BASE}/stats/`, {
+    const res = await apiFetch(`${API_BASE}/stats/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -433,7 +434,7 @@ export async function fetchSchemeStats(): Promise<SchemeStats> {
 
 export async function fetchSchemeCategories(): Promise<SchemeCategory[]> {
   try {
-    const res = await fetch(`${API_BASE}/categories/`, {
+    const res = await apiFetch(`${API_BASE}/categories/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -446,7 +447,7 @@ export async function fetchSchemeCategories(): Promise<SchemeCategory[]> {
 
 export async function fetchSchemeMinistries(): Promise<string[]> {
   try {
-    const res = await fetch(`${API_BASE}/ministries/`, {
+    const res = await apiFetch(`${API_BASE}/ministries/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -458,7 +459,7 @@ export async function fetchSchemeMinistries(): Promise<string[]> {
 
 export async function fetchSchemeBenefits(): Promise<{ code: string; label: string }[]> {
   try {
-    const res = await fetch(`${API_BASE}/benefits/`, {
+    const res = await apiFetch(`${API_BASE}/benefits/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -478,7 +479,7 @@ export async function fetchSchemeLocations(): Promise<{
   active_states: string[];
 }> {
   try {
-    const res = await fetch(`${API_BASE}/locations/`, {
+    const res = await apiFetch(`${API_BASE}/locations/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -497,7 +498,7 @@ export async function fetchSchemeLocations(): Promise<{
 
 export async function fetchSchemeDetail(id: string): Promise<GovtSchemeDetail> {
   try {
-    const res = await fetch(`${API_BASE}/${id}/`, {
+    const res = await apiFetch(`${API_BASE}/${id}/`, {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -546,7 +547,7 @@ export async function matchSchemes(payload: {
   own_contribution?: number;
 }): Promise<SchemeMatchResponse> {
   try {
-    const res = await fetch(`${API_BASE}/match/`, {
+    const res = await apiFetch(`${API_BASE}/match/`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(payload)
@@ -650,7 +651,7 @@ export async function calculateSchemeBenefit(
   }
 ): Promise<BenefitCalculationResult> {
   try {
-    const res = await fetch(`${API_BASE}/${schemeId}/calculate-benefit/`, {
+    const res = await apiFetch(`${API_BASE}/${schemeId}/calculate-benefit/`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(payload)
@@ -709,7 +710,7 @@ export async function compareSchemes(schemeIds: string[]): Promise<{
   schemes: SchemeComparisonItem[];
 }> {
   try {
-    const res = await fetch(`${API_BASE}/compare/`, {
+    const res = await apiFetch(`${API_BASE}/compare/`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ scheme_ids: schemeIds })
@@ -753,7 +754,7 @@ export async function compareSchemes(schemeIds: string[]): Promise<{
 
 export async function fetchSavedSchemes(): Promise<SavedSchemeItem[]> {
   try {
-    const res = await fetch('/api/user/saved-schemes/', {
+    const res = await apiFetch('/api/user/saved-schemes/', {
       headers: getAuthHeaders()
     });
     if (res.ok) return await res.json();
@@ -765,7 +766,7 @@ export async function fetchSavedSchemes(): Promise<SavedSchemeItem[]> {
 
 export async function saveScheme(schemeId: string, notes?: string): Promise<SavedSchemeItem> {
   try {
-    const res = await fetch('/api/user/saved-schemes/', {
+    const res = await apiFetch('/api/user/saved-schemes/', {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ scheme_id: schemeId, notes: notes || '' })
@@ -788,7 +789,7 @@ export async function saveScheme(schemeId: string, notes?: string): Promise<Save
 
 export async function deleteSavedScheme(id: number): Promise<void> {
   try {
-    const res = await fetch(`/api/user/saved-schemes/${id}/`, {
+    const res = await apiFetch(`/api/user/saved-schemes/${id}/`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
@@ -807,7 +808,7 @@ export async function addSchemeToFinancialPlan(schemeId: string): Promise<{
   financial_rules: any;
 }> {
   try {
-    const res = await fetch(`${API_BASE}/${schemeId}/add-to-financial-plan/`, {
+    const res = await apiFetch(`${API_BASE}/${schemeId}/add-to-financial-plan/`, {
       method: 'POST',
       headers: getAuthHeaders()
     });

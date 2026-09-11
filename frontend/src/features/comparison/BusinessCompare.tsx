@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { compareBusinesses } from '../../api/compare';
@@ -17,7 +18,7 @@ export default function BusinessCompare() {
     const { data: categories = [] } = useQuery({
         queryKey: ['categories'],
         queryFn: async () => {
-            const res = await fetch('/api/v1/advisory/categories/');
+            const res = await apiFetch('/api/v1/advisory/categories/');
             if (!res.ok) throw new Error('Failed to fetch categories');
             return res.json();
         },

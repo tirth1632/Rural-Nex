@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -77,7 +78,7 @@ const Login = () => {
     if (!validate()) return;
     setError(''); setLoading(true);
     try {
-      const res = await fetch('/api/v1/auth/login/', {
+      const res = await apiFetch('/api/v1/auth/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -112,7 +113,7 @@ const Login = () => {
         // 1. Fetch user profile directly from Google's userinfo endpoint
         let googleUserData: any = null;
         try {
-          const gRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          const gRes = await apiFetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           });
           if (gRes.ok) {
@@ -145,7 +146,7 @@ const Login = () => {
         // 2. Try backend Google endpoint
         let backendData: any = null;
         try {
-          const res = await fetch('/api/v1/auth/google/', {
+          const res = await apiFetch('/api/v1/auth/google/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ access_token: tokenResponse.access_token }),

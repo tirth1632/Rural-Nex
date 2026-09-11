@@ -1,5 +1,6 @@
+import { apiFetch } from './apiFetch';
 export const fetchCategories = async () => {
-    const res = await fetch('/api/v1/business/categories/', {
+    const res = await apiFetch('/api/v1/business/categories/', {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch categories');
@@ -7,7 +8,7 @@ export const fetchCategories = async () => {
 };
 
 export const fetchBusinessTypes = async (categoryId: number) => {
-    const res = await fetch(`/api/v1/business/types/?category=${categoryId}`, {
+    const res = await apiFetch(`/api/v1/business/types/?category=${categoryId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch business types');
@@ -15,7 +16,7 @@ export const fetchBusinessTypes = async (categoryId: number) => {
 };
 
 export const fetchProducts = async (typeId: number) => {
-    const res = await fetch(`/api/v1/business/products/?business_type=${typeId}`, {
+    const res = await apiFetch(`/api/v1/business/products/?business_type=${typeId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
     });
     if (!res.ok) throw new Error('Failed to fetch products');

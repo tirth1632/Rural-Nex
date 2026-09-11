@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 const BASE_URL = '/api/v1/advisory/reports';
 
 const getAuthHeaders = () => ({
@@ -6,7 +7,7 @@ const getAuthHeaders = () => ({
 });
 
 export const triggerReportGeneration = async (proposalId: number) => {
-    const res = await fetch(`${BASE_URL}/${proposalId}/generate/`, {
+    const res = await apiFetch(`${BASE_URL}/${proposalId}/generate/`, {
         method: 'POST',
         headers: getAuthHeaders()
     });
@@ -18,7 +19,7 @@ export const triggerReportGeneration = async (proposalId: number) => {
 };
 
 export const downloadReport = async (proposalId: number) => {
-    const res = await fetch(`${BASE_URL}/${proposalId}/`, {
+    const res = await apiFetch(`${BASE_URL}/${proposalId}/`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`

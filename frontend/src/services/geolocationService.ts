@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 import { GOOGLE_MAPS_API_KEY } from '../config/maps';
 import { geoService } from './geoService';
 
@@ -53,7 +54,7 @@ async function reverseGeocodeLiveCoords(lat: number, lng: number): Promise<{
 }> {
   // 1. Primary: BigDataCloud Client Reverse Geocoding API (Fast, Free, CORS-friendly, reliable in India)
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
     );
     if (res.ok) {
@@ -103,7 +104,7 @@ async function reverseGeocodeLiveCoords(lat: number, lng: number): Promise<{
   // 2. Secondary: OpenStreetMap Nominatim Reverse Geocoding
   try {
     const nomUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-    const nomRes = await fetch(nomUrl, { headers: { 'Accept-Language': 'en' } });
+    const nomRes = await apiFetch(nomUrl, { headers: { 'Accept-Language': 'en' } });
     if (nomRes.ok) {
       const nomData = await nomRes.json();
       const addr = nomData.address || {};
@@ -129,7 +130,7 @@ async function reverseGeocodeLiveCoords(lat: number, lng: number): Promise<{
   if (GOOGLE_MAPS_API_KEY) {
     try {
       const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
-      const gRes = await fetch(googleUrl);
+      const gRes = await apiFetch(googleUrl);
       if (gRes.ok) {
         const gData = await gRes.json();
         if (gData.results && gData.results.length > 0) {

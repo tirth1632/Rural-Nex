@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 import { geoService } from './geoService';
 
 export interface LocationIntelligence {
@@ -32,7 +33,7 @@ export const locationDataService = {
    */
   async getStates(): Promise<string[]> {
     try {
-      const res = await fetch('/api/v1/geo/hierarchy/', { headers: getAuthHeaders() });
+      const res = await apiFetch('/api/v1/geo/hierarchy/', { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (data.states && Array.isArray(data.states) && data.states.length > 0) {
@@ -44,7 +45,7 @@ export const locationDataService = {
     }
 
     try {
-      const res = await fetch('/api/v1/geo/states/', { headers: getAuthHeaders() });
+      const res = await apiFetch('/api/v1/geo/states/', { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -66,7 +67,7 @@ export const locationDataService = {
   async getDistricts(stateName: string): Promise<any[]> {
     if (!stateName) return [];
     try {
-      const res = await fetch(`/api/v1/geo/districts-data/?state=${encodeURIComponent(stateName)}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`/api/v1/geo/districts-data/?state=${encodeURIComponent(stateName)}`, { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -106,7 +107,7 @@ export const locationDataService = {
   async getBlocks(stateName: string, districtName: string): Promise<string[]> {
     if (!stateName || !districtName) return [];
     try {
-      const res = await fetch(`/api/v1/geo/blocks-data/?state=${encodeURIComponent(stateName)}&district=${encodeURIComponent(districtName)}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`/api/v1/geo/blocks-data/?state=${encodeURIComponent(stateName)}&district=${encodeURIComponent(districtName)}`, { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -155,7 +156,7 @@ export const locationDataService = {
       let url = `/api/v1/geo/villages-data/?state=${encodeURIComponent(stateName)}&district=${encodeURIComponent(districtName)}`;
       if (blockName) url += `&block=${encodeURIComponent(blockName)}`;
 
-      const res = await fetch(url, { headers: getAuthHeaders() });
+      const res = await apiFetch(url, { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -324,12 +325,12 @@ export const locationDataService = {
     let radiusSummary: any = {};
 
     try {
-      const popRes = await fetch(`/api/v1/geo/population-data/?state=${encodeURIComponent(stateName)}&district=${encodeURIComponent(districtName || '')}`, { headers: getAuthHeaders() }).catch(() => null);
+      const popRes = await apiFetch(`/api/v1/geo/population-data/?state=${encodeURIComponent(stateName)}&district=${encodeURIComponent(districtName || '')}`, { headers: getAuthHeaders() }).catch(() => null);
       if (popRes && popRes.ok) {
         popData = await popRes.json().catch(() => ({}));
       }
 
-      const radiusRes = await fetch(`/api/v1/geo/radius-search/?lat=22.56&lng=72.92&radius=25`, { headers: getAuthHeaders() }).catch(() => null);
+      const radiusRes = await apiFetch(`/api/v1/geo/radius-search/?lat=22.56&lng=72.92&radius=25`, { headers: getAuthHeaders() }).catch(() => null);
       if (radiusRes && radiusRes.ok) {
         const radJson = await radiusRes.json().catch(() => ({}));
         radiusSummary = radJson.summary || {};

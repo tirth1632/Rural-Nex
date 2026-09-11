@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 const getAuthHeaders = () => {
     const token = localStorage.getItem('access_token');
     return {
@@ -529,13 +530,13 @@ export interface GeoVillage {
 // -------------------------------------------------------------
 
 export const fetchBusinessActivities = async (): Promise<BusinessActivity[]> => {
-    const res = await fetch('/api/v1/finance/activities/', { headers: getAuthHeaders() });
+    const res = await apiFetch('/api/v1/finance/activities/', { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch business activities');
     return res.json();
 };
 
 export const fetchGovernmentSchemes = async (): Promise<SchemeMaster[]> => {
-    const res = await fetch('/api/v1/finance/schemes/all/', { headers: getAuthHeaders() });
+    const res = await apiFetch('/api/v1/finance/schemes/all/', { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch government schemes');
     return res.json();
 };
@@ -547,7 +548,7 @@ export const matchApplicableSchemes = async (payload: {
     promoter_profile?: PromoterProfile;
     location_data?: LocationData;
 }): Promise<{ matched_schemes: SchemeMatchResult[]; rule_engine_version: string }> => {
-    const res = await fetch('/api/v1/finance/schemes/match/', {
+    const res = await apiFetch('/api/v1/finance/schemes/match/', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)
@@ -566,7 +567,7 @@ export const calculateFeasibility = async (payload: {
     selected_scheme_rule_id?: number | null;
     what_if_modifiers?: Record<string, any>;
 }): Promise<FeasibilityCalculationResponse> => {
-    const res = await fetch('/api/v1/finance/calculate/', {
+    const res = await apiFetch('/api/v1/finance/calculate/', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)
@@ -579,7 +580,7 @@ export const calculateFeasibility = async (payload: {
 };
 
 export const generateBankDPR = async (payload: any): Promise<BankDPR> => {
-    const res = await fetch('/api/v1/finance/dpr/generate/', {
+    const res = await apiFetch('/api/v1/finance/dpr/generate/', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)
@@ -589,7 +590,7 @@ export const generateBankDPR = async (payload: any): Promise<BankDPR> => {
 };
 
 export const fetchAIAdvisoryInsights = async (calculationResults: any) => {
-    const res = await fetch('/api/v1/finance/advisor/explain/', {
+    const res = await apiFetch('/api/v1/finance/advisor/explain/', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ calculation_results: calculationResults })
@@ -599,7 +600,7 @@ export const fetchAIAdvisoryInsights = async (calculationResults: any) => {
 };
 
 export const saveFinancialPlan = async (payload: any) => {
-    const res = await fetch('/api/v1/finance/plans/save/', {
+    const res = await apiFetch('/api/v1/finance/plans/save/', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)
@@ -609,31 +610,31 @@ export const saveFinancialPlan = async (payload: any) => {
 };
 
 export const fetchSavedFinancialPlans = async () => {
-    const res = await fetch('/api/v1/finance/plans/', { headers: getAuthHeaders() });
+    const res = await apiFetch('/api/v1/finance/plans/', { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch saved plans');
     return res.json();
 };
 
 export const fetchGeoStates = async (): Promise<GeoState[]> => {
-    const res = await fetch('/api/v1/geo/states/', { headers: getAuthHeaders() });
+    const res = await apiFetch('/api/v1/geo/states/', { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch states');
     return res.json();
 };
 
 export const fetchGeoDistricts = async (stateId: number | string): Promise<GeoDistrict[]> => {
-    const res = await fetch(`/api/v1/geo/districts/?state=${stateId}`, { headers: getAuthHeaders() });
+    const res = await apiFetch(`/api/v1/geo/districts/?state=${stateId}`, { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch districts');
     return res.json();
 };
 
 export const fetchGeoBlocks = async (districtId: number | string): Promise<GeoBlock[]> => {
-    const res = await fetch(`/api/v1/geo/blocks/?district=${districtId}`, { headers: getAuthHeaders() });
+    const res = await apiFetch(`/api/v1/geo/blocks/?district=${districtId}`, { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch blocks');
     return res.json();
 };
 
 export const fetchGeoVillages = async (blockId: number | string): Promise<GeoVillage[]> => {
-    const res = await fetch(`/api/v1/geo/villages/?block=${blockId}`, { headers: getAuthHeaders() });
+    const res = await apiFetch(`/api/v1/geo/villages/?block=${blockId}`, { headers: getAuthHeaders() });
     if (!res.ok) throw new Error('Failed to fetch villages');
     return res.json();
 };

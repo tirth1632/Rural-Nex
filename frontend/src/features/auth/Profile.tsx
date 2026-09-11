@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,7 @@ const Profile = () => {
 
   const handleUpdate = async () => {
     try {
-      const res = await fetch('/api/v1/auth/profile/', {
+      const res = await apiFetch('/api/v1/auth/profile/', {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

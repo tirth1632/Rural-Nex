@@ -1,3 +1,4 @@
+import { apiFetch } from '../../../api/apiFetch';
 import React, { useState, useEffect } from 'react';
 import { useSettings } from '../SettingsContext';
 import { useAuth } from '../../../context/AuthContext';
@@ -76,7 +77,7 @@ export const SectionProfile: React.FC = () => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      await fetch('/api/v1/auth/profile/', {
+      await apiFetch('/api/v1/auth/profile/', {
         method: 'PATCH',
         headers,
         body: JSON.stringify({ avatar_url: resizedDataUrl }),
@@ -103,7 +104,7 @@ export const SectionProfile: React.FC = () => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      await fetch('/api/v1/auth/profile/', {
+      await apiFetch('/api/v1/auth/profile/', {
         method: 'PATCH',
         headers,
         body: JSON.stringify({ avatar_url: '' }),
@@ -154,7 +155,7 @@ export const SectionProfile: React.FC = () => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch('/api/v1/auth/send-phone-otp/', {
+      const res = await apiFetch('/api/v1/auth/send-phone-otp/', {
         method: 'POST',
         headers,
         body: JSON.stringify({ phone_number: rawPhone })
@@ -194,7 +195,7 @@ export const SectionProfile: React.FC = () => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch('/api/v1/auth/verify-phone-otp/', {
+      const res = await apiFetch('/api/v1/auth/verify-phone-otp/', {
         method: 'POST',
         headers,
         body: JSON.stringify({

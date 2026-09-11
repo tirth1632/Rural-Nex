@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 const API_BASE = '/api/v1/geo';
 
 const getAuthHeaders = () => {
@@ -58,7 +59,7 @@ export interface RadiusSearchResponse {
 export const datasetService = {
   async getStates(): Promise<string[]> {
     try {
-      const res = await fetch(`${API_BASE}/hierarchy/`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/hierarchy/`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return data.states || [];
@@ -70,7 +71,7 @@ export const datasetService = {
 
   async getDistricts(state: string): Promise<any[]> {
     try {
-      const res = await fetch(`${API_BASE}/districts-data/?state=${encodeURIComponent(state)}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/districts-data/?state=${encodeURIComponent(state)}`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -81,7 +82,7 @@ export const datasetService = {
 
   async getVillages(state: string, district: string): Promise<any[]> {
     try {
-      const res = await fetch(`${API_BASE}/villages-data/?state=${encodeURIComponent(state)}&district=${encodeURIComponent(district)}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/villages-data/?state=${encodeURIComponent(state)}&district=${encodeURIComponent(district)}`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -94,7 +95,7 @@ export const datasetService = {
     try {
       let url = `${API_BASE}/radius-search/?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
       if (category) url += `&category=${encodeURIComponent(category)}`;
-      const res = await fetch(url, { headers: getAuthHeaders() });
+      const res = await apiFetch(url, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -107,7 +108,7 @@ export const datasetService = {
     try {
       let url = `${API_BASE}/businesses-data/`;
       if (state) url += `?state=${encodeURIComponent(state)}`;
-      const res = await fetch(url, { headers: getAuthHeaders() });
+      const res = await apiFetch(url, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -121,7 +122,7 @@ export const datasetService = {
       const params = new URLSearchParams();
       if (state) params.append('state', state);
       if (district) params.append('district', district);
-      const res = await fetch(`${API_BASE}/population-data/?${params.toString()}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/population-data/?${params.toString()}`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -135,7 +136,7 @@ export const datasetService = {
       const params = new URLSearchParams();
       if (state) params.append('state', state);
       if (district) params.append('district', district);
-      const res = await fetch(`${API_BASE}/groundwater-data/?${params.toString()}`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/groundwater-data/?${params.toString()}`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -148,7 +149,7 @@ export const datasetService = {
     try {
       let url = `${API_BASE}/economics-data/`;
       if (state) url += `?state=${encodeURIComponent(state)}`;
-      const res = await fetch(url, { headers: getAuthHeaders() });
+      const res = await apiFetch(url, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -161,7 +162,7 @@ export const datasetService = {
     try {
       let url = `${API_BASE}/livestock-data/`;
       if (state) url += `?state=${encodeURIComponent(state)}`;
-      const res = await fetch(url, { headers: getAuthHeaders() });
+      const res = await apiFetch(url, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -172,7 +173,7 @@ export const datasetService = {
 
   async getMarketData(): Promise<any[]> {
     try {
-      const res = await fetch(`${API_BASE}/market-data/`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/market-data/`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -183,7 +184,7 @@ export const datasetService = {
 
   async getDataStatus(): Promise<DatasetStatus[]> {
     try {
-      const res = await fetch(`${API_BASE}/data-status/`, { headers: getAuthHeaders() });
+      const res = await apiFetch(`${API_BASE}/data-status/`, { headers: getAuthHeaders() });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {

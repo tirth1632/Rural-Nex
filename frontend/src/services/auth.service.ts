@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 /** Auth service — wraps all /api/v1/auth/ endpoints */
 
 const BASE = '/api/v1/auth';
@@ -49,7 +50,7 @@ export interface ProfilePayload {
 
 /** POST /api/v1/auth/register/ */
 export async function registerUser(payload: RegisterPayload): Promise<void> {
-  const res = await fetch(`${BASE}/register/`, {
+  const res = await apiFetch(`${BASE}/register/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -67,7 +68,7 @@ export async function loginUser(
   username: string,
   password: string
 ): Promise<LoginResponse> {
-  const res = await fetch(`${BASE}/login/`, {
+  const res = await apiFetch(`${BASE}/login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
@@ -87,7 +88,7 @@ export async function faceLogin(
   username?: string,
   userId?: number
 ): Promise<FaceLoginResponse> {
-  const res = await fetch(`${BASE}/face-login/`, {
+  const res = await apiFetch(`${BASE}/face-login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ face_image: faceImage, username, user_id: userId }),
@@ -106,7 +107,7 @@ export async function faceEnroll(
   faceImage: string,
   accessToken: string
 ): Promise<{ detail: string; face_verified: boolean; embedding_dim: number }> {
-  const res = await fetch(`${BASE}/face-enroll/`, {
+  const res = await apiFetch(`${BASE}/face-enroll/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -129,7 +130,7 @@ export async function updateProfile(
   payload: ProfilePayload,
   accessToken: string
 ): Promise<void> {
-  const res = await fetch(`${BASE}/profile/`, {
+  const res = await apiFetch(`${BASE}/profile/`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

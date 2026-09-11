@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Circle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -63,7 +64,7 @@ const LocationSearch = () => {
     setQuery(val);
     if (val.length > 2) {
       try {
-        const res = await fetch(`/api/locations/search/?q=${val}`);
+        const res = await apiFetch(`/api/locations/search/?q=${val}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -79,7 +80,7 @@ const LocationSearch = () => {
   const handleGeocode = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/locations/geocode/', {
+      const res = await apiFetch('/api/locations/geocode/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query })
@@ -89,7 +90,7 @@ const LocationSearch = () => {
         // The endpoint returns a LocationSummary
         // But we need the point coordinates. 
         // We'll fetch the full location details to get GeoJSON.
-        const detailRes = await fetch(`/api/locations/${data.id}/`);
+        const detailRes = await apiFetch(`/api/locations/${data.id}/`);
         if (detailRes.ok) {
            const detailData = await detailRes.json();
            selectLocation(detailData);
@@ -153,7 +154,7 @@ const LocationSearch = () => {
                   key={s.id} 
                   className="p-3 hover:bg-gray-100 cursor-pointer border-b text-sm"
                   onClick={async () => {
-                    const detailRes = await fetch(`/api/locations/${s.id}/`);
+                    const detailRes = await apiFetch(`/api/locations/${s.id}/`);
                     if (detailRes.ok) {
                       const detailData = await detailRes.json();
                       selectLocation(detailData);

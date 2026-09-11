@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
@@ -29,7 +30,7 @@ const ForgotPassword = () => {
     setError('');
     
     try {
-      const res = await fetch('/api/v1/auth/forgot-password/', {
+      const res = await apiFetch('/api/v1/auth/forgot-password/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -61,7 +62,7 @@ const ForgotPassword = () => {
     setSuccess('');
 
     try {
-      const res = await fetch('/api/v1/auth/verify-otp/', {
+      const res = await apiFetch('/api/v1/auth/verify-otp/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
@@ -96,7 +97,7 @@ const ForgotPassword = () => {
     setError('');
 
     try {
-      const res = await fetch('/api/v1/auth/reset-password/', {
+      const res = await apiFetch('/api/v1/auth/reset-password/', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

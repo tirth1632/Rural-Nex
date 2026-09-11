@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 const getAIHeaders = () => {
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ export const generateAdvisory = async (
     lat: number, lng: number, radius: number, category: string, projectSize: number, financialData?: any
 ) => {
     try {
-        const res = await fetch(`/api/v1/advisory/generate/`, {
+        const res = await apiFetch(`/api/v1/advisory/generate/`, {
             method: 'POST',
             headers: getAIHeaders(),
             body: JSON.stringify({ lat, lng, radius, category, project_size: projectSize, financial_data: financialData })
@@ -130,7 +131,7 @@ export const sendChatMessage = async (
     message: string, sessionId?: number, context?: any
 ) => {
     try {
-        const res = await fetch(`/api/v1/chat/message/`, {
+        const res = await apiFetch(`/api/v1/chat/message/`, {
             method: 'POST',
             headers: getAIHeaders(),
             body: JSON.stringify({ message, session_id: sessionId, context })
@@ -169,7 +170,7 @@ export const transcribeAudio = async (audioBlob: Blob): Promise<string> => {
         'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`
     };
 
-    const res = await fetch(`/api/v1/advisory/voice/transcribe/`, {
+    const res = await apiFetch(`/api/v1/advisory/voice/transcribe/`, {
         method: 'POST',
         headers,
         body: formData
@@ -181,7 +182,7 @@ export const transcribeAudio = async (audioBlob: Blob): Promise<string> => {
 };
 
 export const synthesizeText = async (text: string): Promise<Blob> => {
-    const res = await fetch(`/api/v1/advisory/voice/synthesize/`, {
+    const res = await apiFetch(`/api/v1/advisory/voice/synthesize/`, {
         method: 'POST',
         headers: getAIHeaders(),
         body: JSON.stringify({ text })

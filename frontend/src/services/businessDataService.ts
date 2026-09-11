@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 import datasetActivities from '../data/business_activities_dataset.json';
 
 export interface DatasetBusiness {
@@ -259,9 +260,9 @@ export const businessDataService = {
 
     // Try backend endpoint first
     try {
-      let res = await fetch('/api/v1/finance/activities/', { headers: getAuthHeaders() });
+      let res = await apiFetch('/api/v1/finance/activities/', { headers: getAuthHeaders() });
       if (res.status === 401) {
-        res = await fetch('/api/v1/finance/activities/');
+        res = await apiFetch('/api/v1/finance/activities/');
       }
       if (res.ok) {
         const data = await res.json();

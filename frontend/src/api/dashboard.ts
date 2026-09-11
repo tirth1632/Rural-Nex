@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 const BASE_URL = '/api/v1/advisory/proposals';
 
 const getAuthHeaders = () => {
@@ -75,7 +76,7 @@ export const formatINR = (val: number | string | undefined | null): string => {
 export const getUserProposals = async (): Promise<ProposalItem[]> => {
     let backendProposals: ProposalItem[] = [];
     try {
-        const res = await fetch(`${BASE_URL}/`, {
+        const res = await apiFetch(`${BASE_URL}/`, {
             headers: getAuthHeaders(),
         });
         if (res.ok) {
@@ -150,7 +151,7 @@ export const getUserProposals = async (): Promise<ProposalItem[]> => {
 
 export const getProposalDetail = async (id: number): Promise<ProposalItem | null> => {
     try {
-        const res = await fetch(`${BASE_URL}/${id}/`, {
+        const res = await apiFetch(`${BASE_URL}/${id}/`, {
             headers: getAuthHeaders(),
         });
         if (res.ok) {

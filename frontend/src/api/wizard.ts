@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch';
 const BASE_URL = '/api/v1/advisory/proposals';
 
 const getAuthHeaders = () => ({
@@ -33,7 +34,7 @@ export const saveLocalProposal = (proposal: any) => {
 
 export const createProposal = async () => {
     try {
-        const res = await fetch(`${BASE_URL}/`, {
+        const res = await apiFetch(`${BASE_URL}/`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({}) // creates blank draft
@@ -61,7 +62,7 @@ export const createProposal = async () => {
 
 export const getProposal = async (id: number) => {
     try {
-        const res = await fetch(`${BASE_URL}/${id}/`, {
+        const res = await apiFetch(`${BASE_URL}/${id}/`, {
             headers: getAuthHeaders(),
         });
         if (res.ok) {
@@ -84,7 +85,7 @@ export const updateProposal = async (id: number, data: any) => {
             delete payload.category_id;
         }
 
-        const res = await fetch(`${BASE_URL}/${id}/`, {
+        const res = await apiFetch(`${BASE_URL}/${id}/`, {
             method: 'PATCH',
             headers: getAuthHeaders(),
             body: JSON.stringify(payload)
@@ -101,7 +102,7 @@ export const updateProposal = async (id: number, data: any) => {
 
 export const analyzeProposal = async (id: number) => {
     try {
-        const res = await fetch(`${BASE_URL}/${id}/analyze/`, {
+        const res = await apiFetch(`${BASE_URL}/${id}/analyze/`, {
             method: 'POST',
             headers: getAuthHeaders()
         });
@@ -119,7 +120,7 @@ export const analyzeProposal = async (id: number) => {
 
 export const recommendProposal = async (id: number) => {
     try {
-        const res = await fetch(`${BASE_URL}/${id}/recommend/`, {
+        const res = await apiFetch(`${BASE_URL}/${id}/recommend/`, {
             method: 'POST',
             headers: getAuthHeaders()
         });

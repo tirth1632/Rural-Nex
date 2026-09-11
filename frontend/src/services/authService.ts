@@ -1,3 +1,4 @@
+import { apiFetch } from '../api/apiFetch';
 export interface SessionDevice {
   id: string;
   device: string;
@@ -19,7 +20,7 @@ export const authService = {
   // 1. Change Password
   async changePassword(data: { currentPassword: string; newPassword: string }): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await fetch('/api/v1/auth/change-password/', {
+      const res = await apiFetch('/api/v1/auth/change-password/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,7 +41,7 @@ export const authService = {
   // 2. Active Sessions
   async getSessions(): Promise<SessionDevice[]> {
     try {
-      const res = await fetch('/api/v1/auth/sessions/');
+      const res = await apiFetch('/api/v1/auth/sessions/');
       if (res.ok) {
         const json = await res.json();
         if (Array.isArray(json.sessions)) {
@@ -72,7 +73,7 @@ export const authService = {
 
   async revokeOtherSessions(): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await fetch('/api/v1/auth/sessions/revoke-others/', {
+      const res = await apiFetch('/api/v1/auth/sessions/revoke-others/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -86,7 +87,7 @@ export const authService = {
   // 3. Two-Factor Authentication
   async setup2FA(method: 'sms' | 'totp', phoneNumber?: string): Promise<Setup2FAResponse> {
     try {
-      const res = await fetch('/api/v1/auth/2fa/setup/', {
+      const res = await apiFetch('/api/v1/auth/2fa/setup/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ method, phone_number: phoneNumber }),
@@ -123,7 +124,7 @@ export const authService = {
 
   async verify2FA(method: 'sms' | 'totp', code: string, phoneNumber?: string): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await fetch('/api/v1/auth/2fa/verify/', {
+      const res = await apiFetch('/api/v1/auth/2fa/verify/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ method, code, phone_number: phoneNumber }),
@@ -143,7 +144,7 @@ export const authService = {
 
   async disable2FA(password: string): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await fetch('/api/v1/auth/2fa/disable/', {
+      const res = await apiFetch('/api/v1/auth/2fa/disable/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ current_password: password }),
@@ -167,7 +168,7 @@ export const authService = {
       return { success: false, message: 'Please type DELETE to confirm.' };
     }
     try {
-      const res = await fetch('/api/v1/auth/delete-account/', {
+      const res = await apiFetch('/api/v1/auth/delete-account/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ confirmation: confirmationText }),

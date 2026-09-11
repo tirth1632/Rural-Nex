@@ -1,7 +1,8 @@
+import { apiFetch } from './apiFetch';
 export const compareBusinesses = async (
     lat: number, lng: number, radius: number, marginCapital: number, categories: string[]
 ) => {
-    const res = await fetch(`/api/v1/advisory/feasibility/compare/`, {
+    const res = await apiFetch(`/api/v1/advisory/feasibility/compare/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -21,8 +21,11 @@ import GeoSpatialPage from './features/geospatial/GeoSpatialPage';
 import GovtSchemesPage from './features/schemes/GovtSchemesPage';
 import { SettingsProvider } from './features/settings/SettingsContext';
 import { GlobalFilterProvider } from './context/GlobalFilterContext';
+import { useCapacitor } from './hooks/useCapacitor';
 
 function App() {
+  // Initialize Capacitor mobile-specific features (no-op on web)
+  useCapacitor();
 
   return (
     <SettingsProvider>

@@ -1,3 +1,4 @@
+import { apiFetch } from '../../api/apiFetch';
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -92,7 +93,7 @@ const Register: React.FC = () => {
       try {
         let googleUserData: any = null;
         try {
-          const gRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          const gRes = await apiFetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           });
           if (gRes.ok) {
@@ -124,7 +125,7 @@ const Register: React.FC = () => {
 
         let backendData: any = null;
         try {
-          const res = await fetch('/api/v1/auth/google/', {
+          const res = await apiFetch('/api/v1/auth/google/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ access_token: tokenResponse.access_token }),
