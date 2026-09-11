@@ -55,15 +55,15 @@ const getFallbackAdvisory = (_lat: number, _lng: number, radius: number, categor
 
     return {
         deterministic_data: {
-            overall_score: 64.47,
+            overall_score: 85.0,
             is_feasible: true,
             verdict: "RECOMMENDED",
             category: category || "Retail",
             primary_state: "Gujarat",
             primary_district: "Anand",
             dimensions: {
-                demand: { score: 75.0, population: 15400, villages: 3, weight_pct: demandPct },
-                accessibility: { score: 80.0, avg_road_km: 4.2, nearest_mandi_km: 6.8, weight_pct: accessPct },
+                demand: { score: 86.0, population: 15400, villages: 3, weight_pct: demandPct },
+                accessibility: { score: 85.0, avg_road_km: 4.2, nearest_mandi_km: 6.8, weight_pct: accessPct },
                 labor: { score: 88.0, daily_wage_rs: 420.0, weight_pct: laborPct },
                 resource_water: { score: 80.0, dtwl_meters: 8.5, weight_pct: waterPct },
                 competition: { score: 78.0, state_enterprises: 350, weight_pct: compPct }
@@ -99,8 +99,8 @@ const getFallbackAdvisory = (_lat: number, _lng: number, radius: number, categor
             ]
         },
         ai_analysis: {
-            summary: `Initial Analysis Complete: Based on the deterministic score of 64.47, this project is RECOMMENDED. I have attached your full deterministic context to this session. What would you like to know?`,
-            feasibility: { score: 64.47, label: "RECOMMENDED" }
+            summary: `Initial Analysis Complete: Based on the deterministic score of 85/100, this project is RECOMMENDED. I have attached your full deterministic context to this session. What would you like to know?`,
+            feasibility: { score: 85.0, label: "RECOMMENDED" }
         }
     };
 };
@@ -129,6 +129,7 @@ export const generateAdvisory = async (
 export const sendChatMessage = async (
     message: string, sessionId?: number, context?: any
 ) => {
+    const scoreVal = context?.feasibility_score || 85;
     try {
         const res = await fetch(`/api/v1/chat/message/`, {
             method: 'POST',
@@ -143,7 +144,7 @@ export const sendChatMessage = async (
                 message: {
                     id: Date.now().toString(),
                     role: 'ASSISTANT',
-                    content: `Based on your deterministic context score of 64.47/100, your ${context?.business_category || 'enterprise'} is viable. For live real-time AI responses, please ensure you are logged in or enter a custom API key under 'AI Models & Keys'.`
+                    content: `Based on your deterministic context score of ${scoreVal}/100, your ${context?.business_category || 'enterprise'} is viable. For live real-time AI responses, please ensure you are logged in or enter a custom API key under 'AI Models & Keys'.`
                 }
             };
         }
@@ -155,7 +156,7 @@ export const sendChatMessage = async (
             message: {
                 id: Date.now().toString(),
                 role: 'ASSISTANT',
-                content: `Based on your deterministic context score of 64.47/100, your proposed project is RECOMMENDED. What specific details about machinery, licenses, or loan application would you like to discuss?`
+                content: `Based on your deterministic context score of ${scoreVal}/100, your proposed project is RECOMMENDED. What specific details about machinery, licenses, or loan application would you like to discuss?`
             }
         };
     }
